@@ -4,6 +4,7 @@
 #include "MyPawn.h"
 #include <Engine/World.h>
 #include <GameFramework/Actor.h>
+#include <DrawDebugHelpers.h>
 
 
 // Sets default values for this component's properties
@@ -49,7 +50,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	int NLidars = 4;
 
 	int TotalPoints = PointsPerLayer * Layers* NLidars;
-
+	
 	// Request lidar scan depending on sensor frequency
 	if (isFirst || World->GetTimeSeconds() - LastLidarScanTime > 1.f / LidarFrequency)
 	{
@@ -68,17 +69,33 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		for (int i = 0; i < TotalPoints; i++)
 		{
-			FRotator ThisRotation = CurrentRotation + FRotator(0, i*DeltaYaw, 0);
+			FQuat CurrentQuat(CurrentRotation);
+			FQuat DeltaQuat(FRotator(0.f, i*DeltaYaw, 0.f));
+
+			FRotator ThisRotation = (CurrentQuat*DeltaQuat).Rotator();
 			FVector EndLocation = CurrentLocation + LidarRange * (ThisRotation.Vector());
 
-			World->LineTraceSingleByChannel(
+			bool isValidHit = World->LineTraceSingleByChannel(
 				Hit,
 				CurrentLocation,
 				EndLocation,
 				ECollisionChannel::ECC_Visibility
 			);
 
-			Scan.Add(CurrentRotation.RotateVector(Hit.Location - CurrentLocation));
+			if (isValidHit)
+				Scan.Add(CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation));
+
+			if (i == 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Hit location: %s"), *Hit.Location.ToString());
+				UE_LOG(LogTemp, Warning, TEXT("Current location: %s"), *CurrentLocation.ToString());
+				UE_LOG(LogTemp, Warning, TEXT("CurrentRotation: %s"), *CurrentRotation.ToString());
+				UE_LOG(LogTemp, Warning, TEXT("Rotated vector: %s"), *CurrentRotation.RotateVector(Hit.Location - CurrentLocation).ToString());
+			}
+
+			/*if (isValidHit)
+				DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, FColor::Red, false, 1.f);
+*/
 		}
 
 	}

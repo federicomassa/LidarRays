@@ -2,6 +2,7 @@
 
 #include "LidarHUD.h"
 #include <Engine/World.h>
+#include <Math/UnrealMathUtility.h>
 
 void ALidarHUD::BeginPlay() 
 {
@@ -28,7 +29,7 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, const TArray<FVector>& L
 	// We represent a subset of the real points. NB Watch out for periodicity, choose quasi prime numbers
 	int NHUDPoints = 101;
 
-	// TODO Here we should use lidar range, but we hardcode it for now
+	// TODO Here we should use lidar range, but we hardcode it for now, in laser coords
 	float MinX = -3100;
 	float MaxX = 3100;
 	float MinY = -3100;
@@ -42,11 +43,16 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, const TArray<FVector>& L
 
 	while(i < LaserScan.Num())
 	{
+		// Coordinates on background. Should be between 0 and 1
 		float ThisPointX = (LaserScan[i].X - MinX) / (MaxX - MinX);
 		float ThisPointY = (LaserScan[i].Y - MinY) / (MaxY - MinY);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Point: (%f, %f)"), ThisPointX, ThisPointY);
-		DrawRect(PointsColor, HUDX + HUDW * ThisPointX, HUDY + HUDH * ThisPointY, 3, 3);
+
+
+		if (ThisPointX < 1 && ThisPointX > 0 && ThisPointY < 1 && ThisPointY > 0)
+			DrawRect(PointsColor, HUDX + ThisPointY*HUDW, (HUDY + HUDH) - ThisPointX*HUDH, 3, 3);
+		// else discard point
 
 		i += PointStep;
 	}
