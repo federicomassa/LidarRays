@@ -4,19 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "LidarMessage.h"
 #include "LidarComponent.generated.h"
 
 class AActor;
 class UWorld;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarAvailableDelegate, ULidarMessage*, LidarScan);
+
+UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
 class LIDARRAYS_API ULidarComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 	AActor* Owner = nullptr;
 	UWorld* World = nullptr;
-	TArray<FVector> Scan;
+	ULidarMessage* Scan = nullptr;
 
 	// Lidar range
 	UPROPERTY(EditAnywhere, Category = Lidar)
@@ -34,11 +37,18 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	ULidarComponent();
+	~ULidarComponent();
 
 	UFUNCTION(BlueprintCallable, Category = Lidar)
-	const TArray<FVector>& GetLatestScan() const
+	ULidarMessage* GetLatestScan()
 	{
 		return Scan;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = Lidar)
+	float GetLastScanTime()
+	{
+		return LastLidarScanTime;
 	}
 
 protected:
@@ -49,6 +59,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UPROPERTY(BlueprintAssignable, Category = Lidar)
+	FLidarAvailableDelegate OnLidarAvailable;
 	
 };

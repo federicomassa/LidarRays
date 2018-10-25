@@ -1,21 +1,3 @@
-# Linux generated
-Makefile
-CMakeLists.txt
-*.code-workspace
-*.pri
-*.workspace
-*CodeCompletionFolders.txt
-*CodeLitePreProcessor.txt
-*.pro
-
-# Visual Studio Code
-.vscode/
-.idea/
-
-# Kdevelop
-.kdev4/
-*.kdev4
-
 # Visual Studio 2015 user specific files
 .vs/
 

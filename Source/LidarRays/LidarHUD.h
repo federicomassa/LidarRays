@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "LidarHUD.generated.h"
 
+
+class ULidarMessage;
 /**
  * 
  */
@@ -34,6 +36,6 @@ protected:
 	void DrawBackground(FLinearColor BGColor, float HUDX, float HUDY, float RectW, float RectH);
 
 	UFUNCTION(BlueprintCallable, Category = Lidar)
-	void DrawLidarScan(FLinearColor PointsColor, const TArray<FVector>& LaserScan);
+	void DrawLidarScan(FLinearColor PointsColor, ULidarMessage* LaserScan);
 
 };

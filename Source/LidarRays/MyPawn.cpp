@@ -2,7 +2,6 @@
 
 #include "MyPawn.h"
 
-
 // Sets default values
 AMyPawn::AMyPawn()
 {
@@ -30,5 +29,10 @@ void AMyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+AUDPSender* AMyPawn::GetUDPSender()
+{
+	return UDPSender;
 }
 

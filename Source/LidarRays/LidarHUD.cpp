@@ -3,6 +3,7 @@
 #include "LidarHUD.h"
 #include <Engine/World.h>
 #include <Math/UnrealMathUtility.h>
+#include "LidarMessage.h"
 
 void ALidarHUD::BeginPlay() 
 {
@@ -24,7 +25,7 @@ void ALidarHUD::DrawBackground(FLinearColor BGColor, float HUD_X, float HUD_Y, f
 	HUDH = RectH;
 }
 
-void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, const TArray<FVector>& LaserScan)
+void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, ULidarMessage* LaserScan)
 {
 	// We represent a subset of the real points. NB Watch out for periodicity, choose quasi prime numbers
 	int NHUDPoints = 101;
@@ -36,16 +37,16 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, const TArray<FVector>& L
 	float MaxY = 3100;
 
 	// We take a point every PointStep real points
-	int PointStep = round(float(LaserScan.Num()) / NHUDPoints);
+	int PointStep = round(float(LaserScan->Data.size()) / NHUDPoints);
 
 
 	int i = 0;
 
-	while(i < LaserScan.Num())
+	while(i < LaserScan->Data.size())
 	{
 		// Coordinates on background. Should be between 0 and 1
-		float ThisPointX = (LaserScan[i].X - MinX) / (MaxX - MinX);
-		float ThisPointY = (LaserScan[i].Y - MinY) / (MaxY - MinY);
+		float ThisPointX = (LaserScan->Data[i].X - MinX) / (MaxX - MinX);
+		float ThisPointY = (LaserScan->Data[i].Y - MinY) / (MaxY - MinY);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Point: (%f, %f)"), ThisPointX, ThisPointY);
 

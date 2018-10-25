@@ -17,6 +17,10 @@ ULidarComponent::ULidarComponent()
 	// ...
 }
 
+ULidarComponent::~ULidarComponent()
+{
+}
+
 
 // Called when the game starts
 void ULidarComponent::BeginPlay()
@@ -35,6 +39,9 @@ void ULidarComponent::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Lidar component has no world"));
 	}
+
+	Scan = NewObject<ULidarMessage>();
+
 }
 
 
@@ -55,13 +62,15 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (isFirst || World->GetTimeSeconds() - LastLidarScanTime > 1.f / LidarFrequency)
 	{
 
-		Scan.Empty();
+		Scan->Empty();
 
 		/*if (!isFirst)
 			UE_LOG(LogTemp, Warning, TEXT("Lidar frequency: %f"), 1.f / (World->GetTimeSeconds() - LastLidarScanTime));*/
 
-		// Update last scan time
+			// Update last scan time
 		LastLidarScanTime = World->GetTimeSeconds();
+
+		Scan->timestamp = LastLidarScanTime;
 
 		FVector CurrentLocation = Owner->GetActorLocation();
 		FRotator CurrentRotation = Owner->GetActorRotation();
@@ -83,21 +92,17 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			);
 
 			if (isValidHit)
-				Scan.Add(CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation));
-
-			if (i == 0)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Hit location: %s"), *Hit.Location.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("Current location: %s"), *CurrentLocation.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("CurrentRotation: %s"), *CurrentRotation.ToString());
-				UE_LOG(LogTemp, Warning, TEXT("Rotated vector: %s"), *CurrentRotation.RotateVector(Hit.Location - CurrentLocation).ToString());
+				FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
+				Scan->Data.push_back(ULidarMessage::Point(SensorPoint.X, SensorPoint.Y, SensorPoint.Z));
 			}
-
 			/*if (isValidHit)
 				DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, FColor::Red, false, 1.f);
 */
 		}
 
+
+		OnLidarAvailable.Broadcast(Scan);
 	}
 
 
