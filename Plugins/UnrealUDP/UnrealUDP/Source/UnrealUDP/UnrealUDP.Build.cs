@@ -24,6 +24,10 @@ public class UnrealUDP : ModuleRules
 			}
 			);
 
+        // Cereal to serialize sensor data
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
+        bEnableUndefinedIdentifierWarnings = false;
+
         PublicDependencyModuleNames.AddRange(
 			new string[]
 			{

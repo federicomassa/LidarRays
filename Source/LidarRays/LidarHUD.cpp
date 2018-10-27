@@ -37,16 +37,16 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, ULidarMessage* LaserScan
 	float MaxY = 3100;
 
 	// We take a point every PointStep real points
-	int PointStep = round(float(LaserScan->Data.size()) / NHUDPoints);
+	int PointStep = round(float(LaserScan->PointsX.size()) / NHUDPoints);
 
 
 	int i = 0;
 
-	while(i < LaserScan->Data.size())
+	while(i < LaserScan->PointsX.size())
 	{
 		// Coordinates on background. Should be between 0 and 1
-		float ThisPointX = (LaserScan->Data[i].X - MinX) / (MaxX - MinX);
-		float ThisPointY = (LaserScan->Data[i].Y - MinY) / (MaxY - MinY);
+		float ThisPointX = (LaserScan->PointsX[i] - MinX) / (MaxX - MinX);
+		float ThisPointY = (LaserScan->PointsY[i] - MinY) / (MaxY - MinY);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Point: (%f, %f)"), ThisPointX, ThisPointY);
 

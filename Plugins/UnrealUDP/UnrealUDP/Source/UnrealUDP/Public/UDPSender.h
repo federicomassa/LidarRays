@@ -4,9 +4,9 @@
 
 #include "Networking.h"
 #include "GameFramework/EngineMessage.h"
+#include "Engine.h"
+#include "GameFramework/Actor.h"
 #include "UDPSender.generated.h"
-
-class AActor;
 
 UCLASS()
 class AUDPSender : public AActor

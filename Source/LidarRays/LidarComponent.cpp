@@ -57,7 +57,8 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	int NLidars = 4;
 
 	int TotalPoints = PointsPerLayer * Layers* NLidars;
-	
+	//TotalPoints = 72;
+
 	// Request lidar scan depending on sensor frequency
 	if (isFirst || World->GetTimeSeconds() - LastLidarScanTime > 1.f / LidarFrequency)
 	{
@@ -94,7 +95,9 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			if (isValidHit)
 			{
 				FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
-				Scan->Data.push_back(ULidarMessage::Point(SensorPoint.X, SensorPoint.Y, SensorPoint.Z));
+				Scan->PointsX.push_back(SensorPoint.X);
+				Scan->PointsY.push_back(SensorPoint.Y);
+				Scan->PointsZ.push_back(SensorPoint.Z);
 			}
 			/*if (isValidHit)
 				DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, FColor::Red, false, 1.f);
