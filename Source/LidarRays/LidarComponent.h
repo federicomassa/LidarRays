@@ -19,7 +19,7 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 
 	AActor* Owner = nullptr;
 	UWorld* World = nullptr;
-	ULidarMessage* Scan = nullptr;
+	//ULidarMessage* Scan = nullptr;
 
 	// Lidar range
 	UPROPERTY(EditAnywhere, Category = Lidar)
@@ -27,23 +27,50 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 
 	// Lidar points yaw spacing
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	float DeltaYaw = 0.1; // deg
+	float HorResolution = 0.25; // deg
+
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	float VerResolution = 0.8; // deg
+	
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	int HorPoints = 580; // deg
+
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	int VerLayers = 4; // deg
 
 	bool isFirst = true;
 
 	float LastLidarScanTime = 0.f; // s
+
+	UPROPERTY(EditAnywhere, Category = Lidar)
 	float LidarFrequency = 25; // Hz
+
+	// FIXME const angular separation among lidars. Not true in reality
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	float HorSeparation = 90; //deg
+
+	// Number of lidar sensors
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	int NumLidars = 4;
+
+	// First lidar yaw offset with respect to car FIXME correct once HorSeparation has been fixed
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	float FirstLidarHorOffset = 45;
+
+	// First lidar roll offset with respect to car FIXME correct once lidars have been set up in the generic position
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	float FirstLidarVerOffset = -1.2;
 
 public:	
 	// Sets default values for this component's properties
 	ULidarComponent();
 	~ULidarComponent();
 
-	UFUNCTION(BlueprintCallable, Category = Lidar)
-	ULidarMessage* GetLatestScan()
-	{
-		return Scan;
-	}
+	//UFUNCTION(BlueprintCallable, Category = Lidar)
+	//ULidarMessage* GetLatestScan()
+	//{
+	//	return Scan;
+	//}
 
 	UFUNCTION(BlueprintCallable, Category = Lidar)
 	float GetLastScanTime()
@@ -61,5 +88,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = Lidar)
 	FLidarAvailableDelegate OnLidarAvailable;
+
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	bool DebugLines = false;
 	
 };

@@ -40,7 +40,7 @@ void ULidarComponent::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Lidar component has no world"));
 	}
 
-	Scan = NewObject<ULidarMessage>();
+	//Scan = NewObject<ULidarMessage>();
 
 }
 
@@ -51,17 +51,13 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	//UE_LOG(LogTemp, Warning, TEXT("FPS: %f"), 1.f / DeltaTime);
 
-
-	int PointsPerLayer = 600;
-	int Layers = 4;
-	int NLidars = 4;
-
-	int TotalPoints = PointsPerLayer * Layers* NLidars;
+	//int TotalPoints = PointsPerLayer * Layers* NLidars;
 	//TotalPoints = 72;
 
 	// Request lidar scan depending on sensor frequency
 	if (isFirst || World->GetTimeSeconds() - LastLidarScanTime > 1.f / LidarFrequency)
 	{
+		ULidarMessage* Scan = NewObject<ULidarMessage>();
 
 		Scan->Empty();
 
@@ -77,61 +73,81 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		FRotator CurrentRotation = Owner->GetActorRotation();
 		FHitResult Hit;
 
-		for (int i = 0; i < TotalPoints; i++)
+		for (int lidar = 0; lidar < NumLidars; lidar++)
 		{
-			FQuat CurrentQuat(CurrentRotation);
-			FQuat DeltaQuat(FRotator(0.f, i*DeltaYaw, 0.f));
-
-			FRotator ThisRotation = (CurrentQuat*DeltaQuat).Rotator();
-			FVector EndLocation = CurrentLocation + LidarRange * (ThisRotation.Vector());
-
-			bool isValidHit = World->LineTraceSingleByChannel(
-				Hit,
-				CurrentLocation,
-				EndLocation,
-				ECollisionChannel::ECC_Visibility
-			);
-
-			if (isValidHit)
+			for (int layer = 0; layer < VerLayers; layer++)
 			{
-				FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
-				Scan->PointsX.push_back(SensorPoint.X);
-				Scan->PointsY.push_back(SensorPoint.Y);
-				Scan->PointsZ.push_back(SensorPoint.Z);
+				for (int point = 0; point < HorPoints; point++)
+				{
+					FQuat CurrentQuat(CurrentRotation);
+					FQuat LayerQuat(FRotator(FirstLidarVerOffset + layer * VerResolution, 0.f, 0.f));
+					FQuat HorScanQuat(FRotator(0.f, FirstLidarHorOffset + lidar * HorSeparation + point * HorResolution, 0.f));
+
+
+					FRotator ThisRotation = (CurrentQuat*HorScanQuat*LayerQuat).Rotator();
+					FVector EndLocation = CurrentLocation + LidarRange * (ThisRotation.Vector());
+
+					bool isValidHit = World->LineTraceSingleByChannel(
+						Hit,
+						CurrentLocation,
+						EndLocation,
+						ECollisionChannel::ECC_Visibility
+					);
+
+					if (isValidHit)
+					{
+						FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
+						Scan->PointsX.push_back(SensorPoint.X);
+						Scan->PointsY.push_back(SensorPoint.Y);
+						Scan->PointsZ.push_back(SensorPoint.Z);
+					
+						FColor DebugColor;
+						if (layer == 0)
+							DebugColor = FColor::Red;
+						else if (layer == 1)
+							DebugColor = FColor::Green;
+						else if (layer == 2)
+							DebugColor = FColor::Blue;
+						else if (layer == 3)
+							DebugColor = FColor::Yellow;
+						else
+							DebugColor = FColor::Black;
+
+						if (DebugLines)
+							DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, DebugColor, false, 1.f);
+					}
+				}
+
 			}
-			/*if (isValidHit)
-				DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, FColor::Red, false, 1.f);
-*/
+
+			OnLidarAvailable.Broadcast(Scan);
+			isFirst = false;
 		}
 
 
-		OnLidarAvailable.Broadcast(Scan);
+		//std::ofstream* file = nullptr;
+		//if (isFirst)
+		//{
+		//	file = new std::ofstream("D:/LidarScan.csv");
+		//	*file << "x, y, z" << std::endl;
+		//}
+
+		//	
+		//	if (isFirst)
+		//	{
+		//		*file << Hit.Location.X << "," << Hit.Location.Y << "," << Hit.Location.Z << std::endl;
+		//	}
+		//}
+		//
+		//UE_LOG(LogTemp, Warning, TEXT("Done %d ray-casts"), Scan.Num());
+		//UE_LOG(LogTemp, Warning, TEXT("Example: %f"), Scan[7].X);
+
+		//if (file)
+		//{
+		//	file->close();
+		//	delete file;
+		//}
+
 	}
-
-
-	//std::ofstream* file = nullptr;
-	//if (isFirst)
-	//{
-	//	file = new std::ofstream("D:/LidarScan.csv");
-	//	*file << "x, y, z" << std::endl;
-	//}
-
-	//	
-	//	if (isFirst)
-	//	{
-	//		*file << Hit.Location.X << "," << Hit.Location.Y << "," << Hit.Location.Z << std::endl;
-	//	}
-	//}
-	//
-	//UE_LOG(LogTemp, Warning, TEXT("Done %d ray-casts"), Scan.Num());
-	//UE_LOG(LogTemp, Warning, TEXT("Example: %f"), Scan[7].X);
-
-	//if (file)
-	//{
-	//	file->close();
-	//	delete file;
-	//}
-
-	isFirst = false;
 }
 

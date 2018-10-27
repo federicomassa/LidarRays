@@ -9,7 +9,7 @@ public class LidarRays : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UnrealUDP" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UnrealUDP", "Slate", "SlateCore" });
 
 		PrivateDependencyModuleNames.Add("UnrealUDP");
 

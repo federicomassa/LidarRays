@@ -61,7 +61,14 @@ public class UnrealUDP : ModuleRules
 			}
 			);
 
-       
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_system-vc141-mt-x64-1_68.lib"));
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_date_time-vc141-mt-x64-1_68.lib"));
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_regex-vc141-mt-x64-1_68.lib"));
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_serialization-vc141-mt-x64-1_68.lib"));
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_program_options-vc141-mt-x64-1_68.lib"));
+
+        //// Boost to serialize
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 
     }
 }
