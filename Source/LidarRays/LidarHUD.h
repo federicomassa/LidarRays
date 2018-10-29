@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "LidarMessage.h"
 #include "LidarHUD.generated.h"
 
 
@@ -27,6 +28,7 @@ class LIDARRAYS_API ALidarHUD : public AHUD
 
 	float HUDW = 0.f;
 	float HUDH = 0.f;
+
 
 protected:
 	virtual void BeginPlay() override;

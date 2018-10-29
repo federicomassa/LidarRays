@@ -30,19 +30,27 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, ULidarMessage* LaserScan
 	// We represent a subset of the real points. NB Watch out for periodicity, choose quasi prime numbers
 	int NHUDPoints = 101;
 
+	if (LaserScan->PointsX.size() <= NHUDPoints)
+		NHUDPoints = LaserScan->PointsX.size();
+
 	// TODO Here we should use lidar range, but we hardcode it for now, in laser coords
-	float MinX = -3100;
-	float MaxX = 3100;
-	float MinY = -3100;
-	float MaxY = 3100;
+	float MinX = -31; // meters
+	float MaxX = 31;
+	float MinY = -31;
+	float MaxY = 31;
+
+
 
 	// We take a point every PointStep real points
 	int PointStep = round(float(LaserScan->PointsX.size()) / NHUDPoints);
-
+	if (PointStep <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No points available for HUD!"));
+	}
 
 	int i = 0;
 
-	while(i < LaserScan->PointsX.size())
+	while (i < LaserScan->PointsX.size())
 	{
 		// Coordinates on background. Should be between 0 and 1
 		float ThisPointX = (LaserScan->PointsX[i] - MinX) / (MaxX - MinX);
@@ -52,7 +60,8 @@ void ALidarHUD::DrawLidarScan(FLinearColor PointsColor, ULidarMessage* LaserScan
 
 
 		if (ThisPointX < 1 && ThisPointX > 0 && ThisPointY < 1 && ThisPointY > 0)
-			DrawRect(PointsColor, HUDX + ThisPointY*HUDW, (HUDY + HUDH) - ThisPointX*HUDH, 3, 3);
+			//DrawRect(PointsColor, HUDX + ThisPointY * HUDW, (HUDY + HUDH) - ThisPointX * HUDH, 3, 3);
+			DrawRect(PointsColor, HUDX + ThisPointX * HUDW, (HUDY + HUDH) - ThisPointY * HUDH, 3, 3);
 		// else discard point
 
 		i += PointStep;

@@ -17,6 +17,9 @@ TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(ULidarMessage * LaserS
 	// We represent a subset of the real points. NB Watch out for periodicity, choose quasi prime numbers
 	int NHUDPoints = 101;
 
+	if (LaserScan->PointsX.size() <= NHUDPoints)
+		NHUDPoints = LaserScan->PointsX.size();
+
 	// TODO Here we should use lidar range, but we hardcode it for now, in laser coords
 	float MinX = -3100;
 	float MaxX = 3100;
@@ -27,7 +30,11 @@ TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(ULidarMessage * LaserS
 
 	// We take a point every PointStep real points
 	int PointStep = round(float(LaserScan->PointsX.size()) / NHUDPoints);
-
+	if (PointStep <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No points available for HUD!"));
+		return points;
+	}
 
 	int i = 0;
 

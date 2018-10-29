@@ -83,7 +83,6 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					FQuat LayerQuat(FRotator(FirstLidarVerOffset + layer * VerResolution, 0.f, 0.f));
 					FQuat HorScanQuat(FRotator(0.f, FirstLidarHorOffset + lidar * HorSeparation + point * HorResolution, 0.f));
 
-
 					FRotator ThisRotation = (CurrentQuat*HorScanQuat*LayerQuat).Rotator();
 					FVector EndLocation = CurrentLocation + LidarRange * (ThisRotation.Vector());
 
@@ -97,57 +96,61 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					if (isValidHit)
 					{
 						FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
-						Scan->PointsX.push_back(SensorPoint.X);
-						Scan->PointsY.push_back(SensorPoint.Y);
-						Scan->PointsZ.push_back(SensorPoint.Z);
-					
-						FColor DebugColor;
-						if (layer == 0)
-							DebugColor = FColor::Red;
-						else if (layer == 1)
-							DebugColor = FColor::Green;
-						else if (layer == 2)
-							DebugColor = FColor::Blue;
-						else if (layer == 3)
-							DebugColor = FColor::Yellow;
-						else
-							DebugColor = FColor::Black;
+
+						// Transform to meters and ENU frame
+						Scan->PointsX.push_back(SensorPoint.Y*0.01); 
+						Scan->PointsY.push_back(SensorPoint.X*0.01); 
+						Scan->PointsZ.push_back(-SensorPoint.Z*0.01); 
 
 						if (DebugLines)
+						{
+							FColor DebugColor;
+							if (layer == 0)
+								DebugColor = FColor::Red;
+							else if (layer == 1)
+								DebugColor = FColor::Green;
+							else if (layer == 2)
+								DebugColor = FColor::Blue;
+							else if (layer == 3)
+								DebugColor = FColor::Yellow;
+							else
+								DebugColor = FColor::Black;
+
 							DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, DebugColor, false, 1.f);
+						}
 					}
 				}
-
 			}
-
-			OnLidarAvailable.Broadcast(Scan);
-			isFirst = false;
 		}
 
-
-		//std::ofstream* file = nullptr;
-		//if (isFirst)
-		//{
-		//	file = new std::ofstream("D:/LidarScan.csv");
-		//	*file << "x, y, z" << std::endl;
-		//}
-
-		//	
-		//	if (isFirst)
-		//	{
-		//		*file << Hit.Location.X << "," << Hit.Location.Y << "," << Hit.Location.Z << std::endl;
-		//	}
-		//}
-		//
-		//UE_LOG(LogTemp, Warning, TEXT("Done %d ray-casts"), Scan.Num());
-		//UE_LOG(LogTemp, Warning, TEXT("Example: %f"), Scan[7].X);
-
-		//if (file)
-		//{
-		//	file->close();
-		//	delete file;
-		//}
-
+		OnLidarAvailable.Broadcast(Scan);
+		isFirst = false;
 	}
+
+
+
+	//std::ofstream* file = nullptr;
+	//if (isFirst)
+	//{
+	//	file = new std::ofstream("D:/LidarScan.csv");
+	//	*file << "x, y, z" << std::endl;
+	//}
+
+	//	
+	//	if (isFirst)
+	//	{
+	//		*file << Hit.Location.X << "," << Hit.Location.Y << "," << Hit.Location.Z << std::endl;
+	//	}
+	//}
+	//
+	//UE_LOG(LogTemp, Warning, TEXT("Done %d ray-casts"), Scan.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Example: %f"), Scan[7].X);
+
+	//if (file)
+	//{
+	//	file->close();
+	//	delete file;
+	//}
+
 }
 

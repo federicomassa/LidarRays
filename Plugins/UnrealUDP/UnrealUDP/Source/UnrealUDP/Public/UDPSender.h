@@ -19,6 +19,7 @@ public:
 private:
 	bool isUDP;
 	
+	bool isFirst = true;
 
 public:
 	TSharedPtr<FInternetAddr> RemoteAddr; 

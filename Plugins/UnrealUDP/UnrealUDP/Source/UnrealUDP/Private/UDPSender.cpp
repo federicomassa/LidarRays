@@ -3,6 +3,7 @@
 #include "UDPSender.h"
 #include <GameFramework/Actor.h>
 #include <cereal/archives/portable_binary.hpp>
+#include <cereal/archives/binary.hpp>
 
 // endian conversion
 #include <boost/endian/conversion.hpp>
@@ -15,6 +16,10 @@ AUDPSender::AUDPSender(const FObjectInitializer& ObjectInitializer) : Super(Obje
 
 bool AUDPSender::SendData(TArray<uint8> Data)
 {
+	// ======= FIXME DEBUG ========
+	if (!isFirst) return false;
+	// ============================
+
 	if (!SenderSocket)
 	{
 		ScreenMsg("No sender socket"); 
@@ -23,7 +28,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	
 	int32 BytesSent = 0;
 
-	UE_LOG(LogTemp, Warning, TEXT("Sender data to send: %d"), Data.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Sender data to send: %d"), Data.Num());
 	//SenderSocket->SendTo(Writer.GetData(), Writer.Num(), BytesSent, *RemoteAddr);
 	uint8* bytes = new uint8[Data.Num()];
 
@@ -54,20 +59,27 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	int32 SizeMessageBytesSent;
 	size_t buffer_size_size = sizeof(buffer_size);
 
-	//SenderSocket->SendTo(buffer_size_bytes, buffer_size_size, SizeMessageBytesSent, *RemoteAddr);
+
 	size_t buffer_size_bigendian = boost::endian::native_to_big(buffer_size);
-	UE_LOG(LogTemp, Warning, TEXT("Big endian!"));
+
+
+	// ============= TEST =============
+	//size_t buffer_size_bigendian = boost::endian::native_to_big(test_message++);
+
+	// ================================
+	//UE_LOG(LogTemp, Warning, TEXT("Big endian!"));
+	//SenderSocket->SendTo(buffer_size_bytes, buffer_size_size, SizeMessageBytesSent, *RemoteAddr);
 	SenderSocket->SendTo((uint8*)&buffer_size_bigendian, sizeof(buffer_size_bigendian), SizeMessageBytesSent, *RemoteAddr);
 	if (SizeMessageBytesSent <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hey wtf"));
+		//UE_LOG(LogTemp, Warning, TEXT("Hey wtf"));
 		const FString Str = "First message: socket is valid but the receiver received 0 bytes, make sure it is listening properly!";
-		//UE_LOG(LogTemp, Error, TEXT("%s"), *Str);
+		UE_LOG(LogTemp, Error, TEXT("%s"), *Str);
 		//ScreenMsg(Str);
-		UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
+		//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
 		return false;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
+	//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
 
 	//SenderSocket->SendTo(message_size.bytes, sizeof(buffer_size), SizeMessageBytesSent, *RemoteAddr);
 
@@ -75,7 +87,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	SenderSocket->SendTo(bytes, Data.Num(), BytesSent, *RemoteAddr);
 	if (BytesSent <= 0) 
 	{ 
-		const FString Str = "Socket is valid but the receiver received 0 bytes, make sure it is listening properly!"; 
+		const FString Str = "Lidar message:	Socket is valid but the receiver received 0 bytes, make sure it is listening properly!"; 
 		UE_LOG(LogTemp, Error, TEXT("%s"), *Str);
 		//ScreenMsg(Str); 
 		return false; 
@@ -86,6 +98,10 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 
 	delete[] bytes;
 	//delete[] buffer_size_bytes;
+
+	UE_LOG(LogTemp, Warning, TEXT("End TCP Send at time: %f"), GetWorld()->GetTimeSeconds());
+	//isFirst = false;
+
 	return true;
 }
 

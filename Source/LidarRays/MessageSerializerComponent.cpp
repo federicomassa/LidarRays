@@ -12,9 +12,13 @@
 //#include <boost/archive/portable_oarchive.hpp>
 //#include <boost/archive/text_oarchive.hpp>
 #include <cereal/archives/portable_binary.hpp>
+#include <cereal/archives/binary.hpp>
+
 #include <cereal/types/vector.hpp>
 #include <sstream>
+#include <Containers/UnrealString.h>
 #include "LidarMessage.h"
+#include "TestMessage.h"
 
 
 // Sets default values for this component's properties
@@ -56,17 +60,22 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	
 	//std::stringstream buffer;
 
-	cereal::PortableBinaryOutputArchive oa(oss);
+	//cereal::PortableBinaryOutputArchive oa(oss);
+	cereal::BinaryOutputArchive oa(oss);
+
 
 	//boost::archive::binary_oarchive oa(buffer);
-	
+	/*UTestMessage TestMessage;
+	TestMessage.timestamp = 3.14159;
+*/
 	//eos::portable_oarchive oa(buffer);
 	oa << *Scan;
+	//oa << TestMessage;
 	oss.flush();
 	
 	oss.seekp(0, std::ios::end);
 	int32 bytes_size = oss.tellp();
-	UE_LOG(LogTemp, Warning, TEXT("Size with tellp: %d"), bytes_size);
+	//UE_LOG(LogTemp, Warning, TEXT("Size with tellp: %d"), bytes_size);
 
 	// Reset
 	oss.seekp(0, std::ios::beg);
@@ -75,20 +84,20 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 //	UE_LOG(LogTemp, Warning, TEXT("Serialized lidar message in %i bytes"), bytes_size);
 	
 	TArray<uint8> serialized;
-	UE_LOG(LogTemp, Warning, TEXT("String bytes: %d"), string_data.size());
+	//UE_LOG(LogTemp, Warning, TEXT("String bytes: %d"), string_data.size());
 	//string_data.size();
 
   //OLD VERSION FOR BINARY
 	long i = 0;
 	for (; i < bytes_size; i++)
 	{
-
+		//UE_LOG(LogTemp, Warning, TEXT("Byte %i: %s"), i, *BytesToHex((uint8*)&string_data[i], 1));
 		serialized.Add(string_data[i]);
 		//UE_LOG(LogTemp, Warning, TEXT("Processed %d out of %d"), i, buffer.in_avail());
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Added %d elements to serialized"), i);
-	UE_LOG(LogTemp, Warning, TEXT("Vector is %i elements long"), serialized.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Vector is %i elements long"), serialized.Num());
 
 	//boost::archive::binary_iarchive ia(buffer);
 
