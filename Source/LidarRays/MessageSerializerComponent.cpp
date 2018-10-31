@@ -18,7 +18,6 @@
 #include <sstream>
 #include <Containers/UnrealString.h>
 #include "LidarMessage.h"
-#include "TestMessage.h"
 
 
 // Sets default values for this component's properties

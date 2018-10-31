@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LidarComponent.h"
-#include "MyPawn.h"
 #include <Engine/World.h>
 #include <GameFramework/Actor.h>
 #include <DrawDebugHelpers.h>
@@ -49,6 +48,7 @@ void ULidarComponent::BeginPlay()
 void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	//UE_LOG(LogTemp, Warning, TEXT("FPS: %f"), 1.f / DeltaTime);
 
 	//int TotalPoints = PointsPerLayer * Layers* NLidars;
@@ -69,8 +69,18 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		Scan->timestamp = LastLidarScanTime;
 
-		FVector CurrentLocation = Owner->GetActorLocation();
+		//FVector CurrentLocation = Owner->GetActorLocation();
+		FVector CurrentLocation = GetLidarLocation();
 		FRotator CurrentRotation = Owner->GetActorRotation();
+
+		/*TSet<UActorComponent*> components = Owner->GetComponents();
+		for (auto& comp : components)
+		{
+			if (comp->GetName() == "InternalCameraBase")
+				UE_LOG(LogTemp, Warning, TEXT("Rotation: %s"), *(Cast<USceneComponent>(comp)->GetComponentRotation().ToString()));
+
+		}*/
+
 		FHitResult Hit;
 
 		for (int lidar = 0; lidar < NumLidars; lidar++)
@@ -97,10 +107,16 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					{
 						FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
 
-						// Transform to meters and ENU frame
+						// Transform to meters and ENU frame --- for my pawn
 						Scan->PointsX.push_back(SensorPoint.Y*0.01); 
 						Scan->PointsY.push_back(SensorPoint.X*0.01); 
 						Scan->PointsZ.push_back(-SensorPoint.Z*0.01); 
+
+						//// Transform to meters and ENU frame --- for advanced vehicle
+						//Scan->PointsX.push_back(-SensorPoint.X*0.01);
+						//Scan->PointsY.push_back(SensorPoint.Y*0.01);
+						//Scan->PointsZ.push_back(-SensorPoint.Z*0.01);
+
 
 						if (DebugLines)
 						{
@@ -154,3 +170,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 }
 
+FVector ULidarComponent::GetLidarLocation() const
+{
+	return (Owner->GetActorLocation() + FVector(0.f, 0.f, ZOffset));
+}

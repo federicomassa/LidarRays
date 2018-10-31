@@ -61,6 +61,10 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = Lidar)
 	float FirstLidarVerOffset = -1.2;
 
+	// TODO Add custom lidar positioning: for now only fixed offset in Z
+	UPROPERTY(EditAnywhere, Category = Lidar)
+	float ZOffset = 0.f;
+
 public:	
 	// Sets default values for this component's properties
 	ULidarComponent();
@@ -91,5 +95,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Lidar)
 	bool DebugLines = false;
+
+	FVector GetLidarLocation() const;
 	
 };
