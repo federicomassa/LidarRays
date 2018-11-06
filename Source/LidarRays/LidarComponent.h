@@ -40,6 +40,12 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 
 	bool isFirst = true;
 
+	// World time at begin play
+	float InitTime;
+
+	// Counter of lidar simulations completed. Needed to sync with sensor frequency
+	int32 LidarSimulated = 0;
+
 	float LastLidarScanTime = 0.f; // s
 
 	UPROPERTY(EditAnywhere, Category = Lidar)

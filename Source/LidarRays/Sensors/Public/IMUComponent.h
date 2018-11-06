@@ -9,4 +9,5 @@ class LIDARRAYS_API UIMUComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	
 };

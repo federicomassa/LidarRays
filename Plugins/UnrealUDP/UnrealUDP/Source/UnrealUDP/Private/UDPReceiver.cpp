@@ -23,7 +23,6 @@ void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& TheIP, const int32 ThePort )
 {
-	ScreenMsg("RECEIVER INIT");
 
 	FIPv4Address Addr;
 	FIPv4Address::Parse(TheIP, Addr);
@@ -43,6 +42,9 @@ bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& The
 		return false;
 	}
 	
+	ScreenMsg(FString::Printf(TEXT("Receiving from control board: %s:%i"), *TheIP, ThePort));
+
+
 	FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(100);
 	UDPReceiver = new FUdpSocketReceiver(ListenSocket, ThreadWaitTime, TEXT("UDP RECEIVER"));
 	UDPReceiver->OnDataReceived().BindUObject(this, &AUDPReceiver::Receive);
@@ -53,14 +55,14 @@ bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& The
 
 void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt)
 {
-	ScreenMsg("Received bytes", ArrayReaderPtr->Num());
+	//ScreenMsg("Received bytes", ArrayReaderPtr->Num());
 
 	uint8* Data = ArrayReaderPtr->GetData();
 
 	TArray<uint8> ReceivedData;
 	for (int i = 0; i < ArrayReaderPtr->Num(); i++)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));
+		//UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));
 		ReceivedData.Add(Data[i]);
 	}
 	//float* x = reinterpret_cast<float*>(Data);

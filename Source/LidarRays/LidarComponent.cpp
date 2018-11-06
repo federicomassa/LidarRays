@@ -26,6 +26,8 @@ void ULidarComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitTime = GetWorld()->GetTimeSeconds();
+
 	Owner = GetOwner();
 	World = GetWorld();
 
@@ -55,7 +57,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	//TotalPoints = 72;
 
 	// Request lidar scan depending on sensor frequency
-	if (isFirst || World->GetTimeSeconds() - LastLidarScanTime > 1.f / LidarFrequency)
+	if (World->GetTimeSeconds() >= InitTime + LidarSimulated*1/LidarFrequency)
 	{
 		ULidarMessage* Scan = NewObject<ULidarMessage>();
 
@@ -139,8 +141,11 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			}
 		}
 
+		LidarSimulated++;
+
+		// Delegate broadcast
 		OnLidarAvailable.Broadcast(Scan);
-		isFirst = false;
+		//isFirst = false;
 	}
 
 
