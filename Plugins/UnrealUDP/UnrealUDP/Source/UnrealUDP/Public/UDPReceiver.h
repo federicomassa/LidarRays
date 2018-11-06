@@ -4,10 +4,13 @@
 
 #include "Networking.h"
 #include "UdpSocketReceiver.h"
+#include "Engine.h"
+#include <GameFramework/Actor.h>
 #include "UDPReceiver.generated.h"
 
 struct FAnyCustomData;
-class AActor;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataReceivedDelegate, const TArray<uint8>&, Data);
 
 UCLASS()
 class AUDPReceiver : public AActor
@@ -16,10 +19,6 @@ class AUDPReceiver : public AActor
 
 public:
 	AUDPReceiver(const FObjectInitializer& ObjectInitializer);
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void BPEvent_DataReceived(const float& ReceivedData);
-	//void BPEvent_DataReceived(const FAnyCustomData& ReceivedData);
 
 
 public:
@@ -47,4 +46,7 @@ public:
 	}
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UPROPERTY(BlueprintAssignable, Category = UDP)
+	FDataReceivedDelegate OnDataReceived;
 };

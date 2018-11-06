@@ -18,6 +18,7 @@
 #include <sstream>
 #include <Containers/UnrealString.h>
 #include "LidarMessage.h"
+#include "TwistMessage.h"
 
 
 // Sets default values for this component's properties
@@ -86,7 +87,6 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	//UE_LOG(LogTemp, Warning, TEXT("String bytes: %d"), string_data.size());
 	//string_data.size();
 
-  //OLD VERSION FOR BINARY
 	long i = 0;
 	for (; i < bytes_size; i++)
 	{
@@ -100,6 +100,33 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 
 	//boost::archive::binary_iarchive ia(buffer);
 
+
+	// =========== TEST TWIST MESSAGE --- REMOVE ==========
+	//std::ostringstream twistoss;
+	//cereal::BinaryOutputArchive twistoa(twistoss);
+
+	//TwistMessage twist;
+	//twist.Timestamp = 0.f;
+	//twist.Linear.push_back(0.f);
+	//twist.Linear.push_back(0.f);
+	//twist.Linear.push_back(0.f);
+	//twist.Angular.push_back(0.f);
+	//twist.Angular.push_back(0.f);
+	//twist.Angular.push_back(0.f);
+
+	//twistoa << twist;
+
+	//twistoss.flush();
+	//std::string twist_string = twistoss.str();
+	//int32 twist_bytes = twist_string.size();
+
+	//for (int j = 0; j < twist_bytes; j++)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Twist Byte %i: %s"), j, *BytesToHex((uint8*)&twist_string[i], 1));
+	//}
+
+
+	// ====================================================
 		
 	//int counter = 0;
 	//buffer.seekg(0, std::ios::beg);
@@ -149,5 +176,40 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	/*MyData receivedData;
 	boost::archive::binary_iarchive ia(buffer);
 	ia >> receivedData;*/
+}
+
+UTwistMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
+{
+	UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
+
+	std::istringstream iss;
+	std::string msg;
+
+	for (int i = 0; i < ControlMessage.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Deserialize byte %i: %s"), i, *BytesToHex(&ControlMessage[i], 1));
+		msg.push_back((char)ControlMessage[i]);
+	}
+
+	iss.str(msg);
+
+	UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
+
+
+	cereal::BinaryInputArchive ia(iss);
+	UTwistMessage* Twist = NewObject<UTwistMessage>();
+
+	// Deserialize
+	ia(*Twist);
+
+
+
+	if (Twist->Linear.size() != 3 || Twist->Angular.size() != 3)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not deserialize twist message!!"));
+		return nullptr;
+	}
+
+	return Twist;
 }
 

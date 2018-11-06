@@ -57,14 +57,21 @@ void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4End
 
 	uint8* Data = ArrayReaderPtr->GetData();
 
-	float* x = reinterpret_cast<float*>(Data);
-	//FAnyCustomData Data;
-	//*ArrayReaderPtr << Data;	//Now de-serializing! See AnyCustomData.h
+	TArray<uint8> ReceivedData;
+	for (int i = 0; i < ArrayReaderPtr->Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));
+		ReceivedData.Add(Data[i]);
+	}
+	//float* x = reinterpret_cast<float*>(Data);
+	////FAnyCustomData Data;
+	////*ArrayReaderPtr << Data;	//Now de-serializing! See AnyCustomData.h
 
-	//BP Event 
-	UE_LOG(LogTemp, Warning, TEXT("Received: %f"), *x);
-
-	BPEvent_DataReceived(*x);
+	////BP Event 
+	//UE_LOG(LogTemp, Warning, TEXT("Received: %f"), *x);
+	
+	// TODO this uses a const ref but the object is local!! Potential crash here
+	OnDataReceived.Broadcast(ReceivedData);
 } 
 
 

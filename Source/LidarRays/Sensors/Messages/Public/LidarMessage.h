@@ -18,7 +18,7 @@ public:
 	std::vector<float> PointsZ;
 
 	template<class Archive>
-	void serialize(Archive & ar, const unsigned int version)
+	void serialize(Archive & ar)
 	{
 		ar(timestamp);
 		ar(PointsX);

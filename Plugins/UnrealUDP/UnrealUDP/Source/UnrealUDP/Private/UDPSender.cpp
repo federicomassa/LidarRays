@@ -59,7 +59,6 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	int32 SizeMessageBytesSent;
 	size_t buffer_size_size = sizeof(buffer_size);
 
-
 	size_t buffer_size_bigendian = boost::endian::native_to_big(buffer_size);
 
 

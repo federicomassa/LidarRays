@@ -17,6 +17,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/InputComponent.h"
 
 // Needed for VR Headset
 #if HMD_MODULE_INCLUDED
@@ -177,9 +178,31 @@ AUDPSender* AVehicleTestPawn::GetUDPSender()
 	return UDPSender;
 }
 
+AUDPReceiver* AVehicleTestPawn::GetUDPReceiver()
+{
+	return UDPReceiver;
+}
+
+void AVehicleTestPawn::ToggleManualDriving()
+{
+	ManualDriving = !ManualDriving;
+
+	if (ManualDriving)
+	{
+		InputComponent->BindAxis("MoveForward", this, &AVehicleTestPawn::MoveForward);
+		InputComponent->BindAxis("MoveRight", this, &AVehicleTestPawn::MoveRight);
+	}
+	else
+	{
+		InputComponent->AxisBindings.Empty();
+	}
+
+}
+
 void AVehicleTestPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	InputComponent = PlayerInputComponent;
 
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
@@ -194,12 +217,13 @@ void AVehicleTestPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &AVehicleTestPawn::OnToggleCamera);
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AVehicleTestPawn::OnResetVR); 
+
+	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &AVehicleTestPawn::ToggleManualDriving);
 }
 
 void AVehicleTestPawn::MoveForward(float Val)
 {
 	GetVehicleMovementComponent()->SetThrottleInput(Val);
-
 }
 
 void AVehicleTestPawn::MoveRight(float Val)

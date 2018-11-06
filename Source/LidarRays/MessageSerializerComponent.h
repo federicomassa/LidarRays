@@ -7,6 +7,7 @@
 #include "MessageSerializerComponent.generated.h"
 
 class ULidarMessage;
+class UTwistMessage;
 
 UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
 class LIDARRAYS_API UMessageSerializerComponent : public UActorComponent
@@ -26,4 +27,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Lidar)
 	TArray<uint8> SerializeLidarMessage(ULidarMessage* LidarScan);
 	
+	UFUNCTION(BlueprintCallable, Category = Controller)
+	UTwistMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
+
 };

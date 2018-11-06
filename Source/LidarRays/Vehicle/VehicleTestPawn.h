@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WheeledVehicle.h"
 #include "UDPSender.h" 
+#include "UDPReceiver.h"
 #include "VehicleTestPawn.generated.h"
 
 class UPhysicalMaterial;
@@ -18,6 +19,9 @@ UCLASS(config=Game)
 class AVehicleTestPawn : public AWheeledVehicle
 {
 	GENERATED_BODY()
+
+	// Reference to controller component
+	UInputComponent* InputComponent = nullptr;
 
 	/** Spring arm that will offset the camera */
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -50,11 +54,19 @@ class AVehicleTestPawn : public AWheeledVehicle
 	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPSender* UDPSender = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = UDP)
+	AUDPReceiver* UDPReceiver = nullptr;
+
+	bool ManualDriving = true;
+
 public:
 	AVehicleTestPawn();
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPSender* GetUDPSender();
+
+	UFUNCTION(BlueprintCallable, Category = UDP)
+	AUDPReceiver* GetUDPReceiver();
 
 	/** The current speed as a string eg 10 km/h */
 	UPROPERTY(Category = Display, VisibleDefaultsOnly, BlueprintReadOnly)
@@ -89,13 +101,23 @@ public:
 
 	// Begin Actor interface
 	virtual void Tick(float Delta) override;
+
 protected:
 	virtual void BeginPlay() override;
+
+	void ToggleManualDriving();
+
+	UFUNCTION(BlueprintCallable, Category = Controller)
+	bool IsManualDriveMode() const
+	{
+		return ManualDriving;
+	}
 
 public:
 	// End Actor interface
 
 	/** Handle pressing forwards */
+	UFUNCTION(BlueprintCallable, Category = Controller)
 	void MoveForward(float Val);
 
 	/** Setup the strings used on the hud */
@@ -105,7 +127,9 @@ public:
 	void UpdatePhysicsMaterial();
 
 	/** Handle pressing right */
+	UFUNCTION(BlueprintCallable, Category = Controller)
 	void MoveRight(float Val);
+
 	/** Handle handbrake pressed */
 	void OnHandbrakePressed();
 	/** Handle handbrake released */
