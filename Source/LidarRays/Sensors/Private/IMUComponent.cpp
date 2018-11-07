@@ -1,5 +1,8 @@
 #include "IMUComponent.h"
 
+#include <Engine/World.h>
+#include <GameFramework/Actor.h>
+
 
 UIMUComponent::UIMUComponent()
 {

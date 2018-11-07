@@ -18,6 +18,8 @@ class LIDARRAYS_API UIMUComponent : public UActorComponent
 	AActor* Owner = nullptr;
 	UWorld* World = nullptr;
 
+	float InitTime;
+
 public:
 
 	UIMUComponent();
@@ -29,13 +31,11 @@ protected:
 
 public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorCompnentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(BlueprintAssignable, Category = IMU)
 	FIMUAvailableDelegate OnIMUAvailable;
 
-	UPROPERTY(EditAnywhere, Category = IMU)
-	bool DebugIMU = false;
 
 	FVector GetIMUOrientation() const;
 	FVector GetIMUAngularVelocity() const;
