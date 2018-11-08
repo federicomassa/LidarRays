@@ -52,7 +52,10 @@ class AVehicleTestPawn : public AWheeledVehicle
 	UAudioComponent* EngineSoundComponent;
 
 	UPROPERTY(EditAnywhere, Category = UDP)
-	AUDPSender* UDPSender = nullptr;
+	AUDPSender* LidarSender = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = UDP)
+	AUDPSender* IMUSender = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPReceiver* UDPReceiver = nullptr;
@@ -63,7 +66,10 @@ public:
 	AVehicleTestPawn();
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPSender* GetUDPSender();
+	AUDPSender* GetLidarSender();
+
+	UFUNCTION(BlueprintCallable, Category = UDP)
+	AUDPSender* GetIMUSender();
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetUDPReceiver();

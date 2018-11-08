@@ -18,6 +18,7 @@
 #include <sstream>
 #include <Containers/UnrealString.h>
 #include "LidarMessage.h"
+#include "IMUMessage.h"
 #include "TwistMessage.h"
 
 
@@ -53,7 +54,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 		return TArray<uint8>();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Serializing scan points: %d"), Scan->PointsX.size());
+	//UE_LOG(LogTemp, Warning, TEXT("Serializing scan points: %d"), Scan->PointsX.size());
 
 	//std::stringbuf buffer;
 	std::ostringstream oss;
@@ -95,7 +96,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 		//UE_LOG(LogTemp, Warning, TEXT("Processed %d out of %d"), i, buffer.in_avail());
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Added %d elements to serialized"), i);
+	//UE_LOG(LogTemp, Warning, TEXT("Added %d elements to serialized"), i);
 	//UE_LOG(LogTemp, Warning, TEXT("Vector is %i elements long"), serialized.Num());
 
 	//boost::archive::binary_iarchive ia(buffer);
@@ -178,22 +179,59 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	ia >> receivedData;*/
 }
 
+TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(UIMUMessage * Data)
+{
+	if (Data == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Message serializer has received null message"));
+		return TArray<uint8>();
+	}
+
+	std::ostringstream oss;
+
+	cereal::BinaryOutputArchive oa(oss);
+
+	oa << *Data;
+	//oa << TestMessage;
+	oss.flush();
+
+	oss.seekp(0, std::ios::end);
+	int32 bytes_size = oss.tellp();
+	//UE_LOG(LogTemp, Warning, TEXT("Size with tellp: %d"), bytes_size);
+
+	// Reset
+	oss.seekp(0, std::ios::beg);
+
+	std::string string_data = oss.str();
+
+	TArray<uint8> serialized;
+
+	long i = 0;
+	for (; i < bytes_size; i++)
+	{
+		serialized.Add(string_data[i]);
+	}
+
+
+	return serialized;
+}
+
 UTwistMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
 
 	std::istringstream iss;
 	std::string msg;
 
 	for (int i = 0; i < ControlMessage.Num(); i++)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Deserialize byte %i: %s"), i, *BytesToHex(&ControlMessage[i], 1));
+		//UE_LOG(LogTemp, Warning, TEXT("Deserialize byte %i: %s"), i, *BytesToHex(&ControlMessage[i], 1));
 		msg.push_back((char)ControlMessage[i]);
 	}
 
 	iss.str(msg);
 
-	UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
 
 
 	cereal::BinaryInputArchive ia(iss);

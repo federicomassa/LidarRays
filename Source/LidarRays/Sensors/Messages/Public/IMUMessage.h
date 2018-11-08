@@ -12,17 +12,22 @@ class LIDARRAYS_API UIMUMessage : public UObject // delete in ROS
 public:
 	float timestamp;
 
-	// These must be same size and 1 to 1 correspondence
+	// Vectors are 3D, Covariances are 3*3 matrices
+	std::vector<float> Orientation;
+	std::vector<float> OrientationCov;
+
 	std::vector<float> LinearAcceleration;
-	std::vector<std::vector<float> > LinearAccelerationCov;
+	std::vector<float> LinearAccelerationCov;
 
 	std::vector<float> AngularVelocity;
-	std::vector<std::vector<float> > AngularVelocityCov;
+	std::vector<float> AngularVelocityCov;
 
 	template<class Archive>
 	void serialize(Archive & ar)
 	{
 		ar(timestamp);
+		ar(Orientation);
+		ar(OrientationCov);
 		ar(LinearAcceleration);
 		ar(LinearAccelerationCov);
 		ar(AngularVelocity);

@@ -12,7 +12,7 @@ UVehicleTestWheelFront::UVehicleTestWheelFront()
 	SteerAngle = 40.f;
 
 	// Setup suspension forces
-	SuspensionForceOffset = -4.0f;
+	SuspensionForceOffset = 20.0f;
 	SuspensionMaxRaise = 8.0f;
 	SuspensionMaxDrop = 12.0f;
 	SuspensionNaturalFrequency = 9.0f;

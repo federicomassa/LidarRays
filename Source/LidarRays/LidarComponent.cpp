@@ -134,7 +134,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 							else
 								DebugColor = FColor::Black;
 
-							DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, DebugColor, false, 1.f);
+							DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, DebugColor, false, -1.f);
 						}
 					}
 				}

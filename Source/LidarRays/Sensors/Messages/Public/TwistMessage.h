@@ -6,8 +6,6 @@
 #include <CoreMinimal.h> // delete in ROS
 #include "TwistMessage.generated.h" // delete in ROS
 
-class TwistMessage;
-
 UCLASS(Blueprintable) // delete in ROS
 class UTwistMessage : public UObject // delete parent in ROS
 {

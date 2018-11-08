@@ -173,9 +173,14 @@ AVehicleTestPawn::AVehicleTestPawn()
 	bInReverseGear = false;
 }
 
-AUDPSender* AVehicleTestPawn::GetUDPSender()
+AUDPSender* AVehicleTestPawn::GetLidarSender()
 {
-	return UDPSender;
+	return LidarSender;
+}
+
+AUDPSender* AVehicleTestPawn::GetIMUSender()
+{
+	return IMUSender;
 }
 
 AUDPReceiver* AVehicleTestPawn::GetUDPReceiver()

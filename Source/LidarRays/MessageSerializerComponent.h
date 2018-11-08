@@ -7,6 +7,7 @@
 #include "MessageSerializerComponent.generated.h"
 
 class ULidarMessage;
+class UIMUMessage;
 class UTwistMessage;
 
 UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
@@ -24,8 +25,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = Lidar)
+	UFUNCTION(BlueprintCallable, Category = Sensors)
 	TArray<uint8> SerializeLidarMessage(ULidarMessage* LidarScan);
+
+	UFUNCTION(BlueprintCallable, Category = Sensors)
+	TArray<uint8> SerializeIMUMessage(UIMUMessage* IMUData);
 	
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	UTwistMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
