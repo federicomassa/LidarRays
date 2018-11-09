@@ -12,10 +12,8 @@ class UTwistMessage : public UObject // delete parent in ROS
 	GENERATED_BODY() // delete in ROS
 
 public:
-
-	float Timestamp;
-
 	// These should be vectors with 3 components (x,y,z)
+	float Timestamp;
 	std::vector<float> Linear;
 	std::vector<float> Angular;
 
@@ -30,13 +28,6 @@ public:
 	// delete in ROS
 	UFUNCTION(BlueprintCallable)
 	FString ToString();
-
-	// delete in ROS
-	UFUNCTION(BlueprintCallable, Category = Controller) 
-	float GetTimeStamp() const
-	{
-		return Timestamp;
-	}
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	FVector GetLinear() const
