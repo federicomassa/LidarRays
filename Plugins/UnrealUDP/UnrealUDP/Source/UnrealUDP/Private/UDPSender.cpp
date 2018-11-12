@@ -98,7 +98,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	delete[] bytes;
 	//delete[] buffer_size_bytes;
 
-	UE_LOG(LogTemp, Warning, TEXT("End TCP Send at time: %f"), GetWorld()->GetTimeSeconds());
+	//UE_LOG(LogTemp, Warning, TEXT("End TCP Send at time: %f"), GetWorld()->GetTimeSeconds());
 	//isFirst = false;
 
 	return true;

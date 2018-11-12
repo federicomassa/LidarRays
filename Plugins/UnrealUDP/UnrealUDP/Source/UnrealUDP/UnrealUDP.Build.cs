@@ -70,5 +70,9 @@ public class UnrealUDP : ModuleRules
         //// Boost to serialize
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 
+        // Needed to package
+        bEnableExceptions = true;
+
+
     }
 }
