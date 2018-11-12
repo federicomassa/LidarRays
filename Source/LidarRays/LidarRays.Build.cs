@@ -59,5 +59,8 @@ public class LidarRays : ModuleRules
 
         PublicDefinitions.Add("HMD_MODULE_INCLUDED=1");
 
+        bEnableExceptions = true;
+
+
     }
 }
