@@ -96,3 +96,6 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Driveable car sample maps
+Content/DriveableCar_basic/Maps/*

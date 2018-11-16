@@ -7,12 +7,12 @@
 UVehicleTestWheelFront::UVehicleTestWheelFront()
 {
 	ShapeRadius = 18.f;
-	ShapeWidth = 15.0f;
+	ShapeWidth = 15.f;
 	bAffectedByHandbrake = false;
 	SteerAngle = 40.f;
 
 	// Setup suspension forces
-	SuspensionForceOffset = 20.0f;
+	SuspensionForceOffset = -0.1f;
 	SuspensionMaxRaise = 8.0f;
 	SuspensionMaxDrop = 12.0f;
 	SuspensionNaturalFrequency = 9.0f;
