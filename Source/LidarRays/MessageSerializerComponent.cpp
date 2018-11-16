@@ -216,7 +216,49 @@ TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(UIMUMessage * Dat
 	return serialized;
 }
 
-UTwistMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
+TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * Data)
+{
+	if (Data == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Message serializer has received null message"));
+		return TArray<uint8>();
+	}
+	else if (Data->message == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Message serializer has received message containing null data"));
+		return TArray<uint8>();
+	}
+
+	std::ostringstream oss;
+
+	cereal::BinaryOutputArchive oa(oss);
+
+	oa << (*Data->message);
+	//oa << TestMessage;
+	oss.flush();
+
+	oss.seekp(0, std::ios::end);
+	int32 bytes_size = oss.tellp();
+	//UE_LOG(LogTemp, Warning, TEXT("Size with tellp: %d"), bytes_size);
+
+	// Reset
+	oss.seekp(0, std::ios::beg);
+
+	std::string string_data = oss.str();
+
+	TArray<uint8> serialized;
+
+	long i = 0;
+	for (; i < bytes_size; i++)
+	{
+		serialized.Add(string_data[i]);
+	}
+
+
+	return serialized;
+}
+
+UIncomingMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
 
@@ -235,19 +277,20 @@ UTwistMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<ui
 
 
 	cereal::BinaryInputArchive ia(iss);
-	UTwistMessage* Twist = NewObject<UTwistMessage>();
+	TwistMessage<cereal::BinaryInputArchive> Twist;
 
 	// Deserialize
-	ia(*Twist);
+	ia(Twist);
 
-
-
-	if (Twist->Linear.size() != 3 || Twist->Angular.size() != 3)
+	if (Twist.Linear.size() != 3 || Twist.Angular.size() != 3)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Could not deserialize twist message!!"));
 		return nullptr;
 	}
 
-	return Twist;
+	UIncomingMessage* UTwist = NewObject<UIncomingMessage>();
+	UTwist->message = new TwistMessage<cereal::BinaryInputArchive>(Twist);
+
+	return UTwist;
 }
 

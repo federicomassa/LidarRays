@@ -3,12 +3,13 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "PoseStampedMessage.h"
+#include "MessageWrapper.h"
 #include "GPSComponent.generated.h"
 
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOdometryMessage*, GPSData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
 
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
@@ -20,15 +21,8 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 	UWorld* World = nullptr;
 	USkeletalMeshComponent* Mesh;;
 
-
-
-	float InitTime;
-
-	TArray<UPoseStampedMessage*> PastPoses;
-	float LastVx;
-	float LastVy;
-	float LastVz;
-
+	FVector InitLocation;
+	FRotator InitRotation;
 public:
 
 	UGPSComponent();
@@ -44,10 +38,5 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = GPS)
 	FGPSAvailableDelegate OnGPSAvailable;
-
-
-	FVector GetGPSOrientation() const;
-	FVector GetGPSAngularVelocity() const;
-	FVector GetGPSLinearAcceleration() const;
 
 };

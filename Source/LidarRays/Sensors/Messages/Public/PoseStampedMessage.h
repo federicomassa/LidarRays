@@ -3,25 +3,25 @@
 #pragma once
 
 #include <vector>
-#include <CoreMinimal.h> // delete in ROS
 #include "PoseMessage.h"
-#include "PoseStampedMessage.generated.h" // delete in ROS
 
-UCLASS(Blueprintable) // delete in ROS
-class UPoseStampedMessage : public UObject // delete parent in ROS
+template <class Archive>
+class PoseStampedMessage : public MessageBase<Archive> // delete parent in ROS
 {
-	GENERATED_BODY() // delete in ROS
-
 public:
 
 	float Timestamp;
 
-	UPoseMessage* Pose;
+	PoseMessage<Archive> Pose;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
 		ar(Timestamp);
-		ar(*Pose);
+		ar(Pose);
+	}
+
+	std::string ToString() override
+	{
+		return std::string();
 	}
 };

@@ -22,12 +22,12 @@ void UGPSComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitTime = GetWorld()->GetTimeSeconds();
-
 	Owner = GetOwner();
 	World = GetWorld();
 	Mesh = Owner->FindComponentByClass<USkeletalMeshComponent>();
 
+	InitLocation = Owner->GetActorLocation();
+	InitRotation = Owner->GetActorRotation();
 
 	if (!Owner)
 	{
@@ -52,10 +52,10 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//if (DeltaTime < 0.02) return;
 
 	FRotator CurrentWorldRotation = Owner->GetActorRotation();
-	CurrentWorldRotation.Yaw = CurrentWorldRotation.Yaw - 90.f; // mesh is rotated 90 degrees
+	CurrentWorldRotation.Yaw = CurrentWorldRotation.Yaw + 90; // mesh is rotated 90 degrees? (here is +, in IMU is -??)
 
 	//FVector CurrentWorldLocation = Owner->GetActorLocation() + CurrentWorldRotation.RotateVector(FVector(0.f, 0.f, 50.f));
-	FVector CurrentWorldLocation = Owner->GetActorLocation() + FVector(0.f, 0.f, 50.f); // drawing offset
+	FVector CurrentWorldLocation = Owner->GetActorLocation();
 
 	// ================   ORIENTATION    ===================== //
 	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("r: %f, p: %f, y: %f"), CurrentWorldRotation.Roll, -CurrentWorldRotation.Pitch, -CurrentWorldRotation.Yaw));
@@ -97,69 +97,78 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	float UVy = Owner->GetVelocity().Y;
 	float UVz = Owner->GetVelocity().Y;
 
-	// Kinematics
-	float UAccX = (UVx - LastVx) / DeltaTime;
-	float UAccY = (UVy - LastVy) / DeltaTime;
-	float UAccZ = (UVz - LastVz) / DeltaTime;
-
-	//UE_LOG(LogTemp, Warning, TEXT("U acc X: %f, Y: %f"), UAccX, UAccY);
-	//DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + FVector(UAccX, UAccY, 0.f), FColor::Blue, false, -1.f, (uint8)'\000', 10.f);
-
-
-	LastVx = UVx;
-	LastVy = UVy;
-	LastVz = UVz;
-
-	FVector WorldAcceleration(UAccX, UAccY, UAccZ);
-
-	// To car frame
-	FVector LinearAcceleration = CurrentWorldRotation.UnrotateVector(WorldAcceleration);
-
-	// ============================================================================= //
-
 	// ========================================= BUILD GPS MESSAGE ====================================== //
-	UOdometryMessage* GPSReading = NewObject<UOdometryMessage>();
+	UOutgoingMessage* GPSMessage = NewObject<UOutgoingMessage>();
+	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
 
-	//// in rad, NWU frame
-	//GPSReading->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
-	//GPSReading->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);
-	//GPSReading->Orientation.push_back(-CurrentWorldRotation.Yaw*PI/180);
+	Data->Timestamp = World->GetTimeSeconds();
+
+	// in m, NWU frame
+	FVector GPSLocation = InitRotation.UnrotateVector(CurrentWorldLocation - InitLocation)*0.01;
+	GPSLocation = FVector(GPSLocation.X, -GPSLocation.Y, GPSLocation.Z);
+
+	FRotator GPSRotation = FRotator(-CurrentWorldRotation.Pitch, -(CurrentWorldRotation.Yaw - InitRotation.Yaw) + 90, CurrentWorldRotation.Roll);
+	UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());
+
+	Data->PoseWithCovariance.Pose.X = GPSLocation.X; 
+	Data->PoseWithCovariance.Pose.Y = GPSLocation.Y;
+	Data->PoseWithCovariance.Pose.Z = GPSLocation.Z;
+
+	Data->PoseWithCovariance.Pose.Roll = GPSRotation.Roll*PI/180;
+	Data->PoseWithCovariance.Pose.Pitch = GPSRotation.Pitch*PI/180;
+	Data->PoseWithCovariance.Pose.Yaw = GPSRotation.Yaw*PI/180;
+
+	for (int i = 0; i < 36; i++)
+	{
+		Data->PoseWithCovariance.Covariance[i] = 0;
+
+		if (i % 6 == 0)
+			Data->TwistWithCovariance.Covariance[i] = -1;
+		else
+			Data->TwistWithCovariance.Covariance[i] = 0;
+	}
+
+	//Data->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
+	//Data->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);
+	//Data->Orientation.push_back(-CurrentWorldRotation.Yaw*PI/180);
 
 	//// in m/s^2, NWU frame
-	//GPSReading->LinearAcceleration.push_back(LinearAcceleration.Y*0.01);
-	//GPSReading->LinearAcceleration.push_back(LinearAcceleration.X*0.01);
-	//GPSReading->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
+	//Data->LinearAcceleration.push_back(LinearAcceleration.Y*0.01);
+	//Data->LinearAcceleration.push_back(LinearAcceleration.X*0.01);
+	//Data->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
 
 	//// in rad/s, NWU frame
-	//GPSReading->AngularVelocity.push_back(AngularVelocity.Y);
-	//GPSReading->AngularVelocity.push_back(AngularVelocity.X);
-	//GPSReading->AngularVelocity.push_back(AngularVelocity.Z);
+	//Data->AngularVelocity.push_back(AngularVelocity.Y);
+	//Data->AngularVelocity.push_back(AngularVelocity.X);
+	//Data->AngularVelocity.push_back(AngularVelocity.Z);
 
 	//// Prepare covariances (unknown ==> 0 on the diagonal)
 	//for (int i = 0; i < 9; i++)
 	//{
 	//	if (i == 0 || i == 4 || i == 8)
 	//	{
-	//		GPSReading->OrientationCov.push_back(0.f);
-	//		GPSReading->LinearAccelerationCov.push_back(0.f);
-	//		GPSReading->AngularVelocityCov.push_back(0.f);
+	//		Data->OrientationCov.push_back(0.f);
+	//		Data->LinearAccelerationCov.push_back(0.f);
+	//		Data->AngularVelocityCov.push_back(0.f);
 	//	}
 	//	else
 	//	{
-	//		GPSReading->OrientationCov.push_back(0.f);
-	//		GPSReading->LinearAccelerationCov.push_back(0.f);
-	//		GPSReading->AngularVelocityCov.push_back(0.f);
+	//		Data->OrientationCov.push_back(0.f);
+	//		Data->LinearAccelerationCov.push_back(0.f);
+	//		Data->AngularVelocityCov.push_back(0.f);
 	//	}
 	//}
 
 	// ========================================= BUILD GPS MESSAGE ====================================== //
 
-
+	GPSMessage->message = Data;
 	// Broadcast GPS Message
-	OnGPSAvailable.Broadcast(GPSReading);
+	OnGPSAvailable.Broadcast(GPSMessage);
+
 
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);
-	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), GPSReading->AngularVelocity[0], GPSReading->AngularVelocity[1], GPSReading->AngularVelocity[2]);
+	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), Data->AngularVelocity[0], Data->AngularVelocity[1], Data->AngularVelocity[2]);
 
 
 	// Draw axes
@@ -196,7 +205,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 //	if (PastPoses.Num() == 4)
 //	{
 //		// Ready to compute angular velocity and linear acceleration
-//		UOdometryMessage* GPSReading = NewObject<UOdometryMessage>();
+//		UOdometryMessage* Data = NewObject<UOdometryMessage>();
 //
 //		// Linear acceleration in solidal frame (X = ahead, Y = on the left)
 //		FVector RotatedPose1 = FVector(PastPoses[3]->X, PastPoses[3]->Y, PastPoses[3]->Z);
@@ -240,7 +249,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 //		FVector LinearAcceleration = CurrentRotator.RotateVector(WorldAcceleration);
 //
 //
-//		GPSReading->LinearAcceleration.push_back(acc_x);
+//		Data->LinearAcceleration.push_back(acc_x);
 //
 //		/*UE_LOG(LogTemp, Warning, TEXT("GPS X: %f"), LinearAcceleration.X);
 //		UE_LOG(LogTemp, Warning, TEXT("GPS Y: %f"), LinearAcceleration.Y);

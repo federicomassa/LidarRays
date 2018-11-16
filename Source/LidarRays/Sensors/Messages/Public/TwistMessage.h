@@ -3,46 +3,27 @@
 #pragma once
 
 #include <vector>
-#include <CoreMinimal.h> // delete in ROS
-#include "TwistMessage.generated.h" // delete in ROS
+#include <cereal/types/vector.hpp>
+#include <MessageBase.h>
 
-UCLASS(Blueprintable) // delete in ROS
-class UTwistMessage : public UObject // delete parent in ROS
+template <class Archive>
+class TwistMessage : public MessageBase<Archive>
 {
-	GENERATED_BODY() // delete in ROS
-
 public:
 	// These should be vectors with 3 components (x,y,z)
 	float Timestamp;
 	std::vector<float> Linear;
 	std::vector<float> Angular;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
 		ar(Timestamp);
 		ar(Linear);
 		ar(Angular);
 	}
 
-	// delete in ROS
-	UFUNCTION(BlueprintCallable)
-	FString ToString();
-
-	UFUNCTION(BlueprintCallable, Category = Controller)
-	FVector GetLinear() const
+	std::string ToString() override
 	{
-		if (Linear.size() != 3) return FVector();
-
-		return FVector(Linear[0], Linear[1], Linear[2]);
+		return std::string();
 	}
-
-	UFUNCTION(BlueprintCallable, Category = Controller)
-	FVector GetAngular() const
-	{
-		if (Angular.size() != 3) return FVector();
-
-		return FVector(Angular[0], Angular[1], Angular[2]);
-	}
-
 };

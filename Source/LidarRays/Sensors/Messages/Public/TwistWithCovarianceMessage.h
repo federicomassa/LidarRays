@@ -1,24 +1,26 @@
 #pragma once
 
 #include <array>
-#include <CoreMinimal.h> // delete in ROS
 #include "TwistMessage.h"
-#include "TwistWithCovarianceMessage.generated.h" // delete in ROS
+#include <cereal/types/array.hpp>
 
-UCLASS(Blueprintable) // delete in ROS
-class LIDARRAYS_API UTwistWithCovarianceMessage : public UObject // delete in ROS
+template <class Archive>
+class LIDARRAYS_API TwistWithCovarianceMessage : public MessageBase<Archive>
 {
-	GENERATED_BODY() // delete in ROS
 
 public:
 	// Vectors are 3D, Covariances are 3*3 matrices
-	UTwistMessage* Twist;
+	TwistMessage<Archive> Twist;
 	std::array<float, 36> Covariance;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
-		ar(*Twist);
+		ar(Twist);
 		ar(Covariance);
+	}
+
+	std::string ToString() override
+	{
+		return std::string();
 	}
 };

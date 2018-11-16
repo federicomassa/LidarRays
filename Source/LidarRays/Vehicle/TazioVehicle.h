@@ -30,6 +30,9 @@ class ATazioVehicle : public AWheeledVehicle
 	AUDPSender* IMUSender = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = UDP)
+	AUDPSender* GPSSender = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPReceiver* UDPReceiver = nullptr;
 
 	bool ManualDriving = true;
@@ -44,6 +47,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPSender* GetIMUSender();
+
+	UFUNCTION(BlueprintCallable, Category = UDP)
+	AUDPSender* GetGPSSender();
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetUDPReceiver();

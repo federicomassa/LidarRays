@@ -1,28 +1,29 @@
 #pragma once
 
 #include <vector>
-#include <CoreMinimal.h> // delete in ROS
 #include "PoseWithCovarianceMessage.h"
 #include "TwistWithCovarianceMessage.h"
-#include "OdometryMessage.generated.h" // delete in ROS
+#include "MessageBase.h"
 
-UCLASS(Blueprintable) // delete in ROS
-class LIDARRAYS_API UOdometryMessage : public UObject // delete in ROS
+template <class Archive>
+class LIDARRAYS_API OdometryMessage : public MessageBase<Archive>
 {
-	GENERATED_BODY() // delete in ROS
-
 public:
 	float Timestamp;
 
 	// Vectors are 3D, Covariances are 3*3 matrices
-	UPoseWithCovarianceMessage* PoseWithCovariance;
-	UTwistWithCovarianceMessage* TwistWithCovariance;
+	PoseWithCovarianceMessage<Archive> PoseWithCovariance;
+	TwistWithCovarianceMessage<Archive> TwistWithCovariance;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
 		ar(Timestamp);
-		ar(*PoseWithCovariance);
-		ar(*TwistWithCovariance);
+		ar(PoseWithCovariance);
+		ar(TwistWithCovariance);
+	}
+
+	std::string ToString() override
+	{
+		return std::string();
 	}
 };

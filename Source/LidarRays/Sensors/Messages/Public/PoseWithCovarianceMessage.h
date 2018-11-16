@@ -1,24 +1,26 @@
 #pragma once
 
 #include <array>
-#include <CoreMinimal.h> // delete in ROS
 #include "PoseMessage.h"
-#include "PoseWithCovarianceMessage.generated.h" // delete in ROS
+#include "MessageBase.h"
 
-UCLASS(Blueprintable) // delete in ROS
-class LIDARRAYS_API UPoseWithCovarianceMessage : public UObject // delete in ROS
+template <class Archive>
+class LIDARRAYS_API PoseWithCovarianceMessage : public MessageBase<Archive> 
 {
-	GENERATED_BODY() // delete in ROS
 
 public:
 	// Vectors are 3D, Covariances are 3*3 matrices
-	UPoseMessage* Pose;
+	PoseMessage<Archive> Pose;
 	std::array<float, 36> Covariance;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
-		ar(*Pose);
+		ar(Pose);
 		ar(Covariance);
+	}
+
+	std::string ToString() override
+	{
+		return std::string();
 	}
 };

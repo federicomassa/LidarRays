@@ -6,6 +6,8 @@
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "UObject/ConstructorHelpers.h"
+#include "MessageWrapper.h"
+#include "TestMessage.h"
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -19,6 +21,11 @@ ATazioVehicle::ATazioVehicle()
 AUDPSender* ATazioVehicle::GetLidarSender()
 {
 	return LidarSender;
+}
+
+AUDPSender* ATazioVehicle::GetGPSSender()
+{
+	return GPSSender;
 }
 
 AUDPSender* ATazioVehicle::GetIMUSender()
@@ -98,6 +105,27 @@ void ATazioVehicle::Tick(float Delta)
 void ATazioVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//// Serialize
+	//UOutgoingMessage* toSerialize = NewObject<UOutgoingMessage>();
+	//std::ostringstream oss;
+	//cereal::BinaryOutputArchive oa(oss);
+	//toSerialize->message = new TestMessage<cereal::BinaryOutputArchive>;
+
+	//oa(*toSerialize->message);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Sending message: %s"), *FString(toSerialize->message->ToString().c_str()));
+
+	//// Unserialize
+	//UIncomingMessage* toUnserialize = NewObject<UIncomingMessage>();
+	//std::istringstream iss;
+	//iss.str(oss.str());
+
+	//cereal::BinaryInputArchive ia(iss);
+	//toUnserialize->message = new TestMessage<cereal::BinaryInputArchive>;
+
+	//ia(*toUnserialize->message);
+	//UE_LOG(LogTemp, Warning, TEXT("Arriving message: %s"), *FString(toUnserialize->message->ToString().c_str()));
 }
 
 #undef LOCTEXT_NAMESPACE

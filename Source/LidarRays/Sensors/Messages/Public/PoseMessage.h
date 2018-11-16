@@ -2,14 +2,12 @@
 
 #pragma once
 
+#include "MessageBase.h"
 #include <vector>
-#include <CoreMinimal.h> // delete in ROS
-#include "PoseMessage.generated.h" // delete in ROS
 
-UCLASS(Blueprintable) // delete in ROS
-class UPoseMessage : public UObject // delete parent in ROS
+template <class Archive>
+class PoseMessage : public MessageBase<Archive> 
 {
-	GENERATED_BODY() // delete in ROS
 
 public:
 	float X;
@@ -20,8 +18,7 @@ public:
 	float Pitch;
 	float Yaw;
 
-	template<class Archive>
-	void serialize(Archive & ar)
+	void serialize(Archive & ar) override
 	{
 		ar(X);
 		ar(Y);
@@ -29,5 +26,10 @@ public:
 		ar(Roll);
 		ar(Pitch);
 		ar(Yaw);
+	}
+
+	std::string ToString() override
+	{
+		return std::string();
 	}
 };

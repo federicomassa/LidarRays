@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "MessageWrapper.h"
 #include "MessageSerializerComponent.generated.h"
 
 class ULidarMessage;
 class UIMUMessage;
-class UTwistMessage;
 
 UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
 class LIDARRAYS_API UMessageSerializerComponent : public UActorComponent
@@ -31,7 +31,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Sensors)
 	TArray<uint8> SerializeIMUMessage(UIMUMessage* IMUData);
 	
+	UFUNCTION(BlueprintCallable, Category = Sensors)
+	TArray<uint8> SerializeMessage(UOutgoingMessage* Data);
+
+
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	UTwistMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
+	UIncomingMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
 
 };

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "PoseStampedMessage.h"
+#include <cereal/archives/binary.hpp>
 #include "IMUComponent.generated.h"
 
 class AActor;
@@ -24,7 +25,6 @@ class LIDARRAYS_API UIMUComponent : public UActorComponent
 
 	float InitTime;
 
-	TArray<UPoseStampedMessage*> PastPoses;
 	float LastVx;
 	float LastVy;
 	float LastVz;
@@ -44,10 +44,5 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = IMU)
 	FIMUAvailableDelegate OnIMUAvailable;
-
-
-	FVector GetIMUOrientation() const;
-	FVector GetIMUAngularVelocity() const;
-	FVector GetIMULinearAcceleration() const;
 
 };
