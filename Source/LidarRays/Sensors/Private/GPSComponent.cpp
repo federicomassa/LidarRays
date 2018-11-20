@@ -64,15 +64,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// ======================================================= //
 
 
-	// ================ ANGULAR VELOCITY ===================== //
 
-	FVector WorldAngularVelocity;
-	if (Mesh)
-		WorldAngularVelocity = Mesh->GetPhysicsAngularVelocityInRadians();
-
-	FVector AngularVelocity = CurrentWorldRotation.UnrotateVector(WorldAngularVelocity);
-
-	// ======================================================= //
 
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("%s"), *AngularVelocity.ToString()));
@@ -91,12 +83,6 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//FVector AxisY = FRotator(0.f, CurrentWorldRotation.Yaw - 90.f, 0.f).RotateVector(FVector(1.f, 0.f, 0.f));
 	//FVector AxisZ = FVector(0.f, 0.f, 1.f);
 
-	// ========================== LINEAR ACCELERATION ============================ //
-
-	float UVx = Owner->GetVelocity().X;
-	float UVy = Owner->GetVelocity().Y;
-	float UVz = Owner->GetVelocity().Y;
-
 	// ========================================= BUILD GPS MESSAGE ====================================== //
 	UOutgoingMessage* GPSMessage = NewObject<UOutgoingMessage>();
 	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
@@ -108,8 +94,8 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSLocation = FVector(GPSLocation.X, -GPSLocation.Y, GPSLocation.Z);
 
 	FRotator GPSRotation = FRotator(-CurrentWorldRotation.Pitch, -(CurrentWorldRotation.Yaw - InitRotation.Yaw) + 90, CurrentWorldRotation.Roll);
-	UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());
+	/*UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());*/
 
 	Data->PoseWithCovariance.Pose.X = GPSLocation.X; 
 	Data->PoseWithCovariance.Pose.Y = GPSLocation.Y;
@@ -123,11 +109,45 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	{
 		Data->PoseWithCovariance.Covariance[i] = 0;
 
-		if (i % 6 == 0)
+		// Angular velocity in IMU signal
+		if (i > 17 && i % 7 == 0)
 			Data->TwistWithCovariance.Covariance[i] = -1;
 		else
 			Data->TwistWithCovariance.Covariance[i] = 0;
 	}
+
+	FVector Velocity = Owner->GetVelocity();
+	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
+	RelativeVelocity =	FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
+
+	Data->TwistWithCovariance.Twist.Linear[0] = RelativeVelocity.X*0.01;
+	Data->TwistWithCovariance.Twist.Linear[1] = RelativeVelocity.Y*0.01;
+	Data->TwistWithCovariance.Twist.Linear[2] = RelativeVelocity.Z*0.01;
+
+	//UE_LOG(LogTemp, Warning, TEXT("Sending velocity linear: %s"), *RelativeVelocity.ToString());
+
+	// Has -1 covariance: not used
+	Data->TwistWithCovariance.Twist.Angular[0] = 0.f;
+	Data->TwistWithCovariance.Twist.Angular[1] = 0.f;
+	Data->TwistWithCovariance.Twist.Angular[2] = 0.f;
+
+
+	// ================ ANGULAR VELOCITY ===================== //
+
+	/*FVector WorldAngularVelocity;
+	if (Mesh)
+		WorldAngularVelocity = Mesh->GetPhysicsAngularVelocityInRadians();
+
+	FVector AngularVelocity = Owner->GetActorRotation().UnrotateVector(WorldAngularVelocity);
+*/
+	//UE_LOG(LogTemp, Warning, TEXT("Angular: %s"), *AngularVelocity.ToString());
+
+	// ======================================================= //
+
+	/*UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *Velocity.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Relative Velocity: %s"), *RelativeVelocity.ToString());
+*/
+
 
 	//Data->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
 	//Data->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);

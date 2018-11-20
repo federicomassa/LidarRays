@@ -109,12 +109,12 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					{
 						FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
 
-						// Transform to meters and ENU frame --- for my pawn
-						Scan->PointsX.push_back(SensorPoint.Y*0.01); 
-						Scan->PointsY.push_back(SensorPoint.X*0.01); 
-						Scan->PointsZ.push_back(-SensorPoint.Z*0.01); 
+						// Transform to meters and NWU frame --- for my pawn
+						Scan->PointsX.push_back(SensorPoint.X*0.01); 
+						Scan->PointsY.push_back(-SensorPoint.Y*0.01); 
+						Scan->PointsZ.push_back(SensorPoint.Z*0.01); 
 
-						//// Transform to meters and ENU frame --- for advanced vehicle
+						//// Transform to meters and NWU frame --- for advanced vehicle
 						//Scan->PointsX.push_back(-SensorPoint.X*0.01);
 						//Scan->PointsY.push_back(SensorPoint.Y*0.01);
 						//Scan->PointsZ.push_back(-SensorPoint.Z*0.01);

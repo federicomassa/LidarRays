@@ -61,6 +61,9 @@ public class LidarRays : ModuleRules
 
         bEnableExceptions = true;
 
+        // Needed for dynamic casting
+        bUseRTTI = true;
+
 
     }
 }

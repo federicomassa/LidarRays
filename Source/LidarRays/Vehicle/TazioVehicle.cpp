@@ -6,8 +6,9 @@
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "UObject/ConstructorHelpers.h"
+#include "cereal/archives/binary.hpp"
 #include "MessageWrapper.h"
-#include "TestMessage.h"
+#include "TwistMessage.h"
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -85,17 +86,19 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &ATazioVehicle::ToggleManualDriving);
 }
 
-void ATazioVehicle::ControlForward(float Val)
+void ATazioVehicle::SendControls(UIncomingMessage* msg)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Received forward!"));
-	GetVehicleMovementComponent()->SetThrottleInput(Val);
+	TwistMessage<cereal::BinaryInputArchive>* twist = dynamic_cast<TwistMessage<cereal::BinaryInputArchive>*>(msg->message);
+	if (twist)
+	{
+		GetVehicleMovementComponent()->SetThrottleInput(twist->Linear[0]);
+		GetVehicleMovementComponent()->SetSteeringInput(-twist->Angular[2]);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));
+	}
 }
-
-void ATazioVehicle::ControlRight(float Val)
-{
-	GetVehicleMovementComponent()->SetSteeringInput(Val);
-}
-
 
 void ATazioVehicle::Tick(float Delta)
 {

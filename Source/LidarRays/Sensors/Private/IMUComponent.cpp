@@ -131,14 +131,18 @@ void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	IMUReading->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
 
 	// in rad/s, NWU frame
-	IMUReading->AngularVelocity.push_back(AngularVelocity.Y);
-	IMUReading->AngularVelocity.push_back(AngularVelocity.X);
-	IMUReading->AngularVelocity.push_back(AngularVelocity.Z);
+	IMUReading->AngularVelocity.push_back(-AngularVelocity.Y); // FIXME I don't know why I need minuses
+	IMUReading->AngularVelocity.push_back(-AngularVelocity.X);
+	IMUReading->AngularVelocity.push_back(-AngularVelocity.Z);
+
+	/*UE_LOG(LogTemp, Warning, TEXT("Lin acc: x = %f, y = %f, z = %f"), IMUReading->LinearAcceleration[0], IMUReading->LinearAcceleration[1], IMUReading->LinearAcceleration[2]);
+	UE_LOG(LogTemp, Warning, TEXT("Orient:  r = %f, p = %f, y = %f"), IMUReading->Orientation[0], IMUReading->Orientation[1], IMUReading->Orientation[2]);
+	UE_LOG(LogTemp, Warning, TEXT("Ang vel: x = %f, y = %f, z = %f"), IMUReading->AngularVelocity[0], IMUReading->AngularVelocity[1], IMUReading->AngularVelocity[2]);*/
 
 	// Prepare covariances (unknown ==> 0 on the diagonal)
 	for (int i = 0; i < 9; i++)
 	{
-		if (i == 0 || i == 4 || i == 8)
+		if (i % 4 == 0)
 		{
 			IMUReading->OrientationCov.push_back(0.f);
 			IMUReading->LinearAccelerationCov.push_back(0.f);

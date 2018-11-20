@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <CoreMinimal.h> // delete in ROS
+#include "cereal/types/vector.hpp"
 #include "LidarMessage.generated.h" // delete in ROS
 
 UCLASS(Blueprintable) // delete in ROS

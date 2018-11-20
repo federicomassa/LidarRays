@@ -6,6 +6,7 @@
 #include "WheeledVehicle.h"
 #include "UDPSender.h" 
 #include "UDPReceiver.h"
+#include "MessageWrapper.h"
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -77,11 +78,7 @@ public:
 
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	void ControlForward(float Val);
-
-	/** Handle pressing right */
-	UFUNCTION(BlueprintCallable, Category = Controller)
-	void ControlRight(float Val);
+	void SendControls(UIncomingMessage* ControlMessage);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

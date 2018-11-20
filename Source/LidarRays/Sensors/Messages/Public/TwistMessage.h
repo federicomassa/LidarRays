@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <vector>
-#include <cereal/types/vector.hpp>
+#include <array>
+#include <cereal/types/array.hpp>
 #include <MessageBase.h>
 
 template <class Archive>
@@ -11,13 +11,11 @@ class TwistMessage : public MessageBase<Archive>
 {
 public:
 	// These should be vectors with 3 components (x,y,z)
-	float Timestamp;
-	std::vector<float> Linear;
-	std::vector<float> Angular;
+	std::array<float, 3> Linear;
+	std::array<float, 3> Angular;
 
 	void serialize(Archive & ar) override
 	{
-		ar(Timestamp);
 		ar(Linear);
 		ar(Angular);
 	}
