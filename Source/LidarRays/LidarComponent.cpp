@@ -61,7 +61,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		ULidarMessage* Scan = NewObject<ULidarMessage>();
 
-		Scan->Empty();
+		//Scan->Empty();
 
 		/*if (!isFirst)
 			UE_LOG(LogTemp, Warning, TEXT("Lidar frequency: %f"), 1.f / (World->GetTimeSeconds() - LastLidarScanTime));*/
@@ -85,6 +85,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		FHitResult Hit;
 
+		int count = 0;
 		for (int lidar = 0; lidar < NumLidars; lidar++)
 		{
 			for (int layer = 0; layer < VerLayers; layer++)
@@ -109,10 +110,15 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					{
 						FVector SensorPoint = CurrentRotation.UnrotateVector(Hit.Location - CurrentLocation);
 
-						// Transform to meters and NWU frame --- for my pawn
-						Scan->PointsX.push_back(SensorPoint.X*0.01); 
-						Scan->PointsY.push_back(-SensorPoint.Y*0.01); 
-						Scan->PointsZ.push_back(SensorPoint.Z*0.01); 
+						//// Transform to meters and NWU frame --- for my pawn
+						//Scan->PointsX.push_back(SensorPoint.X*0.01); 
+						//Scan->PointsY.push_back(-SensorPoint.Y*0.01); 
+						//Scan->PointsZ.push_back(SensorPoint.Z*0.01); 
+
+						Scan->PointsX[count] = SensorPoint.X*0.01;
+						Scan->PointsY[count] = -SensorPoint.Y*0.01;
+						Scan->PointsZ[count] = SensorPoint.Z*0.01;
+						count++;
 
 						//// Transform to meters and NWU frame --- for advanced vehicle
 						//Scan->PointsX.push_back(-SensorPoint.X*0.01);
@@ -142,6 +148,14 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		}
 
 		LidarSimulated++;
+
+
+		for (int i = Scan->PointsX.size(); i < 9600; i++)
+		{
+			Scan->PointsX[i] = -1;
+			Scan->PointsY[i] = -1;
+			Scan->PointsZ[i] = -1;
+		}
 
 		// Delegate broadcast
 		OnLidarAvailable.Broadcast(Scan);

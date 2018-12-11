@@ -24,7 +24,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	{
 		ScreenMsg("No sender socket"); 
 		return false; 
-	} 
+	}
 	
 	int32 BytesSent = 0;
 
@@ -58,6 +58,8 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 
 	int32 SizeMessageBytesSent;
 	size_t buffer_size_size = sizeof(buffer_size);
+
+	UE_LOG(LogTemp, Warning, TEXT("Sending header: %i"), buffer_size);
 
 	size_t buffer_size_bigendian = boost::endian::native_to_big(buffer_size);
 

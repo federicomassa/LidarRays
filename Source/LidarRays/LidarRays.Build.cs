@@ -24,7 +24,12 @@ public class LidarRays : ModuleRules
 
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
- 
+
+        // ILC controller to use iterative control on the car
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/ilc_cpp/include"));
+        PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "D:/Projects/ilc_cpp/ilc_cpp/x64/Release/ilc_cpp.lib"));
+        // Eigen dependencies: include as eigen3/Eigen/...
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty"));
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

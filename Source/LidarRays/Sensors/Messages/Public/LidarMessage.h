@@ -1,9 +1,11 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <CoreMinimal.h> // delete in ROS
-#include "cereal/types/vector.hpp"
+#include "cereal/types/array.hpp"
 #include "LidarMessage.generated.h" // delete in ROS
+
+constexpr int Npoints = 9600;
 
 UCLASS(Blueprintable) // delete in ROS
 class ULidarMessage : public UObject // delete in ROS
@@ -14,9 +16,9 @@ public:
 	float timestamp;
 
 	// These must be same size and 1 to 1 correspondence
-	std::vector<float> PointsX;
-	std::vector<float> PointsY;
-	std::vector<float> PointsZ;
+	std::array<float, Npoints> PointsX;
+	std::array<float, Npoints> PointsY;
+	std::array<float, Npoints> PointsZ;
 
 	template<class Archive>
 	void serialize(Archive & ar)
@@ -27,12 +29,5 @@ public:
 		ar(PointsZ);
 	}
 
-	ULidarMessage();
-	void Empty();
-
-	UFUNCTION(BlueprintCallable, Category = Lidar) // delete in ROS
-	float GetTimeStamp()
-	{
-		return timestamp;
-	}
+	ULidarMessage() {}
 };

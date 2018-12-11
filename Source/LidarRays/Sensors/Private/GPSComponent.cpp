@@ -6,6 +6,15 @@
 #include <Components/SkeletalMeshComponent.h>
 #include <DrawDebugHelpers.h>
 
+//
+//#ifdef WIN32
+//#include "AllowWindowsPlatformTypes.h"
+//#include "Windows.h"
+//#include "HideWindowsPlatformTypes.h"
+//#else
+//#error "FIXME Windows platform needed for timers!"
+//#endif
+
 
 UGPSComponent::UGPSComponent()
 {
@@ -50,6 +59,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//if (DeltaTime < 0.02) return;
+
+	//_LARGE_INTEGER StartingTime;
+	//QueryPerformanceCounter(&StartingTime);
+	//_LARGE_INTEGER SystemTickFrequency;
+	//QueryPerformanceFrequency(&SystemTickFrequency);
 
 	FRotator CurrentWorldRotation = Owner->GetActorRotation();
 	CurrentWorldRotation.Yaw = CurrentWorldRotation.Yaw + 90; // mesh is rotated 90 degrees? (here is +, in IMU is -??)
@@ -186,7 +200,17 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// Broadcast GPS Message
 	OnGPSAvailable.Broadcast(GPSMessage);
 
+	/*_LARGE_INTEGER EndTime;
+	QueryPerformanceCounter(&EndTime);
 
+	_LARGE_INTEGER Ticks;
+	Ticks.QuadPart = (EndTime.QuadPart - StartingTime.QuadPart);
+	Ticks.QuadPart *= 1000000;
+	Ticks.QuadPart /= SystemTickFrequency.QuadPart;
+
+	int ElapsedMicroseconds = Ticks.QuadPart;
+	UE_LOG(LogTemp, Warning, TEXT("GPS took %i microseconds"), ElapsedMicroseconds);
+*/
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), Data->AngularVelocity[0], Data->AngularVelocity[1], Data->AngularVelocity[2]);
 

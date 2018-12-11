@@ -47,7 +47,7 @@ FSocket* ATCPListener::CreateTCPConnectionListener(const FString& YourChosenSock
 	if (!FormatIP4ToNumber(TheIP, IP4Nums))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Invalid IP! Expecting 4 parts separated by ."));
-		return false;
+		return 0;
 	}
 
 	FIPv4Endpoint Endpoint(FIPv4Address(IP4Nums[0], IP4Nums[1], IP4Nums[2], IP4Nums[3]), ThePort);
@@ -131,7 +131,7 @@ void ATCPListener::TCPSocketListener()
 
 			return;
 		}
-
+		 
 		UE_LOG(LogTemp, Warning, TEXT("Total Data read: %d"), ReceivedData.Num());
 
 		const FString ReceivedUE4String = StringFromBinaryArray(ReceivedData);
