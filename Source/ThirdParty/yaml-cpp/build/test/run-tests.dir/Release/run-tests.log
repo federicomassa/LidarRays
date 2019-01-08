@@ -1,0 +1,25 @@
+﻿  Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt
+  CMake does not need to re-run because D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp is up-to-date.
+  emitter_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\emitter_test.cpp(4): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  encoding_test.cpp
+d:\projects\ilc_cpp\ilc_cpp\yaml-cpp\test\mock_event_handler.h(4): fatal error C1083: Cannot open include file: 'gmock/gmock.h': No such file or directory
+  gen_emitter_test.cpp
+d:\projects\ilc_cpp\ilc_cpp\yaml-cpp\test\mock_event_handler.h(4): fatal error C1083: Cannot open include file: 'gmock/gmock.h': No such file or directory
+  handler_spec_test.cpp
+d:\projects\ilc_cpp\ilc_cpp\yaml-cpp\test\mock_event_handler.h(4): fatal error C1083: Cannot open include file: 'gmock/gmock.h': No such file or directory
+  handler_test.cpp
+d:\projects\ilc_cpp\ilc_cpp\yaml-cpp\test\mock_event_handler.h(4): fatal error C1083: Cannot open include file: 'gmock/gmock.h': No such file or directory
+  load_node_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\load_node_test.cpp(3): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  node_spec_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\node_spec_test.cpp(4): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  main.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\main.cpp(1): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  node_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\node\node_test.cpp(9): fatal error C1083: Cannot open include file: 'gmock/gmock.h': No such file or directory
+  ostream_wrapper_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\ostream_wrapper_test.cpp(4): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  regex_test.cpp
+D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\regex_test.cpp(1): fatal error C1083: Cannot open include file: 'gtest/gtest.h': No such file or directory
+  Generating Code...

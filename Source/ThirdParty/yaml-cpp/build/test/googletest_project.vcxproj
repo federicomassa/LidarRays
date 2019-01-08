@@ -1,0 +1,830 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{96C99EAF-E449-3A72-B62B-7D3F26E2B037}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>googletest_project</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-mkdir.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating directories for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-mkdir.rule;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating directories for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-mkdir.rule;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Creating directories for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-mkdir.rule;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Creating directories for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-mkdir.rule;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-download.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">No download step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-download.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">No download step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-download.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">No download step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-download.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">No download step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-download.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-update.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">No update step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-update.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">No update step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-update.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">No update step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-update.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">No update step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-update.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-patch.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">No patch step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-patch.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">No patch step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-patch.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">No patch step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-patch.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">No patch step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-patch.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-configure.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing configure step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix -DBUILD_GMOCK=ON -Dgtest_force_shared_crt=ON "-GVisual Studio 15 2017 Win64" "-DCMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2017/Community" D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-configure.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing configure step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix -DBUILD_GMOCK=ON -Dgtest_force_shared_crt=ON "-GVisual Studio 15 2017 Win64" "-DCMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2017/Community" D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-configure.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Performing configure step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix -DBUILD_GMOCK=ON -Dgtest_force_shared_crt=ON "-GVisual Studio 15 2017 Win64" "-DCMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2017/Community" D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-configure.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Performing configure step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -DCMAKE_INSTALL_PREFIX:PATH=D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/prefix -DBUILD_GMOCK=ON -Dgtest_force_shared_crt=ON "-GVisual Studio 15 2017 Win64" "-DCMAKE_GENERATOR_INSTANCE:INTERNAL=C:/Program Files (x86)/Microsoft Visual Studio/2017/Community" D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/gtest-1.8.0
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-configure.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-build.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing build step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config Debug
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-build.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing build step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config Release
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-build.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Performing build step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-build.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Performing build step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-build.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-install.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Performing install step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config Debug --target install
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-install.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Performing install step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config Release --target install
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-install.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Performing install step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config MinSizeRel --target install
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-install.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Performing install step for 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+cd D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe --build . --config RelWithDebInfo --target install
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/d29e93078e96e01e941498ce46be12b6/googletest_project-install.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\a96b619ecc6e9e82216562947e513b10\googletest_project-complete.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Completed 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)/googletest_project-complete
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/a96b619ecc6e9e82216562947e513b10/googletest_project-complete.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Completed 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)/googletest_project-complete
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/a96b619ecc6e9e82216562947e513b10/googletest_project-complete.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Completed 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)/googletest_project-complete
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/a96b619ecc6e9e82216562947e513b10/googletest_project-complete.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Completed 'googletest_project'</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -E make_directory D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/$(Configuration)/googletest_project-complete
+if %errorlevel% neq 0 goto :cmEnd
+D:\Programs\CMake\bin\cmake.exe -E touch D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/$(Configuration)/googletest_project-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/a96b619ecc6e9e82216562947e513b10/googletest_project-complete.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-mkdir;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-download;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-update;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-patch;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-configure;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-build;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-stamp\$(Configuration)\googletest_project-install;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\31d9af7204e023cd2e6c910ec3ceacd1\googletest_project.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/31d9af7204e023cd2e6c910ec3ceacd1/googletest_project.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/31d9af7204e023cd2e6c910ec3ceacd1/googletest_project.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/31d9af7204e023cd2e6c910ec3ceacd1/googletest_project.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/CMakeFiles/31d9af7204e023cd2e6c910ec3ceacd1/googletest_project.rule;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\$(Configuration)\googletest_project-complete;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\ZERO_CHECK.vcxproj">
+      <Project>{EA9F50B7-371F-3163-A738-BC4EA9377ECD}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

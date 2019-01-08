@@ -9,15 +9,18 @@
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
-
+//#ifndef SIMULINK
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
+//#else
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingSimulinkMessage*, GPSData);
+//#endif
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	AActor* Owner = nullptr;
+		AActor* Owner = nullptr;
 	UWorld* World = nullptr;
 	USkeletalMeshComponent* Mesh;;
 
@@ -37,6 +40,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(BlueprintAssignable, Category = GPS)
-	FGPSAvailableDelegate OnGPSAvailable;
+		FGPSAvailableDelegate OnGPSAvailable;
 
 };

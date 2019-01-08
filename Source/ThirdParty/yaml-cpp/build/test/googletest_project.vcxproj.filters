@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\d29e93078e96e01e941498ce46be12b6\googletest_project-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\a96b619ecc6e9e82216562947e513b10\googletest_project-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\CMakeFiles\31d9af7204e023cd2e6c910ec3ceacd1\googletest_project.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\googletest_project" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{104FF75D-CF39-3A17-BB08-DE6CCF40E1EB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

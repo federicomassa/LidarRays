@@ -21,6 +21,7 @@
 #include "LidarMessage.h"
 #include "IMUMessage.h"
 #include "TwistMessage.h"
+#include "SimulinkControlMessage.h"
 
 
 // Sets default values for this component's properties
@@ -29,7 +30,7 @@ UMessageSerializerComponent::UMessageSerializerComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	
+
 	// ...
 }
 
@@ -59,7 +60,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 
 	//std::stringbuf buffer;
 	std::ostringstream oss;
-	
+
 	//std::stringstream buffer;
 
 	//cereal::PortableBinaryOutputArchive oa(oss);
@@ -70,11 +71,11 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	/*UTestMessage TestMessage;
 	TestMessage.timestamp = 3.14159;
 */
-	//eos::portable_oarchive oa(buffer);
+//eos::portable_oarchive oa(buffer);
 	oa << *Scan;
 	//oa << TestMessage;
 	oss.flush();
-	
+
 	oss.seekp(0, std::ios::end);
 	int32 bytes_size = oss.tellp();
 	//UE_LOG(LogTemp, Warning, TEXT("Size with tellp: %d"), bytes_size);
@@ -83,8 +84,8 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 	oss.seekp(0, std::ios::beg);
 
 	std::string string_data = oss.str();
-//	UE_LOG(LogTemp, Warning, TEXT("Serialized lidar message in %i bytes"), bytes_size);
-	
+	//	UE_LOG(LogTemp, Warning, TEXT("Serialized lidar message in %i bytes"), bytes_size);
+
 	TArray<uint8> serialized;
 	//UE_LOG(LogTemp, Warning, TEXT("String bytes: %d"), string_data.size());
 	//string_data.size();
@@ -129,7 +130,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 
 
 	// ====================================================
-		
+
 	//int counter = 0;
 	//buffer.seekg(0, std::ios::beg);
 	//while (!buffer.eof())
@@ -171,7 +172,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(ULidarMessage *
 		UE_LOG(LogTemp, Warning, TEXT("Buffer length does not correspond to output data size"));
 
 	buffer.seekg(0, std::ios::beg);
-	
+
 	int a = buffer.get();*/
 
 	return serialized;
@@ -217,7 +218,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(UIMUMessage * Dat
 	return serialized;
 }
 
-TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * Data)
+TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingSimulinkMessage * Data)
 {
 	if (Data == nullptr)
 	{
@@ -232,7 +233,9 @@ TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * D
 
 	std::ostringstream oss;
 
-	cereal::BinaryOutputArchive oa(oss);
+	/*cereal::BinaryOutputArchive oa(oss);
+*/
+	simulink::SimulinkOutputArchive oa(oss);
 
 	oa << (*Data->message);
 	//oa << TestMessage;
@@ -259,7 +262,44 @@ TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * D
 	return serialized;
 }
 
-UIncomingMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
+//UIncomingMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
+//{
+//	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
+//
+//	std::istringstream iss;
+//	std::string msg;
+//
+//	for (int i = 0; i < ControlMessage.Num(); i++)
+//	{
+//		//UE_LOG(LogTemp, Warning, TEXT("Deserialize byte %i: %s"), i, *BytesToHex(&ControlMessage[i], 1));
+//		msg.push_back((char)ControlMessage[i]);
+//	}
+//
+//	iss.str(msg);
+//
+//	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
+//
+//
+//	cereal::BinaryInputArchive ia(iss);
+//	TwistMessage<cereal::BinaryInputArchive> Twist;
+//
+//	// Deserialize
+//	ia(Twist);
+//
+//	if (Twist.Linear.size() != 3 || Twist.Angular.size() != 3)
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("Could not deserialize twist message!!"));
+//		return nullptr;
+//	}
+//
+//	UIncomingMessage* UTwist = NewObject<UIncomingMessage>();
+//	UTwist->message = new TwistMessage<cereal::BinaryInputArchive>(Twist);
+//
+//	return UTwist;
+//}
+
+
+UIncomingSimulinkMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray<uint8> ControlMessage)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
 
@@ -277,21 +317,14 @@ UIncomingMessage * UMessageSerializerComponent::DeserializeControlMessage(TArray
 	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
 
 
-	cereal::BinaryInputArchive ia(iss);
-	TwistMessage<cereal::BinaryInputArchive> Twist;
+	simulink::SimulinkInputArchive ia(iss);
+	SimulinkControlMessage<simulink::SimulinkInputArchive> Control;
 
 	// Deserialize
-	ia(Twist);
+	ia(Control);
 
-	if (Twist.Linear.size() != 3 || Twist.Angular.size() != 3)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Could not deserialize twist message!!"));
-		return nullptr;
-	}
+	UIncomingSimulinkMessage* UControl = NewObject<UIncomingSimulinkMessage>();
+	UControl->message = new SimulinkControlMessage<simulink::SimulinkInputArchive>(Control);
 
-	UIncomingMessage* UTwist = NewObject<UIncomingMessage>();
-	UTwist->message = new TwistMessage<cereal::BinaryInputArchive>(Twist);
-
-	return UTwist;
+	return UControl;
 }
-

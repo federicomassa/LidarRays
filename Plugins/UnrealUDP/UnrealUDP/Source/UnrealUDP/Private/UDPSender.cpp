@@ -8,6 +8,8 @@
 // endian conversion
 #include <boost/endian/conversion.hpp>
 
+#define UDP
+
 AUDPSender::AUDPSender(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	SenderSocket = NULL;
@@ -56,7 +58,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	//for (int i = 0; i < buffer_size_size; i++)
 	//	buffer_size_bytes[i] = buffer_size_string[i];
 
-	int32 SizeMessageBytesSent;
+	int32 SizeMessageBytesSent = 0;
 	size_t buffer_size_size = sizeof(buffer_size);
 
 	size_t buffer_size_bigendian = boost::endian::native_to_big(buffer_size);
@@ -68,6 +70,8 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	// ================================
 	//UE_LOG(LogTemp, Warning, TEXT("Big endian!"));
 	//SenderSocket->SendTo(buffer_size_bytes, buffer_size_size, SizeMessageBytesSent, *RemoteAddr);
+
+#ifndef UDP
 	SenderSocket->SendTo((uint8*)&buffer_size_bigendian, sizeof(buffer_size_bigendian), SizeMessageBytesSent, *RemoteAddr);
 	if (SizeMessageBytesSent <= 0)
 	{
@@ -78,6 +82,7 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 		//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
 		return false;
 	}
+#endif
 	//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
 
 	//SenderSocket->SendTo(message_size.bytes, sizeof(buffer_size), SizeMessageBytesSent, *RemoteAddr);
@@ -119,14 +124,18 @@ bool AUDPSender::Start(const FString & YourChosenSocketName, const FString & The
 		return false;
 	}
 
-//	SenderSocket = FUdpSocketBuilder(*YourChosenSocketName).AsReusable().WithBroadcast();
-
+#ifdef UDP
+	SenderSocket = FUdpSocketBuilder(*YourChosenSocketName).AsReusable().WithBroadcast();
+#else
 	SenderSocket = FTcpSocketBuilder(*YourChosenSocketName)
 		.AsReusable();
+#endif
 
-
-	//check(SenderSocket->GetSocketType() == SOCKTYPE_Datagram);
+#ifdef UDP
+	check(SenderSocket->GetSocketType() == SOCKTYPE_Datagram);
+#else
 	check(SenderSocket->GetSocketType() == SOCKTYPE_Streaming);
+#endif
 
 	////Set Send Buffer Size
 	/*int32 SendSize = 2*1024*1024; 

@@ -78,7 +78,7 @@ public:
 
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	void SendControls(UIncomingMessage* ControlMessage);
+	void SendControls(UIncomingSimulinkMessage* ControlMessage);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

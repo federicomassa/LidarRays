@@ -1,0 +1,381 @@
+The system is: Windows - 10.0.17134 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:12.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdC\CompilerIdC.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "Debug\".
+  Creazione directory "Debug\CompilerIdC.tlog\".
+InitializeBuildStatus:
+  Creazione di "Debug\CompilerIdC.tlog\unsuccessfulbuild". � stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:classic /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc141.pdb" /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X64 Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdC\.\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\Hostx86\x64\cl.exe
+FinalizeBuildStatus:
+  Eliminazione del file "Debug\CompilerIdC.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdC\CompilerIdC.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.72
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/3.13.1/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:13.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdCXX\CompilerIdCXX.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "Debug\".
+  Creazione directory "Debug\CompilerIdCXX.tlog\".
+InitializeBuildStatus:
+  Creazione di "Debug\CompilerIdCXX.tlog\unsuccessfulbuild". � stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:classic /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc141.pdb" /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdCXX\.\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\Hostx86\x64\cl.exe
+FinalizeBuildStatus:
+  Eliminazione del file "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\3.13.1\CompilerIdCXX\CompilerIdCXX.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.68
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/3.13.1/CompilerIdCXX/CompilerIdCXX.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_1593c.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:14.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_1593c.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_1593c.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_1593c.dir\Debug\cmTC_1593c.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_1593c.dir\Debug\cmTC_1593c.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_1593c.dir\Debug\\" /Fd"cmTC_1593c.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\testCCompiler.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_1593c.dir\Debug\\" /Fd"cmTC_1593c.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\testCCompiler.c"
+  testCCompiler.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_1593c.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_1593c.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_1593c.lib" /MACHINE:X64  /machine:x64 cmTC_1593c.dir\Debug\testCCompiler.obj
+  cmTC_1593c.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_1593c.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_1593c.dir\Debug\cmTC_1593c.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_1593c.dir\Debug\cmTC_1593c.tlog\cmTC_1593c.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_1593c.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.74
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_b0659.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:15.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_b0659.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_b0659.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_b0659.dir\Debug\cmTC_b0659.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_b0659.dir\Debug\cmTC_b0659.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b0659.dir\Debug\\" /Fd"cmTC_b0659.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Programs\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_b0659.dir\Debug\\" /Fd"cmTC_b0659.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Programs\CMake\share\cmake-3.13\Modules\CMakeCCompilerABI.c"
+  CMakeCCompilerABI.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_b0659.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_b0659.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_b0659.lib" /MACHINE:X64  /machine:x64 cmTC_b0659.dir\Debug\CMakeCCompilerABI.obj
+  cmTC_b0659.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_b0659.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_b0659.dir\Debug\cmTC_b0659.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_b0659.dir\Debug\cmTC_b0659.tlog\cmTC_b0659.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_b0659.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.76
+
+
+
+
+Detecting C [] compiler features compiled with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_6cf31.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:16.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_6cf31.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_6cf31.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_6cf31.dir\Debug\cmTC_6cf31.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_6cf31.dir\Debug\cmTC_6cf31.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6cf31.dir\Debug\\" /Fd"cmTC_6cf31.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\feature_tests.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_6cf31.dir\Debug\\" /Fd"cmTC_6cf31.dir\Debug\vc141.pdb" /Gd /TC /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\feature_tests.c"
+  feature_tests.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_6cf31.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_6cf31.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_6cf31.lib" /MACHINE:X64  /machine:x64 cmTC_6cf31.dir\Debug\feature_tests.obj
+  cmTC_6cf31.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_6cf31.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_6cf31.dir\Debug\cmTC_6cf31.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_6cf31.dir\Debug\cmTC_6cf31.tlog\cmTC_6cf31.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_6cf31.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.75
+
+
+    Feature record: C_FEATURE:1c_function_prototypes
+    Feature record: C_FEATURE:1c_variadic_macros
+Determining if the CXX compiler works passed with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_601af.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:17.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_601af.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_601af.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_601af.dir\Debug\cmTC_601af.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_601af.dir\Debug\cmTC_601af.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_601af.dir\Debug\\" /Fd"cmTC_601af.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_601af.dir\Debug\\" /Fd"cmTC_601af.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  testCXXCompiler.cxx
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_601af.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_601af.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_601af.lib" /MACHINE:X64  /machine:x64 cmTC_601af.dir\Debug\testCXXCompiler.obj
+  cmTC_601af.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_601af.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_601af.dir\Debug\cmTC_601af.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_601af.dir\Debug\cmTC_601af.tlog\cmTC_601af.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_601af.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.76
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_6e9a4.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:18.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_6e9a4.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_6e9a4.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_6e9a4.dir\Debug\cmTC_6e9a4.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_6e9a4.dir\Debug\cmTC_6e9a4.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_6e9a4.dir\Debug\\" /Fd"cmTC_6e9a4.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Programs\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_6e9a4.dir\Debug\\" /Fd"cmTC_6e9a4.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Programs\CMake\share\cmake-3.13\Modules\CMakeCXXCompilerABI.cpp"
+  CMakeCXXCompilerABI.cpp
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_6e9a4.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_6e9a4.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_6e9a4.lib" /MACHINE:X64  /machine:x64 cmTC_6e9a4.dir\Debug\CMakeCXXCompilerABI.obj
+  cmTC_6e9a4.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_6e9a4.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_6e9a4.dir\Debug\cmTC_6e9a4.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_6e9a4.dir\Debug\cmTC_6e9a4.tlog\cmTC_6e9a4.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_6e9a4.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.77
+
+
+
+
+Detecting CXX [] compiler features compiled with the following output:
+Change Dir: D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_cdb14.vcxproj" "/p:Configuration=Debug" "/p:Platform=x64" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine versione 15.8.168+ga8fba1ebd7 per .NET Framework
+Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
+
+Compilazione avviata 12/12/2018 11:33:19.
+Progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_cdb14.vcxproj" sul nodo 1 (destinazioni predefinite).
+PrepareForBuild:
+  Creazione directory "cmTC_cdb14.dir\Debug\".
+  Creazione directory "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\".
+  Creazione directory "cmTC_cdb14.dir\Debug\cmTC_cdb14.tlog\".
+InitializeBuildStatus:
+  Creazione di "cmTC_cdb14.dir\Debug\cmTC_cdb14.tlog\unsuccessfulbuild". È stato specificato "AlwaysCreate".
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cdb14.dir\Debug\\" /Fd"cmTC_cdb14.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\feature_tests.cxx"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.15.26729 for x64
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cdb14.dir\Debug\\" /Fd"cmTC_cdb14.dir\Debug\vc141.pdb" /Gd /TP /errorReport:queue "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\feature_tests.cxx"
+  feature_tests.cxx
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.15.26726\bin\HostX86\x64\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_cdb14.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_cdb14.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-build/CMakeFiles/CMakeTmp/Debug/cmTC_cdb14.lib" /MACHINE:X64  /machine:x64 cmTC_cdb14.dir\Debug\feature_tests.obj
+  cmTC_cdb14.vcxproj -> D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\Debug\cmTC_cdb14.exe
+FinalizeBuildStatus:
+  Eliminazione del file "cmTC_cdb14.dir\Debug\cmTC_cdb14.tlog\unsuccessfulbuild" in corso.
+  Aggiornamento timestamp di "cmTC_cdb14.dir\Debug\cmTC_cdb14.tlog\cmTC_cdb14.lastbuildstate".
+Compilazione progetto "D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\src\googletest_project-build\CMakeFiles\CMakeTmp\cmTC_cdb14.vcxproj" (destinazioni predefinite) completata.
+
+Compilazione completata.
+    Avvisi: 0
+    Errori: 0
+
+Tempo trascorso 00:00:00.77
+
+
+    Feature record: CXX_FEATURE:1cxx_aggregate_default_initializers
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:1cxx_alignas
+    Feature record: CXX_FEATURE:1cxx_alignof
+    Feature record: CXX_FEATURE:1cxx_attributes
+    Feature record: CXX_FEATURE:1cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:1cxx_binary_literals
+    Feature record: CXX_FEATURE:1cxx_constexpr
+    Feature record: CXX_FEATURE:1cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:1cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_decltype_incomplete_return_types
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:1cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:1cxx_deleted_functions
+    Feature record: CXX_FEATURE:1cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:1cxx_func_identifier
+    Feature record: CXX_FEATURE:1cxx_generalized_initializers
+    Feature record: CXX_FEATURE:1cxx_generic_lambdas
+    Feature record: CXX_FEATURE:1cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:1cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:1cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:1cxx_noexcept
+    Feature record: CXX_FEATURE:1cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:1cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:1cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:1cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:1cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:1cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:1cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:1cxx_user_literals
+    Feature record: CXX_FEATURE:1cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates

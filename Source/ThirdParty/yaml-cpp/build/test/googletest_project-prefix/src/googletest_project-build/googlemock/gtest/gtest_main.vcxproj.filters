@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\gtest-1.8.0\googletest\src\gtest_main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\gtest-1.8.0\googletest\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{50482BE4-50B1-3301-8295-B6372CB9FCAD}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

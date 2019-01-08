@@ -22,6 +22,10 @@ public class LidarRays : ModuleRules
         //// Boost to serialize
         //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 
+        //// Simulink communication
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/simulink_interface/include"));
+
+
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
  

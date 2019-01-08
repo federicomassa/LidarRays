@@ -1,10 +1,24 @@
 #include "GPSComponent.h"
 #include "OdometryMessage.h"
+#include "OdometrySimulinkMessage.h"
 #include <Engine/World.h>
 #include "EngineGlobals.h"
 #include <GameFramework/Actor.h>
 #include <Components/SkeletalMeshComponent.h>
 #include <DrawDebugHelpers.h>
+
+#ifndef SIMULINK
+#define SIMULINK
+#endif
+
+//
+//#ifdef WIN32
+//#include "AllowWindowsPlatformTypes.h"
+//#include "Windows.h"
+//#include "HideWindowsPlatformTypes.h"
+//#else
+//#error "FIXME Windows platform needed for timers!"
+//#endif
 
 
 UGPSComponent::UGPSComponent()
@@ -51,6 +65,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	//if (DeltaTime < 0.02) return;
 
+	//_LARGE_INTEGER StartingTime;
+	//QueryPerformanceCounter(&StartingTime);
+	//_LARGE_INTEGER SystemTickFrequency;
+	//QueryPerformanceFrequency(&SystemTickFrequency);
+
 	FRotator CurrentWorldRotation = Owner->GetActorRotation();
 	CurrentWorldRotation.Yaw = CurrentWorldRotation.Yaw + 90; // mesh is rotated 90 degrees? (here is +, in IMU is -??)
 
@@ -84,10 +103,21 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//FVector AxisZ = FVector(0.f, 0.f, 1.f);
 
 	// ========================================= BUILD GPS MESSAGE ====================================== //
+#ifndef SIMULINK
 	UOutgoingMessage* GPSMessage = NewObject<UOutgoingMessage>();
-	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
+#else
+	UOutgoingSimulinkMessage* GPSMessage = NewObject<UOutgoingSimulinkMessage>();
+#endif
 
+#ifndef SIMULINK
+	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
+#else
+	OdometrySimulinkMessage<simulink::SimulinkOutputArchive>* Data = new OdometrySimulinkMessage<simulink::SimulinkOutputArchive>;
+#endif
+
+#ifndef SIMULINK
 	Data->Timestamp = World->GetTimeSeconds();
+#endif
 
 	// in m, NWU frame
 	FVector GPSLocation = InitRotation.UnrotateVector(CurrentWorldLocation - InitLocation)*0.01;
@@ -97,14 +127,26 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	/*UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());*/
 
-	Data->PoseWithCovariance.Pose.X = GPSLocation.X; 
+#ifndef SIMULINK
+	Data->PoseWithCovariance.Pose.X = GPSLocation.X;
 	Data->PoseWithCovariance.Pose.Y = GPSLocation.Y;
 	Data->PoseWithCovariance.Pose.Z = GPSLocation.Z;
 
-	Data->PoseWithCovariance.Pose.Roll = GPSRotation.Roll*PI/180;
-	Data->PoseWithCovariance.Pose.Pitch = GPSRotation.Pitch*PI/180;
-	Data->PoseWithCovariance.Pose.Yaw = GPSRotation.Yaw*PI/180;
+	Data->PoseWithCovariance.Pose.Roll = GPSRotation.Roll*PI / 180;
+	Data->PoseWithCovariance.Pose.Pitch = GPSRotation.Pitch*PI / 180;
+	Data->PoseWithCovariance.Pose.Yaw = GPSRotation.Yaw*PI / 180;
+#else
+	Data->X = GPSLocation.X;
+	Data->Y = GPSLocation.Y;
+	Data->Z = GPSLocation.Z;
+	Data->Phi = GPSRotation.Yaw*PI / 180;
+#endif
 
+	FVector Velocity = Owner->GetVelocity();
+	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
+	RelativeVelocity = FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
+
+#ifndef SIMULINK
 	for (int i = 0; i < 36; i++)
 	{
 		Data->PoseWithCovariance.Covariance[i] = 0;
@@ -116,9 +158,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			Data->TwistWithCovariance.Covariance[i] = 0;
 	}
 
-	FVector Velocity = Owner->GetVelocity();
-	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
-	RelativeVelocity =	FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
+
 
 	Data->TwistWithCovariance.Twist.Linear[0] = RelativeVelocity.X*0.01;
 	Data->TwistWithCovariance.Twist.Linear[1] = RelativeVelocity.Y*0.01;
@@ -130,7 +170,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Data->TwistWithCovariance.Twist.Angular[0] = 0.f;
 	Data->TwistWithCovariance.Twist.Angular[1] = 0.f;
 	Data->TwistWithCovariance.Twist.Angular[2] = 0.f;
-
+#else
+	Data->VX = RelativeVelocity.X*0.01;
+	Data->VY = RelativeVelocity.Y*0.01;
+	Data->VZ = RelativeVelocity.Z*0.01;
+#endif
 
 	// ================ ANGULAR VELOCITY ===================== //
 
@@ -140,65 +184,75 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	FVector AngularVelocity = Owner->GetActorRotation().UnrotateVector(WorldAngularVelocity);
 */
-	//UE_LOG(LogTemp, Warning, TEXT("Angular: %s"), *AngularVelocity.ToString());
+//UE_LOG(LogTemp, Warning, TEXT("Angular: %s"), *AngularVelocity.ToString());
 
-	// ======================================================= //
+// ======================================================= //
 
-	/*UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *Velocity.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Relative Velocity: %s"), *RelativeVelocity.ToString());
+/*UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *Velocity.ToString());
+UE_LOG(LogTemp, Warning, TEXT("Relative Velocity: %s"), *RelativeVelocity.ToString());
 */
 
 
-	//Data->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
-	//Data->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);
-	//Data->Orientation.push_back(-CurrentWorldRotation.Yaw*PI/180);
+//Data->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
+//Data->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);
+//Data->Orientation.push_back(-CurrentWorldRotation.Yaw*PI/180);
 
-	//// in m/s^2, NWU frame
-	//Data->LinearAcceleration.push_back(LinearAcceleration.Y*0.01);
-	//Data->LinearAcceleration.push_back(LinearAcceleration.X*0.01);
-	//Data->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
+//// in m/s^2, NWU frame
+//Data->LinearAcceleration.push_back(LinearAcceleration.Y*0.01);
+//Data->LinearAcceleration.push_back(LinearAcceleration.X*0.01);
+//Data->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
 
-	//// in rad/s, NWU frame
-	//Data->AngularVelocity.push_back(AngularVelocity.Y);
-	//Data->AngularVelocity.push_back(AngularVelocity.X);
-	//Data->AngularVelocity.push_back(AngularVelocity.Z);
+//// in rad/s, NWU frame
+//Data->AngularVelocity.push_back(AngularVelocity.Y);
+//Data->AngularVelocity.push_back(AngularVelocity.X);
+//Data->AngularVelocity.push_back(AngularVelocity.Z);
 
-	//// Prepare covariances (unknown ==> 0 on the diagonal)
-	//for (int i = 0; i < 9; i++)
-	//{
-	//	if (i == 0 || i == 4 || i == 8)
-	//	{
-	//		Data->OrientationCov.push_back(0.f);
-	//		Data->LinearAccelerationCov.push_back(0.f);
-	//		Data->AngularVelocityCov.push_back(0.f);
-	//	}
-	//	else
-	//	{
-	//		Data->OrientationCov.push_back(0.f);
-	//		Data->LinearAccelerationCov.push_back(0.f);
-	//		Data->AngularVelocityCov.push_back(0.f);
-	//	}
-	//}
+//// Prepare covariances (unknown ==> 0 on the diagonal)
+//for (int i = 0; i < 9; i++)
+//{
+//	if (i == 0 || i == 4 || i == 8)
+//	{
+//		Data->OrientationCov.push_back(0.f);
+//		Data->LinearAccelerationCov.push_back(0.f);
+//		Data->AngularVelocityCov.push_back(0.f);
+//	}
+//	else
+//	{
+//		Data->OrientationCov.push_back(0.f);
+//		Data->LinearAccelerationCov.push_back(0.f);
+//		Data->AngularVelocityCov.push_back(0.f);
+//	}
+//}
 
-	// ========================================= BUILD GPS MESSAGE ====================================== //
+// ========================================= BUILD GPS MESSAGE ====================================== //
 
 	GPSMessage->message = Data;
 	// Broadcast GPS Message
 	OnGPSAvailable.Broadcast(GPSMessage);
 
+	/*_LARGE_INTEGER EndTime;
+	QueryPerformanceCounter(&EndTime);
 
-	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);
-	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), Data->AngularVelocity[0], Data->AngularVelocity[1], Data->AngularVelocity[2]);
+	_LARGE_INTEGER Ticks;
+	Ticks.QuadPart = (EndTime.QuadPart - StartingTime.QuadPart);
+	Ticks.QuadPart *= 1000000;
+	Ticks.QuadPart /= SystemTickFrequency.QuadPart;
 
-
-	// Draw axes
-	/*DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisX * 100.f, FColor::Red, false, -1.f, (uint8)'\000', 2.f);
-	DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisY * 100.f, FColor::Green, false, -1.f, (uint8)'\000', 2.f);
-	DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisZ * 100.f, FColor::Yellow, false, -1.f, (uint8)'\000', 2.f);
+	int ElapsedMicroseconds = Ticks.QuadPart;
+	UE_LOG(LogTemp, Warning, TEXT("GPS took %i microseconds"), ElapsedMicroseconds);
 */
-	//DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + FRotator(0.f, CurrentWorldRotation.Yaw - 90.f, 0.f).RotateVector(FVector(0.f, 1.f, 0.f)) * 100.f, FColor::Yellow, false, -1.f, (uint8)'\000', 2.f);
+//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);
+//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), Data->AngularVelocity[0], Data->AngularVelocity[1], Data->AngularVelocity[2]);
 
-	// Save current pose in Unreal frame. This is a world pose 
+
+// Draw axes
+/*DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisX * 100.f, FColor::Red, false, -1.f, (uint8)'\000', 2.f);
+DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisY * 100.f, FColor::Green, false, -1.f, (uint8)'\000', 2.f);
+DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisZ * 100.f, FColor::Yellow, false, -1.f, (uint8)'\000', 2.f);
+*/
+//DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + FRotator(0.f, CurrentWorldRotation.Yaw - 90.f, 0.f).RotateVector(FVector(0.f, 1.f, 0.f)) * 100.f, FColor::Yellow, false, -1.f, (uint8)'\000', 2.f);
+
+// Save current pose in Unreal frame. This is a world pose 
 //	UPoseStampedMessage* CurrentPose = NewObject<UPoseStampedMessage>();
 //	CurrentPose->Timestamp = GetWorld()->GetTimeSeconds();
 //	

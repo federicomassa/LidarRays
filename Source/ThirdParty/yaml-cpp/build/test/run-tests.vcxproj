@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4B7AD512-1950-3F77-B1F9-C83A7A8CA1FA}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>run-tests</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">run-tests.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">run-tests</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">run-tests.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">run-tests</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">run-tests.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">run-tests</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">run-tests.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">run-tests</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4127;4355</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\Debug\libyaml-cppmdd.lib;prefix\lib\gmock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/Debug/run-tests.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/Debug/run-tests.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4127;4355</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\Release\libyaml-cppmd.lib;prefix\lib\gmock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/Release/run-tests.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/Release/run-tests.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DisableSpecificWarnings>4127;4355</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\MinSizeRel\libyaml-cppmd.lib;prefix\lib\gmock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/MinSizeRel/run-tests.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/MinSizeRel/run-tests.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4127;4355</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\src;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\include;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\prefix\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\RelWithDebInfo\libyaml-cppmd.lib;prefix\lib\gmock.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/RelWithDebInfo/run-tests.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/RelWithDebInfo/run-tests.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Programs\CMake\bin\cmake.exe -SD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp -BD:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build --check-stamp-file D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/build/test/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/Projects/ilc_cpp/ilc_cpp/yaml-cpp/test/CMakeLists.txt;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.c.in;D:\Programs\CMake\share\cmake-3.13\Modules\CheckIncludeFile.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckLibraryExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\CheckSymbolExists.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\ExternalProject.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageHandleStandardArgs.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindPackageMessage.cmake;D:\Programs\CMake\share\cmake-3.13\Modules\FindThreads.cmake;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project-prefix\tmp\googletest_project-cfgcmd.txt.in;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\emitter_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\encoding_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\gen_emitter_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\handler_spec_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\handler_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\load_node_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\integration\node_spec_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\main.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\node\node_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\ostream_wrapper_test.cpp" />
+    <ClCompile Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\regex_test.cpp" />
+    <ClInclude Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\handler_test.h" />
+    <ClInclude Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\mock_event_handler.h" />
+    <ClInclude Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\test\specexamples.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\ZERO_CHECK.vcxproj">
+      <Project>{EA9F50B7-371F-3163-A738-BC4EA9377ECD}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\test\googletest_project.vcxproj">
+      <Project>{96C99EAF-E449-3A72-B62B-7D3F26E2B037}</Project>
+      <Name>googletest_project</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\ilc_cpp\ilc_cpp\yaml-cpp\build\yaml-cpp.vcxproj">
+      <Project>{2F326596-5F87-35C2-8D12-4A16CCD90D6B}</Project>
+      <Name>yaml-cpp</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

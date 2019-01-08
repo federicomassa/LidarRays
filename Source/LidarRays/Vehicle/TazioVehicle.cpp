@@ -9,6 +9,7 @@
 #include "cereal/archives/binary.hpp"
 #include "MessageWrapper.h"
 #include "TwistMessage.h"
+#include "SimulinkControlMessage.h"
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -86,14 +87,30 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &ATazioVehicle::ToggleManualDriving);
 }
 
-void ATazioVehicle::SendControls(UIncomingMessage* msg)
+//void ATazioVehicle::SendControls(UIncomingMessage* msg)
+//{
+//	TwistMessage<cereal::BinaryInputArchive>* twist = dynamic_cast<TwistMessage<cereal::BinaryInputArchive>*>(msg->message);
+//	if (twist)
+//	{
+//		GetVehicleMovementComponent()->SetThrottleInput(twist->Linear[0]);
+//		GetVehicleMovementComponent()->SetSteeringInput(-twist->Angular[2]);
+//	}
+//	else
+//	{
+//		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));
+//	}
+//}
+
+
+void ATazioVehicle::SendControls(UIncomingSimulinkMessage* msg)
 {
-	TwistMessage<cereal::BinaryInputArchive>* twist = dynamic_cast<TwistMessage<cereal::BinaryInputArchive>*>(msg->message);
-	if (twist)
+	SimulinkControlMessage<simulink::SimulinkInputArchive>* control = dynamic_cast<SimulinkControlMessage<simulink::SimulinkInputArchive>*>(msg->message);
+	if (control)
 	{
-		GetVehicleMovementComponent()->SetThrottleInput(twist->Linear[0]);
-		GetVehicleMovementComponent()->SetSteeringInput(-twist->Angular[2]);
-	}
+		UE_LOG(LogTemp, Warning, TEXT("Received: %f, %f, %f, %f, %f, %f"), control->VX, control->VY, control->VZ, control->Rdot, control->Pdot, control->Ydot);
+	/*	GetVehicleMovementComponent()->SetThrottleInput(control->VX);
+		GetVehicleMovementComponent()->SetSteeringInput(-control->Ydot);
+	*/}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));

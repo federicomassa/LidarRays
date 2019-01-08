@@ -10,32 +10,34 @@
 class ULidarMessage;
 class UIMUMessage;
 
-UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UMessageSerializerComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UMessageSerializerComponent();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-	TArray<uint8> SerializeLidarMessage(ULidarMessage* LidarScan);
+		TArray<uint8> SerializeLidarMessage(ULidarMessage* LidarScan);
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-	TArray<uint8> SerializeIMUMessage(UIMUMessage* IMUData);
-	
+		TArray<uint8> SerializeIMUMessage(UIMUMessage* IMUData);
+
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-	TArray<uint8> SerializeMessage(UOutgoingMessage* Data);
+		TArray<uint8> SerializeMessage(UOutgoingSimulinkMessage* Data);
 
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	UIncomingMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
+		UIncomingSimulinkMessage* DeserializeControlMessage(TArray<uint8> ControlMessage);
+
+
 
 };
