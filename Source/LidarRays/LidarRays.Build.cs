@@ -20,14 +20,21 @@ public class LidarRays : ModuleRules
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Sensors/Messages/Public"));
 
         //// Boost to serialize
-        //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
 
+        // Simulink communication interface
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/simulink_interface/include"));
+
+
         // ILC controller to use iterative control on the car
-        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/ilc_cpp/include"));
+        //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/ilc_cpp/include"));
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/ilc_cpp/x64/Release/ilc_cpp.lib"));
         PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "D:/Projects/ilc_cpp/ilc_cpp/x64/Release/ilc_cpp.lib"));
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "D:/Projects/ilc_cpp/ilc_cpp/ilc_cpp/include"));
+        
         // Eigen dependencies: include as eigen3/Eigen/...
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty"));
 

@@ -1,10 +1,15 @@
 #include "GPSComponent.h"
 #include "OdometryMessage.h"
+#include "OdometrySimulinkMessage.h"
 #include <Engine/World.h>
 #include "EngineGlobals.h"
 #include <GameFramework/Actor.h>
 #include <Components/SkeletalMeshComponent.h>
 #include <DrawDebugHelpers.h>
+
+#ifndef SIMULINK
+#define SIMULINK
+#endif
 
 //
 //#ifdef WIN32
@@ -98,8 +103,17 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//FVector AxisZ = FVector(0.f, 0.f, 1.f);
 
 	// ========================================= BUILD GPS MESSAGE ====================================== //
+#ifndef SIMULINK
 	UOutgoingMessage* GPSMessage = NewObject<UOutgoingMessage>();
+#else
+	UOutgoingSimulinkMessage* GPSMessage = NewObject<UOutgoingSimulinkMessage>();
+#endif
+
+#ifndef SIMULINK
 	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
+#else
+	OdometrySimulinkMessage<simulink::SimulinkOutputArchive>* Data = new OdometrySimulinkMessage<simulink::SimulinkOutputArchive>;
+#endif
 
 	Data->Timestamp = World->GetTimeSeconds();
 
@@ -111,6 +125,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	/*UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());*/
 
+#ifndef SIMULINK
 	Data->PoseWithCovariance.Pose.X = GPSLocation.X; 
 	Data->PoseWithCovariance.Pose.Y = GPSLocation.Y;
 	Data->PoseWithCovariance.Pose.Z = GPSLocation.Z;
@@ -118,7 +133,18 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Data->PoseWithCovariance.Pose.Roll = GPSRotation.Roll*PI/180;
 	Data->PoseWithCovariance.Pose.Pitch = GPSRotation.Pitch*PI/180;
 	Data->PoseWithCovariance.Pose.Yaw = GPSRotation.Yaw*PI/180;
+#else
+	Data->X = GPSLocation.X;
+	Data->Y = GPSLocation.Y;
+	Data->Z = GPSLocation.Z;
+	Data->Phi = GPSRotation.Yaw*PI / 180;
+#endif
 
+	FVector Velocity = Owner->GetVelocity();
+	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
+	RelativeVelocity = FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
+
+#ifndef SIMULINK
 	for (int i = 0; i < 36; i++)
 	{
 		Data->PoseWithCovariance.Covariance[i] = 0;
@@ -130,9 +156,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 			Data->TwistWithCovariance.Covariance[i] = 0;
 	}
 
-	FVector Velocity = Owner->GetVelocity();
-	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
-	RelativeVelocity =	FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
+	
 
 	Data->TwistWithCovariance.Twist.Linear[0] = RelativeVelocity.X*0.01;
 	Data->TwistWithCovariance.Twist.Linear[1] = RelativeVelocity.Y*0.01;
@@ -144,7 +168,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Data->TwistWithCovariance.Twist.Angular[0] = 0.f;
 	Data->TwistWithCovariance.Twist.Angular[1] = 0.f;
 	Data->TwistWithCovariance.Twist.Angular[2] = 0.f;
-
+#else
+	Data->VX = RelativeVelocity.X*0.01;
+	Data->VY = RelativeVelocity.Y*0.01;
+	Data->VZ = RelativeVelocity.Z*0.01;
+#endif
 
 	// ================ ANGULAR VELOCITY ===================== //
 

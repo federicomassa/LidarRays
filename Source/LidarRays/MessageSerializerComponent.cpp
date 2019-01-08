@@ -217,7 +217,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(UIMUMessage * Dat
 	return serialized;
 }
 
-TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * Data)
+TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingSimulinkMessage * Data)
 {
 	if (Data == nullptr)
 	{
@@ -232,7 +232,9 @@ TArray<uint8> UMessageSerializerComponent::SerializeMessage(UOutgoingMessage * D
 
 	std::ostringstream oss;
 
-	cereal::BinaryOutputArchive oa(oss);
+	/*cereal::BinaryOutputArchive oa(oss);
+*/
+	simulink::SimulinkOutputArchive oa(oss);
 
 	oa << (*Data->message);
 	//oa << TestMessage;

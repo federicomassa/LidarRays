@@ -32,7 +32,7 @@ public:
 	TArray<uint8> SerializeIMUMessage(UIMUMessage* IMUData);
 	
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-	TArray<uint8> SerializeMessage(UOutgoingMessage* Data);
+	TArray<uint8> SerializeMessage(UOutgoingSimulinkMessage* Data);
 
 
 	UFUNCTION(BlueprintCallable, Category = Controller)

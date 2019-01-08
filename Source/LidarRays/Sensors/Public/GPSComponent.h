@@ -9,8 +9,11 @@
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
-
+//#ifndef SIMULINK
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
+//#else
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingSimulinkMessage*, GPSData);
+//#endif
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
