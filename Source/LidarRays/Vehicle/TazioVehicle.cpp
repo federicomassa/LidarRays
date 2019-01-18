@@ -107,10 +107,12 @@ void ATazioVehicle::SendControls(UIncomingSimulinkMessage* msg)
 	SimulinkControlMessage<simulink::SimulinkInputArchive>* control = dynamic_cast<SimulinkControlMessage<simulink::SimulinkInputArchive>*>(msg->message);
 	if (control)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Received: %f, %f, %f, %f, %f, %f"), control->VX, control->VY, control->VZ, control->Rdot, control->Pdot, control->Ydot);
-	/*	GetVehicleMovementComponent()->SetThrottleInput(control->VX);
+		UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);
+		/*if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
+		GetVehicleMovementComponent()->SetThrottleInput(control->VX);
 		GetVehicleMovementComponent()->SetSteeringInput(-control->Ydot);
-	*/}
+	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));

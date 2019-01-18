@@ -14,13 +14,13 @@ public:
 	float Z;
 	float VX;
 	float VY;
-	float VZ;
+	float PhiRate;
 	float Phi;
 
 	void serialize(Archive & ar) override
 	{
 		ar(X, Y, Z);
-		ar(VX, VY, VZ);
+		ar(VX, VY, PhiRate);
 		ar(Phi);
 	}
 

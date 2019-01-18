@@ -59,7 +59,8 @@ void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4End
 
 	uint8* Data = ArrayReaderPtr->GetData();
 
-	TArray<uint8> ReceivedData;
+	//TSharedPtr<TArray<uint8> > ReceivedData(new TArray<uint8>);
+
 	for (int i = 0; i < ArrayReaderPtr->Num(); i++)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));

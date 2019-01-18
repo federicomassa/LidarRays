@@ -5,6 +5,7 @@
 #include "EngineGlobals.h"
 #include <GameFramework/Actor.h>
 #include <Components/SkeletalMeshComponent.h>
+#include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
 
 #ifndef SIMULINK
@@ -40,6 +41,15 @@ void UGPSComponent::BeginPlay()
 	World = GetWorld();
 	Mesh = Owner->FindComponentByClass<USkeletalMeshComponent>();
 
+	UInputComponent* Input = Owner->FindComponentByClass<UInputComponent>();
+	if (!Input)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Cannot find Input Component from GPSComponent!"));
+	}
+
+	Input->BindAction("ToggleGPS", IE_Pressed, this, &UGPSComponent::ToggleGPS);
+
+
 	InitLocation = Owner->GetActorLocation();
 	InitRotation = Owner->GetActorRotation();
 
@@ -61,6 +71,9 @@ void UGPSComponent::BeginPlay()
 
 void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if (!isActive)
+		return;
+
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//if (DeltaTime < 0.02) return;
@@ -78,10 +91,17 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	// ================   ORIENTATION    ===================== //
 	//GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, FString::Printf(TEXT("r: %f, p: %f, y: %f"), CurrentWorldRotation.Roll, -CurrentWorldRotation.Pitch, -CurrentWorldRotation.Yaw));
+#ifdef SIMULINK
+	FRotator CurrentWorldRotationIMU = Owner->GetActorRotation();
+	CurrentWorldRotationIMU.Yaw = CurrentWorldRotationIMU.Yaw - 90.f; // mesh is rotated 90 degrees
+	FVector WorldAngularVelocity;
+	if (Mesh)
+		WorldAngularVelocity = Mesh->GetPhysicsAngularVelocityInRadians();
 
-
+	FVector AngularVelocity = CurrentWorldRotationIMU.UnrotateVector(WorldAngularVelocity);
+	
 	// ======================================================= //
-
+#endif
 
 
 
@@ -103,17 +123,9 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//FVector AxisZ = FVector(0.f, 0.f, 1.f);
 
 	// ========================================= BUILD GPS MESSAGE ====================================== //
-#ifndef SIMULINK
-	UOutgoingMessage* GPSMessage = NewObject<UOutgoingMessage>();
-#else
-	UOutgoingSimulinkMessage* GPSMessage = NewObject<UOutgoingSimulinkMessage>();
-#endif
 
-#ifndef SIMULINK
-	OdometryMessage<cereal::BinaryOutputArchive>* Data = new OdometryMessage<cereal::BinaryOutputArchive>;
-#else
-	OdometrySimulinkMessage<simulink::SimulinkOutputArchive>* Data = new OdometrySimulinkMessage<simulink::SimulinkOutputArchive>;
-#endif
+	UOutgoingSimulinkMessage* GPSMessage = NewObject<UOutgoingSimulinkMessage>();
+	OdometryMessage<simulink::SimulinkOutputArchive>* Data = new OdometryMessage<simulink::SimulinkOutputArchive>;
 
 #ifndef SIMULINK
 	Data->Timestamp = World->GetTimeSeconds();
@@ -127,54 +139,39 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	/*UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());*/
 
-#ifndef SIMULINK
-	Data->PoseWithCovariance.Pose.X = GPSLocation.X;
-	Data->PoseWithCovariance.Pose.Y = GPSLocation.Y;
-	Data->PoseWithCovariance.Pose.Z = GPSLocation.Z;
 
-	Data->PoseWithCovariance.Pose.Roll = GPSRotation.Roll*PI / 180;
-	Data->PoseWithCovariance.Pose.Pitch = GPSRotation.Pitch*PI / 180;
-	Data->PoseWithCovariance.Pose.Yaw = GPSRotation.Yaw*PI / 180;
-#else
-	Data->X = GPSLocation.X;
-	Data->Y = GPSLocation.Y;
-	Data->Z = GPSLocation.Z;
-	Data->Phi = GPSRotation.Yaw*PI / 180;
-#endif
+	Data->x = GPSLocation.X;
+	Data->y = GPSLocation.Y;
+	Data->z = GPSLocation.Z;
+	Data->yaw = GPSRotation.Yaw*PI / 180;
+	Data->yaw_rate = -AngularVelocity.Z;
+	
 
 	FVector Velocity = Owner->GetVelocity();
 	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
 	RelativeVelocity = FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
 
-#ifndef SIMULINK
 	for (int i = 0; i < 36; i++)
 	{
-		Data->PoseWithCovariance.Covariance[i] = 0;
+		Data->pose_covariance[i] = 0;
 
 		// Angular velocity in IMU signal
 		if (i > 17 && i % 7 == 0)
-			Data->TwistWithCovariance.Covariance[i] = -1;
+			Data->twist_covariance[i] = -1;
 		else
-			Data->TwistWithCovariance.Covariance[i] = 0;
+			Data->twist_covariance[i] = 0;
 	}
 
-
-
-	Data->TwistWithCovariance.Twist.Linear[0] = RelativeVelocity.X*0.01;
-	Data->TwistWithCovariance.Twist.Linear[1] = RelativeVelocity.Y*0.01;
-	Data->TwistWithCovariance.Twist.Linear[2] = RelativeVelocity.Z*0.01;
+	Data->vx = RelativeVelocity.X*0.01;
+	Data->vy = RelativeVelocity.Y*0.01;
+	Data->vz = RelativeVelocity.Z*0.01;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Sending velocity linear: %s"), *RelativeVelocity.ToString());
 
 	// Has -1 covariance: not used
-	Data->TwistWithCovariance.Twist.Angular[0] = 0.f;
-	Data->TwistWithCovariance.Twist.Angular[1] = 0.f;
-	Data->TwistWithCovariance.Twist.Angular[2] = 0.f;
-#else
-	Data->VX = RelativeVelocity.X*0.01;
-	Data->VY = RelativeVelocity.Y*0.01;
-	Data->VZ = RelativeVelocity.Z*0.01;
-#endif
+	Data->yaw_rate = 0.f;
+	Data->pitch_rate = 0.f;
+	Data->roll_rate = 0.f;
 
 	// ================ ANGULAR VELOCITY ===================== //
 
@@ -340,4 +337,9 @@ DrawDebugLine(GetWorld(), CurrentWorldLocation, CurrentWorldLocation + AxisZ * 1
 ////		UE_LOG(LogTemp, Warning, TEXT("GPS X: %f, %f, %f, %f"), x3, x2, t3, t2);
 //	}
 //
+}
+
+void UGPSComponent::ToggleGPS()
+{
+	isActive = !isActive;
 }

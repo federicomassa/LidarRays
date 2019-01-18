@@ -9,11 +9,7 @@
 class AActor;
 class UWorld;
 
-//#ifndef SIMULINK
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingMessage*, GPSData);
-//#else
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingSimulinkMessage*, GPSData);
-//#endif
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
@@ -26,6 +22,8 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 
 	FVector InitLocation;
 	FRotator InitRotation;
+
+	bool isActive = true;
 public:
 
 	UGPSComponent();
@@ -41,5 +39,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = GPS)
 		FGPSAvailableDelegate OnGPSAvailable;
+
+private:
+	void ToggleGPS();
 
 };

@@ -17,6 +17,9 @@ class AUDPReceiver : public AActor
 {
 	GENERATED_BODY()
 
+	// TODO this should not be here. Maybe alleviates the problem in UDPReceiver.cpp (see TODO) but does not solve it
+	TArray<uint8> ReceivedData;
+
 public:
 	AUDPReceiver(const FObjectInitializer& ObjectInitializer);
 

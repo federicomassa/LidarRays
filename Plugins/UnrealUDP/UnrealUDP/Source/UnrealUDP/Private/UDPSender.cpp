@@ -8,8 +8,6 @@
 // endian conversion
 #include <boost/endian/conversion.hpp>
 
-#define UDP
-
 AUDPSender::AUDPSender(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	SenderSocket = NULL;
@@ -71,18 +69,19 @@ bool AUDPSender::SendData(TArray<uint8> Data)
 	//UE_LOG(LogTemp, Warning, TEXT("Big endian!"));
 	//SenderSocket->SendTo(buffer_size_bytes, buffer_size_size, SizeMessageBytesSent, *RemoteAddr);
 
-#ifndef UDP
-	SenderSocket->SendTo((uint8*)&buffer_size_bigendian, sizeof(buffer_size_bigendian), SizeMessageBytesSent, *RemoteAddr);
-	if (SizeMessageBytesSent <= 0)
+	if (!isUDP)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Hey wtf"));
-		const FString Str = "First message: socket is valid but the receiver received 0 bytes, make sure it is listening properly!";
-		UE_LOG(LogTemp, Error, TEXT("%s"), *Str);
-		//ScreenMsg(Str);
-		//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
-		return false;
+		SenderSocket->SendTo((uint8*)&buffer_size_bigendian, sizeof(buffer_size_bigendian), SizeMessageBytesSent, *RemoteAddr);
+		if (SizeMessageBytesSent <= 0)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Hey wtf"));
+			const FString Str = "First message: socket is valid but the receiver received 0 bytes, make sure it is listening properly!";
+			UE_LOG(LogTemp, Error, TEXT("%s"), *Str);
+			//ScreenMsg(Str);
+			//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
+			return false;
+		}
 	}
-#endif
 	//UE_LOG(LogTemp, Warning, TEXT("First message: sent %d/%d bytes"), SizeMessageBytesSent, buffer_size_size);
 
 	//SenderSocket->SendTo(message_size.bytes, sizeof(buffer_size), SizeMessageBytesSent, *RemoteAddr);
@@ -114,6 +113,8 @@ bool AUDPSender::Start(const FString & YourChosenSocketName, const FString & The
 	//Create Remote Address. 
 	RemoteAddr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 
+	isUDP = UDP;
+
 	bool bIsValid; 
 	RemoteAddr->SetIp(*TheIP, bIsValid);
 	RemoteAddr->SetPort(ThePort);
@@ -124,18 +125,18 @@ bool AUDPSender::Start(const FString & YourChosenSocketName, const FString & The
 		return false;
 	}
 
-#ifdef UDP
-	SenderSocket = FUdpSocketBuilder(*YourChosenSocketName).AsReusable().WithBroadcast();
-#else
-	SenderSocket = FTcpSocketBuilder(*YourChosenSocketName)
-		.AsReusable();
-#endif
+	if (isUDP)
+	{
+		SenderSocket = FUdpSocketBuilder(*YourChosenSocketName).AsReusable().WithBroadcast();
+		check(SenderSocket->GetSocketType() == SOCKTYPE_Datagram);
 
-#ifdef UDP
-	check(SenderSocket->GetSocketType() == SOCKTYPE_Datagram);
-#else
-	check(SenderSocket->GetSocketType() == SOCKTYPE_Streaming);
-#endif
+	}
+	else
+	{
+		SenderSocket = FTcpSocketBuilder(*YourChosenSocketName)
+			.AsReusable();
+		check(SenderSocket->GetSocketType() == SOCKTYPE_Streaming);
+	}
 
 	////Set Send Buffer Size
 	/*int32 SendSize = 2*1024*1024; 
