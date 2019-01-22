@@ -143,9 +143,17 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Data->x = GPSLocation.X;
 	Data->y = GPSLocation.Y;
 	Data->z = GPSLocation.Z;
-	Data->yaw = GPSRotation.Yaw*PI / 180;
+	Data->yaw = (GPSRotation.Yaw)*PI / 180;
+	Data->pitch = 0.0f;
+	Data->roll = 0.0f;
+
+	if (Data->yaw > PI)
+		Data->yaw -= 2 * PI;
+	else if (Data->yaw < -PI)
+		Data->yaw += 2 * PI;
+
 	Data->yaw_rate = -AngularVelocity.Z;
-	
+	UE_LOG(LogTemp, Warning, TEXT("GPS Yaw: %f"), Data->yaw);
 
 	FVector Velocity = Owner->GetVelocity();
 	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
