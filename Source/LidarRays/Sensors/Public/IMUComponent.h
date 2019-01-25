@@ -2,8 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PoseStampedMessage.h"
-#include <cereal/archives/binary.hpp>
+#include "IMUMessage.h"
 #include "IMUComponent.generated.h"
 
 class AActor;

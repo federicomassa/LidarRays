@@ -1,11 +1,14 @@
 #pragma once
 #include <string>
+#include <CoreMinimal.h>
+#include "MessageBase.generated.h"
 
-template <class Archive>
-class MessageBase
+UCLASS(Blueprintable, ClassGroup = (Messages))
+class UMessageBase : public UObject
 {
+	GENERATED_BODY()
+
 public:
-	virtual void serialize(Archive&) = 0;
-	virtual std::string ToString() = 0;
-	virtual ~MessageBase() {}
+	virtual std::string ToString();
+	virtual ~UMessageBase() {}
 };

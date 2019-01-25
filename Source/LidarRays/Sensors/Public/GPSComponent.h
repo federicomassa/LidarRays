@@ -2,21 +2,21 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PoseStampedMessage.h"
-#include "MessageWrapper.h"
+#include <random>
+#include "OdometryMessage.h"
 #include "GPSComponent.generated.h"
 
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOutgoingSimulinkMessage*, GPSData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOdometryMessage*, GPSData);
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-		AActor* Owner = nullptr;
+	AActor* Owner = nullptr;
 	UWorld* World = nullptr;
 	USkeletalMeshComponent* Mesh;;
 
@@ -24,6 +24,22 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 	FRotator InitRotation;
 
 	bool isActive = true;
+
+	// Random generator
+	std::random_device RandomDevice;
+	std::mt19937 RandomGenerator;
+
+	// meters
+	UPROPERTY(EditAnywhere, Category = Noise)
+	float PositionStdDev = 0.3f;
+
+	// deg
+	UPROPERTY(EditAnywhere, Category = Noise)
+	float YawStdDev = 1.f;
+
+	std::normal_distribution<float> PositionRandomNoise;
+	std::normal_distribution<float> YawRandomNoise;
+
 public:
 
 	UGPSComponent();
@@ -37,7 +53,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(BlueprintAssignable, Category = GPS)
+	UPROPERTY(BlueprintAssignable, Category = Sensors)
 		FGPSAvailableDelegate OnGPSAvailable;
 
 private:

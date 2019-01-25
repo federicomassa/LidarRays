@@ -3,10 +3,13 @@
 #pragma once
 
 #include <MessageBase.h>
+#include "ControlMessage.generated.h"
 
-template <class Archive>
-class SimulinkControlMessage : public MessageBase<Archive>
+UCLASS(Blueprintable, ClassGroup = (Messages))
+class UControlMessage : public UMessageBase
 {
+	GENERATED_BODY()
+
 public:
 	// These should be vectors with 3 components (x,y,z)
 	float VX, VY, VZ;
@@ -14,7 +17,8 @@ public:
 	// Velocities of roll, pitch, yaw
 	float Rdot, Pdot, Ydot;
 
-	void serialize(Archive & ar) override
+	template <class Archive>
+	void serialize(Archive & ar)
 	{
 		ar(VX, VY, VZ);
 		ar(Rdot, Pdot, Ydot);

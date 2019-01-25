@@ -2,10 +2,11 @@
 
 #include <vector>
 #include <CoreMinimal.h> // delete in ROS
+#include "MessageBase.h"
 #include "IMUMessage.generated.h" // delete in ROS
 
-UCLASS(Blueprintable) // delete in ROS
-class LIDARRAYS_API UIMUMessage : public UObject // delete in ROS
+UCLASS(Blueprintable, ClassGroup = (Messages))
+class LIDARRAYS_API UIMUMessage : public UMessageBase // delete in ROS
 {
 	GENERATED_BODY() // delete in ROS
 

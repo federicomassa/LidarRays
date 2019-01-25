@@ -6,10 +6,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "UObject/ConstructorHelpers.h"
-#include "cereal/archives/binary.hpp"
-#include "MessageWrapper.h"
-#include "TwistMessage.h"
-#include "SimulinkControlMessage.h"
+#include "ControlMessage.h"
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -102,9 +99,8 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 //}
 
 
-void ATazioVehicle::SendControls(UIncomingSimulinkMessage* msg)
+void ATazioVehicle::SendControls(UControlMessage* control)
 {
-	SimulinkControlMessage<simulink::SimulinkInputArchive>* control = dynamic_cast<SimulinkControlMessage<simulink::SimulinkInputArchive>*>(msg->message);
 	if (control)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);
@@ -127,27 +123,6 @@ void ATazioVehicle::Tick(float Delta)
 void ATazioVehicle::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//// Serialize
-	//UOutgoingMessage* toSerialize = NewObject<UOutgoingMessage>();
-	//std::ostringstream oss;
-	//cereal::BinaryOutputArchive oa(oss);
-	//toSerialize->message = new TestMessage<cereal::BinaryOutputArchive>;
-
-	//oa(*toSerialize->message);
-
-	//UE_LOG(LogTemp, Warning, TEXT("Sending message: %s"), *FString(toSerialize->message->ToString().c_str()));
-
-	//// Unserialize
-	//UIncomingMessage* toUnserialize = NewObject<UIncomingMessage>();
-	//std::istringstream iss;
-	//iss.str(oss.str());
-
-	//cereal::BinaryInputArchive ia(iss);
-	//toUnserialize->message = new TestMessage<cereal::BinaryInputArchive>;
-
-	//ia(*toUnserialize->message);
-	//UE_LOG(LogTemp, Warning, TEXT("Arriving message: %s"), *FString(toUnserialize->message->ToString().c_str()));
 }
 
 #undef LOCTEXT_NAMESPACE

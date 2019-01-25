@@ -6,7 +6,6 @@
 #include "WheeledVehicle.h"
 #include "UDPSender.h" 
 #include "UDPReceiver.h"
-#include "MessageWrapper.h"
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -15,6 +14,7 @@ class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
 class UAudioComponent;
+class UControlMessage;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
@@ -78,7 +78,7 @@ public:
 
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	void SendControls(UIncomingSimulinkMessage* ControlMessage);
+	void SendControls(UControlMessage* ControlMessage);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

@@ -42,7 +42,6 @@ void ULidarComponent::BeginPlay()
 	}
 
 	//Scan = NewObject<ULidarMessage>();
-
 }
 
 
@@ -63,7 +62,9 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		ULidarMessage* Scan = NewObject<ULidarMessage>();
 
-		Scan->Empty();
+		Scan->PointsX.reserve(NumLidars*VerLayers*HorPoints);
+		Scan->PointsY.reserve(NumLidars*VerLayers*HorPoints);
+		Scan->PointsZ.reserve(NumLidars*VerLayers*HorPoints);
 
 		/*if (!isFirst)
 			UE_LOG(LogTemp, Warning, TEXT("Lidar frequency: %f"), 1.f / (World->GetTimeSeconds() - LastLidarScanTime));*/
@@ -88,6 +89,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		FHitResult Hit;
 
 		int count = 0;
+
 		for (int lidar = 0; lidar < NumLidars; lidar++)
 		{
 			for (int layer = 0; layer < VerLayers; layer++)
@@ -118,9 +120,9 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 						//Scan->PointsY.push_back(-SensorPoint.Y*0.01); 
 						//Scan->PointsZ.push_back(SensorPoint.Z*0.01); 
 
-						Scan->PointsX[count] = SensorPoint.X*0.01; 
-						Scan->PointsY[count] = -SensorPoint.Y*0.01; 
-						Scan->PointsZ[count] = SensorPoint.Z*0.01; 
+						Scan->PointsX.push_back(SensorPoint.X*0.01); 
+						Scan->PointsY.push_back(-SensorPoint.Y*0.01); 
+						Scan->PointsZ.push_back(SensorPoint.Z*0.01); 
 
 						//// Transform to meters and NWU frame --- for advanced vehicle
 						//Scan->PointsX.push_back(-SensorPoint.X*0.01);
@@ -148,9 +150,9 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 					}
 					else
 					{
-						Scan->PointsX[count] = -1;
+						/*Scan->PointsX[count] = -1;
 						Scan->PointsY[count] = -1;
-						Scan->PointsZ[count] = -1;
+						Scan->PointsZ[count] = -1;*/
 					}
 
 					count++;
@@ -161,6 +163,10 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		LidarSimulated++;
 
 		// Delegate broadcast
+		Scan->PointsX.shrink_to_fit();
+		Scan->PointsY.shrink_to_fit();
+		Scan->PointsZ.shrink_to_fit();
+
 		OnLidarAvailable.Broadcast(Scan);
 		//isFirst = false;
 	}
