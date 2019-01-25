@@ -178,9 +178,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSTruthMessage->y = -CurrentWorldLocation.Y*0.01;
 	GPSTruthMessage->z = CurrentWorldLocation.Z*0.01;
 
-	GPSTruthMessage->vx = Velocity.X*0.01;
-	GPSTruthMessage->vy = -Velocity.Y*0.01;
-	GPSTruthMessage->vz = Velocity.Z*0.01;
+	// Velocity in truth is relative: x longitudinal, y to the left
+	GPSTruthMessage->vx = RelativeVelocity.X*0.01;
+	GPSTruthMessage->vy = RelativeVelocity.Y*0.01;
+	GPSTruthMessage->vz = RelativeVelocity.Z*0.01;
+
 
 	GPSTruthMessage->yaw = Owner->GetActorRotation().Yaw;
 	GPSTruthMessage->pitch = Owner->GetActorRotation().Pitch;
