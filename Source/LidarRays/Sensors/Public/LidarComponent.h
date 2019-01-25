@@ -23,7 +23,7 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 
 	// Lidar range
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	float LidarRange = 10000.f;
+	float LidarRange = 10000.f; // cm
 
 	// Lidar points yaw spacing
 	UPROPERTY(EditAnywhere, Category = Lidar)
@@ -33,10 +33,10 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 	float VerResolution = 0.8; // deg
 	
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	int HorPoints = 580; // deg
+	int HorPoints = 580;
 
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	int VerLayers = 4; // deg
+	int VerLayers = 2;
 
 	bool isFirst = true;
 
@@ -65,7 +65,7 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 
 	// First lidar roll offset with respect to car FIXME correct once lidars have been set up in the generic position
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	float FirstLidarVerOffset = -1.2;
+	float FirstLidarVerOffset = 0.f;
 
 	// TODO Add custom lidar positioning: for now only fixed offset in Z
 	UPROPERTY(EditAnywhere, Category = Lidar)

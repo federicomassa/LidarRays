@@ -19,6 +19,10 @@ public class LidarRays : ModuleRules
         // Sensor messages
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Sensors/Messages/Public"));
 
+        // Utility
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Utility/Public"));
+
+
         //// Boost to serialize
         //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 

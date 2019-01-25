@@ -6,6 +6,7 @@
 #include "cereal/types/vector.hpp"
 #include "cereal/types/array.hpp"
 #include "MessageBase.h"
+#include "Point3D.h"
 #include "LidarMessage.generated.h" // delete in ROS
 
 UCLASS(Blueprintable, ClassGroup = (Messages))
@@ -17,17 +18,13 @@ public:
 	float timestamp;
 
 	// These must be same size and 1 to 1 correspondence
-	std::vector<float> PointsX;
-	std::vector<float> PointsY;
-	std::vector<float> PointsZ;
+	std::vector<Point3D> Points;
 
 	template<class Archive>
 	void serialize(Archive & ar)
 	{
 		ar(timestamp);
-		ar(PointsX);
-		ar(PointsY);
-		ar(PointsZ);
+		ar(Points);
 	}
 
 	ULidarMessage();
