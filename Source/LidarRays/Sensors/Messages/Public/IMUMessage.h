@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <CoreMinimal.h> // delete in ROS
 #include "MessageBase.h"
+#include "Point3D.h"
 #include "IMUMessage.generated.h" // delete in ROS
 
 UCLASS(Blueprintable, ClassGroup = (Messages))
@@ -14,14 +15,14 @@ public:
 	float timestamp;
 
 	// Vectors are 3D, Covariances are 3*3 matrices
-	std::vector<float> Orientation;
-	std::vector<float> OrientationCov;
+	Point3D Orientation;
+	std::array<float, 9> OrientationCov;
 
-	std::vector<float> LinearAcceleration;
-	std::vector<float> LinearAccelerationCov;
+	Point3D LinearAcceleration;
+	std::array<float, 9> LinearAccelerationCov;
 
-	std::vector<float> AngularVelocity;
-	std::vector<float> AngularVelocityCov;
+	Point3D AngularVelocity;
+	std::array<float, 9> AngularVelocityCov;
 
 	template<class Archive>
 	void serialize(Archive & ar)

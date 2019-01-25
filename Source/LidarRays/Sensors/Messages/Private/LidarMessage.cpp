@@ -2,6 +2,7 @@
 
 void ULidarMessage::Empty()
 {
+	Points.clear();
 }
 
 ULidarMessage::ULidarMessage()

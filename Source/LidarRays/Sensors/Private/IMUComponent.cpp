@@ -121,19 +121,19 @@ void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	UIMUMessage* IMUReading = NewObject<UIMUMessage>();
 
 	// in rad, NWU frame
-	IMUReading->Orientation.push_back(CurrentWorldRotation.Roll*PI/180);
-	IMUReading->Orientation.push_back(-CurrentWorldRotation.Pitch*PI/180);
-	IMUReading->Orientation.push_back(-CurrentWorldRotation.Yaw*PI/180);
+	IMUReading->Orientation.x = CurrentWorldRotation.Roll*PI/180;
+	IMUReading->Orientation.y = -CurrentWorldRotation.Pitch*PI/180;
+	IMUReading->Orientation.z = -CurrentWorldRotation.Yaw*PI/180;
 
 	// in m/s^2, NWU frame
-	IMUReading->LinearAcceleration.push_back(LinearAcceleration.Y*0.01);
-	IMUReading->LinearAcceleration.push_back(LinearAcceleration.X*0.01);
-	IMUReading->LinearAcceleration.push_back(LinearAcceleration.Z*0.01 + 9.81);
+	IMUReading->LinearAcceleration.x = LinearAcceleration.Y*0.01;
+	IMUReading->LinearAcceleration.y = LinearAcceleration.X*0.01;
+	IMUReading->LinearAcceleration.z = LinearAcceleration.Z*0.01 + 9.81;
 
 	// in rad/s, NWU frame
-	IMUReading->AngularVelocity.push_back(-AngularVelocity.Y); // FIXME I don't know why I need minuses
-	IMUReading->AngularVelocity.push_back(-AngularVelocity.X);
-	IMUReading->AngularVelocity.push_back(-AngularVelocity.Z);
+	IMUReading->AngularVelocity.x = -AngularVelocity.Y; // FIXME I don't know why I need minuses
+	IMUReading->AngularVelocity.y = -AngularVelocity.X;
+	IMUReading->AngularVelocity.z = -AngularVelocity.Z;
 
 	/*UE_LOG(LogTemp, Warning, TEXT("Lin acc: x = %f, y = %f, z = %f"), IMUReading->LinearAcceleration[0], IMUReading->LinearAcceleration[1], IMUReading->LinearAcceleration[2]);
 	UE_LOG(LogTemp, Warning, TEXT("Orient:  r = %f, p = %f, y = %f"), IMUReading->Orientation[0], IMUReading->Orientation[1], IMUReading->Orientation[2]);
@@ -142,24 +142,19 @@ void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// Prepare covariances (unknown ==> 0 on the diagonal)
 	for (int i = 0; i < 9; i++)
 	{
-		if (i % 4 == 0)
-		{
-			IMUReading->OrientationCov.push_back(0.f);
-			IMUReading->LinearAccelerationCov.push_back(0.f);
-			IMUReading->AngularVelocityCov.push_back(0.f);
-		}
-		else
-		{
-			IMUReading->OrientationCov.push_back(0.f);
-			IMUReading->LinearAccelerationCov.push_back(0.f);
-			IMUReading->AngularVelocityCov.push_back(0.f);
-		}
+		IMUReading->OrientationCov[i] = 0.f;
+		IMUReading->LinearAccelerationCov[i] = 0.f;
+		IMUReading->AngularVelocityCov[i] = 0.f;
 	}
 
 	// ========================================= BUILD IMU MESSAGE ====================================== //
 
 
 	// Broadcast IMU Message
+	UE_LOG(LogTemp, Warning, TEXT("Lin acc: x: %f, y: %f, z: %f"), IMUReading->LinearAcceleration.x, IMUReading->LinearAcceleration.y, IMUReading->LinearAcceleration.z);
+
+
+
 	OnIMUAvailable.Broadcast(IMUReading);
 
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);

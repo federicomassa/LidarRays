@@ -61,7 +61,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (World->GetTimeSeconds() >= InitTime + LidarSimulated*1/LidarFrequency)
 	{
 		ULidarMessage* Scan = NewObject<ULidarMessage>();
-
+		Scan->Empty();
 		Scan->Points.reserve(NumLidars*VerLayers*HorPoints);
 		
 		/*if (!isFirst)

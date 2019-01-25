@@ -27,6 +27,11 @@ AUDPSender* ATazioVehicle::GetGPSSender()
 	return GPSSender;
 }
 
+AUDPSender* ATazioVehicle::GetGPSTruthSender()
+{
+	return GPSTruthSender;
+}
+
 AUDPSender* ATazioVehicle::GetIMUSender()
 {
 	return IMUSender;

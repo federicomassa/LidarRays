@@ -10,6 +10,8 @@ class AActor;
 class UWorld;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOdometryMessage*, GPSData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSTruthAvailableDelegate, UOdometryMessage*, GPSTruthData);
+
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
@@ -55,6 +57,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = Sensors)
 		FGPSAvailableDelegate OnGPSAvailable;
+
+	UPROPERTY(BlueprintAssignable, Category = Sensors)
+		FGPSTruthAvailableDelegate OnGPSTruthAvailable;
 
 private:
 	void ToggleGPS();

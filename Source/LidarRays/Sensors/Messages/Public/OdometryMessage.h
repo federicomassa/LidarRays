@@ -12,6 +12,8 @@ class UOdometryMessage : public UMessageBase
 
 	GENERATED_BODY()
 public:
+	UOdometryMessage();
+
 	float x, y, z;
 	float vx, vy, vz;
 	float yaw, pitch, roll;
