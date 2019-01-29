@@ -29,8 +29,7 @@ UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PositionRandom
 }
 
 UGPSComponent::~UGPSComponent()
-{
-}
+{}
 
 void UGPSComponent::BeginPlay()
 {
@@ -101,7 +100,8 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	// ========================================= BUILD GPS MESSAGE ====================================== //
 
-	UOdometryMessage* GPSMessage = NewObject<UOdometryMessage>();
+	//UOdometryMessage* GPSMessage = NewObject<UOdometryMessage>();
+	FOdometryMessage GPSMessage;
 
 	// in m, NWU frame
 	FVector GPSLocation = InitRotation.UnrotateVector(CurrentWorldLocation - InitLocation)*0.01;
@@ -121,23 +121,23 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	//UE_LOG(LogTemp, Warning, TEXT("Noise: %f, %f"), PositionCurrentNoise, YawCurrentNoise);
 
-	GPSMessage->x = GPSLocation.X + XCurrentNoise;
-	GPSMessage->y = GPSLocation.Y + YCurrentNoise;
-	GPSMessage->z = GPSLocation.Z + ZCurrentNoise;
+	GPSMessage.x = GPSLocation.X + XCurrentNoise;
+	GPSMessage.y = GPSLocation.Y + YCurrentNoise;
+	GPSMessage.z = GPSLocation.Z + ZCurrentNoise;
 
 
 
-	GPSMessage->yaw = (GPSRotation.Yaw)*PI / 180 + YawCurrentNoise;
-	GPSMessage->pitch = 0.0f;
-	GPSMessage->roll = 0.0f;
+	GPSMessage.yaw = (GPSRotation.Yaw)*PI / 180 + YawCurrentNoise;
+	GPSMessage.pitch = 0.0f;
+	GPSMessage.roll = 0.0f;
 
-	if (GPSMessage->yaw > PI)
-		GPSMessage->yaw -= 2 * PI;
-	else if (GPSMessage->yaw < -PI)
-		GPSMessage->yaw += 2 * PI;
+	if (GPSMessage.yaw > PI)
+		GPSMessage.yaw -= 2 * PI;
+	else if (GPSMessage.yaw < -PI)
+		GPSMessage.yaw += 2 * PI;
 
-	GPSMessage->yaw_rate = -AngularVelocity.Z;
-	//UE_LOG(LogTemp, Warning, TEXT("GPS Yaw: %f"), GPSMessage->yaw);
+	GPSMessage.yaw_rate = -AngularVelocity.Z;
+	//UE_LOG(LogTemp, Warning, TEXT("GPS Yaw: %f"), GPSMessage.yaw);
 
 	FVector Velocity = Owner->GetVelocity();
 	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
@@ -145,25 +145,25 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	for (int i = 0; i < 36; i++)
 	{
-		GPSMessage->pose_covariance[i] = 0;
+		GPSMessage.pose_covariance[i] = 0;
 
 		// Angular velocity in IMU signal
 		if (i > 17 && i % 7 == 0)
-			GPSMessage->twist_covariance[i] = -1;
+			GPSMessage.twist_covariance[i] = -1;
 		else
-			GPSMessage->twist_covariance[i] = 0;
+			GPSMessage.twist_covariance[i] = 0;
 	}
 
-	GPSMessage->vx = RelativeVelocity.X*0.01;
-	GPSMessage->vy = RelativeVelocity.Y*0.01;
-	GPSMessage->vz = RelativeVelocity.Z*0.01;
+	GPSMessage.vx = RelativeVelocity.X*0.01;
+	GPSMessage.vy = RelativeVelocity.Y*0.01;
+	GPSMessage.vz = RelativeVelocity.Z*0.01;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Sending velocity linear: %s"), *RelativeVelocity.ToString());
 
 	// Has -1 covariance: not used
-	GPSMessage->yaw_rate = 0.f;
-	GPSMessage->pitch_rate = 0.f;
-	GPSMessage->roll_rate = 0.f;
+	GPSMessage.yaw_rate = 0.f;
+	GPSMessage.pitch_rate = 0.f;
+	GPSMessage.roll_rate = 0.f;
 
 	
  // ========================================= BUILD GPS MESSAGE ====================================== //
@@ -172,36 +172,37 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	OnGPSAvailable.Broadcast(GPSMessage);
 
 // ========================================= BUILD GPS TRUTH MESSAGE ================================= //
-	UOdometryMessage* GPSTruthMessage = NewObject<UOdometryMessage>();
+	//UOdometryMessage* GPSTruthMessage = NewObject<UOdometryMessage>();
+	FOdometryMessage GPSTruthMessage;
 
-	GPSTruthMessage->x = CurrentWorldLocation.X*0.01;
-	GPSTruthMessage->y = -CurrentWorldLocation.Y*0.01;
-	GPSTruthMessage->z = CurrentWorldLocation.Z*0.01;
+	GPSTruthMessage.x = CurrentWorldLocation.X*0.01;
+	GPSTruthMessage.y = -CurrentWorldLocation.Y*0.01;
+	GPSTruthMessage.z = CurrentWorldLocation.Z*0.01;
 
 	// Velocity in truth is relative: x longitudinal, y to the left
-	GPSTruthMessage->vx = RelativeVelocity.X*0.01;
-	GPSTruthMessage->vy = RelativeVelocity.Y*0.01;
-	GPSTruthMessage->vz = RelativeVelocity.Z*0.01;
+	GPSTruthMessage.vx = RelativeVelocity.X*0.01;
+	GPSTruthMessage.vy = RelativeVelocity.Y*0.01;
+	GPSTruthMessage.vz = RelativeVelocity.Z*0.01;
 
 
-	GPSTruthMessage->yaw = Owner->GetActorRotation().Yaw;
-	GPSTruthMessage->pitch = Owner->GetActorRotation().Pitch;
-	GPSTruthMessage->roll = Owner->GetActorRotation().Roll;
+	GPSTruthMessage.yaw = Owner->GetActorRotation().Yaw;
+	GPSTruthMessage.pitch = Owner->GetActorRotation().Pitch;
+	GPSTruthMessage.roll = Owner->GetActorRotation().Roll;
 
-	GPSTruthMessage->yaw_rate = 0.f;
-	GPSTruthMessage->pitch_rate = 0.f;
-	GPSTruthMessage->roll_rate = 0.f;
+	GPSTruthMessage.yaw_rate = 0.f;
+	GPSTruthMessage.pitch_rate = 0.f;
+	GPSTruthMessage.roll_rate = 0.f;
 
-	GPSTruthMessage->pose_covariance[0] = FMath::Pow(PositionStdDev,2);
-	GPSTruthMessage->pose_covariance[7] = FMath::Pow(PositionStdDev, 2);
-	GPSTruthMessage->pose_covariance[14] = 0.f;
-	GPSTruthMessage->pose_covariance[21] = 0.f;
-	GPSTruthMessage->pose_covariance[28] = 0.f;
-	GPSTruthMessage->pose_covariance[35] = FMath::Pow(YawStdDev*PI/180, 2);
+	GPSTruthMessage.pose_covariance[0] = FMath::Pow(PositionStdDev,2);
+	GPSTruthMessage.pose_covariance[7] = FMath::Pow(PositionStdDev, 2);
+	GPSTruthMessage.pose_covariance[14] = 0.f;
+	GPSTruthMessage.pose_covariance[21] = 0.f;
+	GPSTruthMessage.pose_covariance[28] = 0.f;
+	GPSTruthMessage.pose_covariance[35] = FMath::Pow(YawStdDev*PI/180, 2);
 
-	/*UE_LOG(LogTemp, Warning, TEXT("GPS X, Y, Z:  %f, %f, %f"), GPSTruthMessage->x, GPSTruthMessage->y, GPSTruthMessage->z);
-	UE_LOG(LogTemp, Warning, TEXT("GPS VX, VY, VZ:  %f, %f, %f"), GPSTruthMessage->vx, GPSTruthMessage->vy, GPSTruthMessage->vz);
-	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage->roll, -GPSTruthMessage->pitch, -GPSTruthMessage->yaw);*/
+	/*UE_LOG(LogTemp, Warning, TEXT("GPS X, Y, Z:  %f, %f, %f"), GPSTruthMessage.x, GPSTruthMessage.y, GPSTruthMessage.z);
+	UE_LOG(LogTemp, Warning, TEXT("GPS VX, VY, VZ:  %f, %f, %f"), GPSTruthMessage.vx, GPSTruthMessage.vy, GPSTruthMessage.vz);
+	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage.roll, -GPSTruthMessage.pitch, -GPSTruthMessage.yaw);*/
 	OnGPSTruthAvailable.Broadcast(GPSTruthMessage);
 }
 

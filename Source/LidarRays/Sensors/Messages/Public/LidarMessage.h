@@ -9,12 +9,12 @@
 #include "Point3D.h"
 #include "LidarMessage.generated.h" // delete in ROS
 
-UCLASS(Blueprintable, ClassGroup = (Messages))
-class ULidarMessage : public UMessageBase
+//UCLASS(Blueprintable, ClassGroup = (Messages))
+USTRUCT(BlueprintType)
+struct FLidarMessage : public FMessageBase
 {
 	GENERATED_BODY() // delete in ROS
 
-public:
 	float timestamp;
 
 	// These must be same size and 1 to 1 correspondence
@@ -27,12 +27,6 @@ public:
 		ar(Points);
 	}
 
-	ULidarMessage();
+	FLidarMessage();
 	void Empty();
-
-	UFUNCTION(BlueprintCallable, Category = Lidar) // delete in ROS
-	float GetTimeStamp()
-	{
-		return timestamp;
-	}
 };

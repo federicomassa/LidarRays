@@ -6,13 +6,15 @@
 
 #pragma once
 
-UCLASS(Blueprintable, ClassGroup = (Messages))
-class UOdometryMessage : public UMessageBase
+//UCLASS(Blueprintable, ClassGroup = (Messages))
+USTRUCT(BlueprintType)
+struct FOdometryMessage : public FMessageBase
 {
 
 	GENERATED_BODY()
-public:
-	UOdometryMessage();
+
+	FOdometryMessage();
+	~FOdometryMessage();
 
 	float x, y, z;
 	float vx, vy, vz;

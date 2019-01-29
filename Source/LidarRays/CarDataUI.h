@@ -18,6 +18,6 @@ class LIDARRAYS_API UCarDataUI : public UUserWidget
 	void NativePaint(FPaintContext& Context) const override;
 
 	UFUNCTION(BlueprintCallable, Category = SensorData)
-	TArray<FVector2D> GetRepresentableLidarPoints(ULidarMessage * LaserScan) const;
+	TArray<FVector2D> GetRepresentableLidarPoints(const FLidarMessage& LaserScan) const;
 
 };

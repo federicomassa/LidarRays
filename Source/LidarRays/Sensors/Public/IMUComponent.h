@@ -8,7 +8,7 @@
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIMUAvailableDelegate, UIMUMessage*, IMUData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIMUAvailableDelegate, const FIMUMessage&, IMUData);
 
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))

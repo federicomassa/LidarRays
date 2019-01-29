@@ -1,11 +1,11 @@
 #include "LidarMessage.h"
 
-void ULidarMessage::Empty()
+void FLidarMessage::Empty()
 {
 	Points.clear();
 }
 
-ULidarMessage::ULidarMessage()
+FLidarMessage::FLidarMessage()
 {
 	Empty();
 }

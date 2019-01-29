@@ -9,9 +9,8 @@
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, UOdometryMessage*, GPSData);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSTruthAvailableDelegate, UOdometryMessage*, GPSTruthData);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, const FOdometryMessage&, GPSData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSTruthAvailableDelegate, const FOdometryMessage&, GPSTruthData);
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent

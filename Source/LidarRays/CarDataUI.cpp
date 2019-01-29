@@ -10,15 +10,15 @@ void UCarDataUI::NativePaint(FPaintContext& Context) const
 
 
 
-TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(ULidarMessage * LaserScan) const
+TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(const FLidarMessage & LaserScan) const
 {
 	TArray<FVector2D> points;
 
 	// We represent a subset of the real points. NB Watch out for periodicity, choose quasi prime numbers
 	int NHUDPoints = 101;
 
-	if (LaserScan->Points.size() <= NHUDPoints)
-		NHUDPoints = LaserScan->Points.size();
+	if (LaserScan.Points.size() <= NHUDPoints)
+		NHUDPoints = LaserScan.Points.size();
 
 	// TODO Here we should use lidar range, but we hardcode it for now, in laser coords
 	float MinX = -3100;
@@ -29,7 +29,7 @@ TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(ULidarMessage * LaserS
 
 
 	// We take a point every PointStep real points
-	int PointStep = round(float(LaserScan->Points.size()) / NHUDPoints);
+	int PointStep = round(float(LaserScan.Points.size()) / NHUDPoints);
 	if (PointStep <= 0)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No points available for HUD!"));
@@ -38,11 +38,11 @@ TArray<FVector2D> UCarDataUI::GetRepresentableLidarPoints(ULidarMessage * LaserS
 
 	int i = 0;
 
-	while (i < LaserScan->Points.size())
+	while (i < LaserScan.Points.size())
 	{
 		// Coordinates on background. Should be between 0 and 1
-		float ThisPointX = (LaserScan->Points[i].x - MinX) / (MaxX - MinX);
-		float ThisPointY = (LaserScan->Points[i].y - MinY) / (MaxY - MinY);
+		float ThisPointX = (LaserScan.Points[i].x - MinX) / (MaxX - MinX);
+		float ThisPointY = (LaserScan.Points[i].y - MinY) / (MaxY - MinY);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Point: (%f, %f)"), ThisPointX, ThisPointY);
 

@@ -6,6 +6,8 @@
 #include "WheeledVehicle.h"
 #include "UDPSender.h" 
 #include "UDPReceiver.h"
+#include "CriticalSection.h"
+#include "ControlMessage.h"
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -14,7 +16,6 @@ class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
 class UAudioComponent;
-class UControlMessage;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
@@ -37,7 +38,7 @@ class ATazioVehicle : public AWheeledVehicle
 	AUDPSender* GPSTruthSender = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = UDP)
-	AUDPReceiver* UDPReceiver = nullptr;
+	AUDPReceiver* ControlReceiver = nullptr;
 
 	bool ManualDriving = true;
 
@@ -59,7 +60,7 @@ public:
 	AUDPSender* GetGPSTruthSender();
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPReceiver* GetUDPReceiver();
+	AUDPReceiver* GetControlReceiver();	
 
 	// Begin Pawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -84,7 +85,7 @@ public:
 
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
-	void SendControls(UControlMessage* ControlMessage);
+	void SendControls(const FControlMessage& ControlMessage);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

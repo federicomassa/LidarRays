@@ -37,9 +37,9 @@ AUDPSender* ATazioVehicle::GetIMUSender()
 	return IMUSender;
 }
 
-AUDPReceiver* ATazioVehicle::GetUDPReceiver()
+AUDPReceiver* ATazioVehicle::GetControlReceiver()
 {
-	return UDPReceiver;
+	return ControlReceiver;
 }
 
 void ATazioVehicle::ToggleManualDriving()
@@ -104,20 +104,13 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 //}
 
 
-void ATazioVehicle::SendControls(UControlMessage* control)
+void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	if (control)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);
-		/*if (GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
-		GetVehicleMovementComponent()->SetThrottleInput(control->VX);
-		GetVehicleMovementComponent()->SetSteeringInput(-control->Ydot);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));
-	}
+	UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
+	/*if (GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
+	/*GetVehicleMovementComponent()->SetThrottleInput(control->VX);
+	GetVehicleMovementComponent()->SetSteeringInput(-control->Ydot);*/
 }
 
 void ATazioVehicle::Tick(float Delta)

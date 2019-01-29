@@ -6,12 +6,12 @@
 #include "Point3D.h"
 #include "IMUMessage.generated.h" // delete in ROS
 
-UCLASS(Blueprintable, ClassGroup = (Messages))
-class LIDARRAYS_API UIMUMessage : public UMessageBase // delete in ROS
+//UCLASS(Blueprintable, ClassGroup = (Messages))
+USTRUCT(BlueprintType)
+struct LIDARRAYS_API FIMUMessage : public FMessageBase // delete in ROS
 {
 	GENERATED_BODY() // delete in ROS
 
-public:
 	float timestamp;
 
 	// Vectors are 3D, Covariances are 3*3 matrices

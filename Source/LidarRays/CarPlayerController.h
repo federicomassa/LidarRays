@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "LidarMessage.h"
 #include "CarPlayerController.generated.h"
 
 /**
  * 
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarDataAvailable, ULidarMessage*, LidarScan);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarDataAvailable, const FLidarMessage&, LidarScan);
 
 UCLASS()
 class LIDARRAYS_API ACarPlayerController : public APlayerController

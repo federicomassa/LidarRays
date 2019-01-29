@@ -5,6 +5,7 @@
 #include "Networking.h"
 #include "UdpSocketReceiver.h"
 #include "Engine.h"
+#include "ArrayWrapper.h"
 #include <GameFramework/Actor.h>
 #include "UDPReceiver.generated.h"
 
@@ -17,12 +18,11 @@ class AUDPReceiver : public AActor
 {
 	GENERATED_BODY()
 
-	// TODO this should not be here. Maybe alleviates the problem in UDPReceiver.cpp (see TODO) but does not solve it
-	TArray<uint8> ReceivedData;
-
 public:
 	AUDPReceiver(const FObjectInitializer& ObjectInitializer);
-
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void IncomingData(const TArray<uint8>& ReceivedData);
 
 public:
 	FSocket* ListenSocket;

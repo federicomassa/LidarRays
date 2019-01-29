@@ -2,6 +2,14 @@
 
 #include "UDPReceiver.h"
 #include "AnyCustomData.h"
+#include <sstream>
+
+// ==== DEBUG ======
+//#include "ControlMessage.h"
+//#include "simulink_interface/archive.hpp"
+// =================
+
+#include <string>
 #include <GameFramework/Actor.h>
 
 AUDPReceiver::AUDPReceiver(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) 
@@ -11,7 +19,6 @@ AUDPReceiver::AUDPReceiver(const FObjectInitializer& ObjectInitializer) : Super(
 
 void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::EndPlay(EndPlayReason);
 	delete UDPReceiver;
 	UDPReceiver = nullptr;
 	if (ListenSocket)
@@ -19,6 +26,7 @@ void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		ListenSocket->Close();
 		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(ListenSocket);
 	}
+	Super::EndPlay(EndPlayReason);
 }
 
 bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& TheIP, const int32 ThePort )
@@ -34,7 +42,11 @@ bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& The
 	int32 BufferSize = 2*1024*1024;
 
 	//ListenSocket = FUdpSocketBuilder(*YourChosenSocketName).AsNonBlocking().AsReusable().BoundToEndpoint(Endpoint).WithReceiveBufferSize(BufferSize);
-	ListenSocket = FUdpSocketBuilder(*YourChosenSocketName).AsNonBlocking().AsReusable().BoundToPort(ThePort).WithReceiveBufferSize(BufferSize).Build();
+	ListenSocket = FUdpSocketBuilder(*YourChosenSocketName)
+			.AsNonBlocking()
+			.AsReusable()
+			.BoundToPort(ThePort)
+			.WithReceiveBufferSize(BufferSize).Build();
 	
 	if (!ListenSocket)
 	{
@@ -55,17 +67,26 @@ bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& The
 
 void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4Endpoint& EndPt)
 {
+	// ======= https://github.com/getnamo/udp-ue4/blob/master/Source/UDPWrapper/Private/UDPComponent.cpp 
+
+	TArray<uint8> Data;
+	Data.AddUninitialized(ArrayReaderPtr->TotalSize());
+	ArrayReaderPtr->Serialize(Data.GetData(), ArrayReaderPtr->TotalSize());
+
+	// ==========================================================
+
 	//ScreenMsg("Received bytes", ArrayReaderPtr->Num());
 
-	uint8* Data = ArrayReaderPtr->GetData();
+//	uint8* Data = ArrayReaderPtr->GetData();
 
 	//TSharedPtr<TArray<uint8> > ReceivedData(new TArray<uint8>);
+	//UArrayWrapper* ReceivedData = NewObject<UArrayWrapper>();
 
-	for (int i = 0; i < ArrayReaderPtr->Num(); i++)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));
-		ReceivedData.Add(Data[i]);
-	}
+	//for (int i = 0; i < ArrayReaderPtr->Num(); i++)
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("UDPReceiver: Byte %i: %s"), i, *BytesToHex(&Data[i], 1));
+	//	ReceivedData.Add(Data[i]);
+	//}
 	//float* x = reinterpret_cast<float*>(Data);
 	////FAnyCustomData Data;
 	////*ArrayReaderPtr << Data;	//Now de-serializing! See AnyCustomData.h
@@ -74,7 +95,48 @@ void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4End
 	//UE_LOG(LogTemp, Warning, TEXT("Received: %f"), *x);
 	
 	// TODO this uses a const ref but the object is local!! Potential crash here
-	OnDataReceived.Broadcast(ReceivedData);
-} 
 
 
+	// ================ DEBUG ======================== //
+
+	//{
+	//	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i ReceivedData"), ControlMessage.Num());
+
+	//	std::istringstream iss;
+	//	std::string ReceivedData_str;
+
+	//	// TODO efficiency issue, ReceivedData are copied into a string
+	//	for (int i = 0; i < ReceivedData.Num(); i++)
+	//	{
+	//		//UE_LOG(LogTemp, Warning, TEXT("Deserialize byte %i: %s"), i, *ReceivedDataToHex(&ControlMessage[i], 1));
+	//		ReceivedData_str.push_back((char)ReceivedData[i]);
+	//	}
+
+	//	iss.str(ReceivedData_str);
+
+	//	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
+
+	//	 UControlMessage * msg = NewObject<UControlMessage>();
+	//	{
+	//		simulink::SimulinkInputArchive ia(iss);
+
+	//		// Deserialize
+	//		try
+	//		{
+	//			ia >> (*msg);
+	//		}
+	//		catch (std::exception& e)
+	//		{
+	//			UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(e.what()));
+	//		}
+	//	}
+
+	//	UE_LOG(LogTemp, Warning, TEXT("UDP LOG: Force: %f, Steer: %f"), msg->VX, msg->Ydot);
+	//}
+
+	// =============================================== //
+
+
+	OnDataReceived.Broadcast(Data);
+	//IncomingData(ReceivedData);
+}

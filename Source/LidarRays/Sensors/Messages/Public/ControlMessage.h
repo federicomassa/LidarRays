@@ -5,12 +5,12 @@
 #include <MessageBase.h>
 #include "ControlMessage.generated.h"
 
-UCLASS(Blueprintable, ClassGroup = (Messages))
-class UControlMessage : public UMessageBase
+//UCLASS(Blueprintable, ClassGroup = (Messages))
+USTRUCT(BlueprintType)
+struct FControlMessage : public FMessageBase
 {
 	GENERATED_BODY()
 
-public:
 	// These should be vectors with 3 components (x,y,z)
 	float VX, VY, VZ;
 

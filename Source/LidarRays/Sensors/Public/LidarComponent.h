@@ -10,7 +10,7 @@
 class AActor;
 class UWorld;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarAvailableDelegate, ULidarMessage*, LidarScan);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarAvailableDelegate, const FLidarMessage&, LidarScan);
 
 UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
 class LIDARRAYS_API ULidarComponent : public UActorComponent

@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "simulink_interface/archive.hpp"
-#include "MessageSerializerComponent.generated.h"
+#include "IMUMessage.h"
+#include "OdometryMessage.h"
+#include "LidarMessage.h"
+#include "ControlMessage.h"
 
-class ULidarMessage;
-class UIMUMessage;
+#include "MessageSerializerComponent.generated.h"
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UMessageSerializerComponent : public UActorComponent
@@ -26,48 +28,42 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-		TArray<uint8> SerializeLidarMessage(ULidarMessage* msg, bool Simulink = false);
+		TArray<uint8> SerializeLidarMessage(const FLidarMessage& msg, bool Simulink = false);
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-		TArray<uint8> SerializeIMUMessage(UIMUMessage* msg, bool Simulink = false);
+		TArray<uint8> SerializeIMUMessage(const FIMUMessage& msg, bool Simulink = false);
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-		TArray<uint8> SerializeOdometryMessage(UOdometryMessage* msg, bool Simulink = false);
+		TArray<uint8> SerializeOdometryMessage(const FOdometryMessage& msg, bool Simulink = false);
 
 
 	template <class MessageType>
-		TArray<uint8> SerializeMessage(MessageType* msg, bool Simulink);
+		TArray<uint8> SerializeMessage(const MessageType& msg, bool Simulink);
 
 	template <class MessageType>
-		MessageType* DeserializeMessage(TArray<uint8> bytes, bool Simulink);
+		MessageType DeserializeMessage(const TArray<uint8>& bytes, bool Simulink);
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
-		UControlMessage* DeserializeControlMessage(TArray<uint8> bytes, bool Simulink = true);
+		FControlMessage DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink = true);
 
 
 
 };
 
 template <class MessageType>
-TArray<uint8> UMessageSerializerComponent::SerializeMessage(MessageType * msg, bool Simulink)
+TArray<uint8> UMessageSerializerComponent::SerializeMessage(const MessageType & msg, bool Simulink)
 {
-	if (msg == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Message serializer has received null message"));
-		return TArray<uint8>();
-	}
-
 	std::ostringstream oss;
 
 	if (Simulink)
 	{
 		simulink::SimulinkOutputArchive oa(oss);
-		oa << (*msg);
+		oa << (msg);
 	}
 	else
 	{
 		cereal::PortableBinaryOutputArchive oa(oss);
-		oa << (*msg);
+		oa << (msg);
 	}
 
 	oss.flush();
@@ -92,7 +88,7 @@ TArray<uint8> UMessageSerializerComponent::SerializeMessage(MessageType * msg, b
 }
 
 template <class MessageType>
-MessageType * UMessageSerializerComponent::DeserializeMessage(TArray<uint8> bytes, bool Simulink)
+MessageType UMessageSerializerComponent::DeserializeMessage(const TArray<uint8>& bytes, bool Simulink)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: Going to deserialize %i bytes"), ControlMessage.Num());
 
@@ -110,7 +106,8 @@ MessageType * UMessageSerializerComponent::DeserializeMessage(TArray<uint8> byte
 
 	//UE_LOG(LogTemp, Warning, TEXT("MessageSerializer: String is %i char long"), ControlMessage.Num());
 
-	MessageType* msg = NewObject<MessageType>();
+	//MessageType* msg = NewObject<MessageType>();
+	MessageType msg;
 
 	if (Simulink)
 	{
@@ -119,11 +116,12 @@ MessageType * UMessageSerializerComponent::DeserializeMessage(TArray<uint8> byte
 		// Deserialize
 		try
 		{
-			ia >> (*msg);
+			ia >> (msg);
 		}
-		catch (std::exception&)
+		catch (std::exception& e)
 		{
-			return nullptr;
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FString(e.what()));
+			return msg;
 		}
 	}
 	else
@@ -133,11 +131,12 @@ MessageType * UMessageSerializerComponent::DeserializeMessage(TArray<uint8> byte
 		// Deserialize
 		try
 		{
-			ia >> (*msg);
+			ia >> (msg);
 		}
-		catch (std::exception&)
+		catch (std::exception& e)
 		{
-			return nullptr;
+			UE_LOG(LogTemp, Error, TEXT("%s"), *FString(e.what()));
+			return msg;
 		}
 	}
 

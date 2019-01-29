@@ -11,13 +11,13 @@ public class UnrealUDP : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"UnrealUDP/Public"
+				"Public"
 				// ... add public include paths required here ...
 			}
 			);
-				
-		
-		PrivateIncludePaths.AddRange(
+
+
+        PrivateIncludePaths.AddRange(
 			new string[] {
 				"UnrealUDP/Private",
 				// ... add other private include paths required here ...
@@ -26,6 +26,15 @@ public class UnrealUDP : ModuleRules
 
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
+
+        //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../../../../../Source/LidarRays/Sensors/Messages/Public"));
+        //System.Console.WriteLine(Path.Combine(ModuleDirectory, "../../../../../Source/LidarRays/Sensors/Messages/Public"));
+
+
+        // ========= DEBUG ==========
+        //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/simulink_interface/include"));
+        // =========================
+
         bEnableUndefinedIdentifierWarnings = false;
 
         PublicDependencyModuleNames.AddRange(
@@ -60,12 +69,6 @@ public class UnrealUDP : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-
-        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_system-vc141-mt-x64-1_68.lib"));
-        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_date_time-vc141-mt-x64-1_68.lib"));
-        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_regex-vc141-mt-x64-1_68.lib"));
-        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_serialization-vc141-mt-x64-1_68.lib"));
-        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/libboost_program_options-vc141-mt-x64-1_68.lib"));
 
         //// Boost to serialize
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));

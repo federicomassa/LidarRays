@@ -3,12 +3,12 @@
 #include <CoreMinimal.h>
 #include "MessageBase.generated.h"
 
-UCLASS(Blueprintable, ClassGroup = (Messages))
-class UMessageBase : public UObject
+//UCLASS(Blueprintable, ClassGroup = (Messages))
+USTRUCT(BlueprintType)
+struct FMessageBase
 {
 	GENERATED_BODY()
 
-public:
 	virtual std::string ToString();
-	virtual ~UMessageBase() {}
+	virtual ~FMessageBase() {}
 };

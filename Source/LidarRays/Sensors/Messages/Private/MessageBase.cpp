@@ -1,6 +1,6 @@
 #include "MessageBase.h"
 
-std::string UMessageBase::ToString()
+std::string FMessageBase::ToString()
 {
 	return "ToString - NOT IMPLEMENTED";
 }
