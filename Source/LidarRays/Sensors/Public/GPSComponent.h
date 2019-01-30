@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include <random>
 #include "OdometryMessage.h"
+#include <fstream>
 #include "GPSComponent.generated.h"
 
 class AActor;
@@ -40,6 +41,8 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 
 	std::normal_distribution<float> PositionRandomNoise;
 	std::normal_distribution<float> YawRandomNoise;
+
+	//std::ofstream csv_file;
 
 public:
 

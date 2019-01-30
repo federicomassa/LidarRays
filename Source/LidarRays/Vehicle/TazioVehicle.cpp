@@ -108,7 +108,7 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
+	UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
 	/*if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
 	GetVehicleMovementComponent()->SetThrottleInput(control.VX);

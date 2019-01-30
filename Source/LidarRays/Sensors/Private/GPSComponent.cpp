@@ -26,10 +26,14 @@ UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PositionRandom
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+
+	//csv_file.open("D:/gps_truth.csv");
 }
 
 UGPSComponent::~UGPSComponent()
-{}
+{
+	//csv_file.close();
+}
 
 void UGPSComponent::BeginPlay()
 {
@@ -179,15 +183,17 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSTruthMessage.y = -CurrentWorldLocation.Y*0.01;
 	GPSTruthMessage.z = CurrentWorldLocation.Z*0.01;
 
+	//csv_file << GPSTruthMessage.x << "," << GPSTruthMessage.y << '\n';
+
 	// Velocity in truth is relative: x longitudinal, y to the left
 	GPSTruthMessage.vx = RelativeVelocity.X*0.01;
 	GPSTruthMessage.vy = RelativeVelocity.Y*0.01;
 	GPSTruthMessage.vz = RelativeVelocity.Z*0.01;
 
 
-	GPSTruthMessage.yaw = Owner->GetActorRotation().Yaw;
-	GPSTruthMessage.pitch = Owner->GetActorRotation().Pitch;
-	GPSTruthMessage.roll = Owner->GetActorRotation().Roll;
+	GPSTruthMessage.yaw = -Owner->GetActorRotation().Yaw * PI/180;
+	GPSTruthMessage.pitch = Owner->GetActorRotation().Pitch * PI/180;
+	GPSTruthMessage.roll = Owner->GetActorRotation().Roll * PI/180;
 
 	GPSTruthMessage.yaw_rate = 0.f;
 	GPSTruthMessage.pitch_rate = 0.f;
