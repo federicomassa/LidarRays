@@ -18,11 +18,12 @@ class AUDPReceiver : public AActor
 {
 	GENERATED_BODY()
 
+private:
+	//BUFFER SIZE
+	UPROPERTY(EditAnywhere, Category = UDP)
+	int32 BufferSize = 2 * 1024 * 1024;
 public:
 	AUDPReceiver(const FObjectInitializer& ObjectInitializer);
-	
-	UFUNCTION(BlueprintImplementableEvent)
-		void IncomingData(const TArray<uint8>& ReceivedData);
 
 public:
 	FSocket* ListenSocket;

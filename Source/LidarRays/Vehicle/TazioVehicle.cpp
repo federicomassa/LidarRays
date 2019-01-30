@@ -44,8 +44,8 @@ AUDPReceiver* ATazioVehicle::GetControlReceiver()
 
 void ATazioVehicle::ToggleManualDriving()
 {
-	UE_LOG(LogTemp, Warning, TEXT("BINDINGS: %i"), InputComponent->AxisBindings.Num());
-	UE_LOG(LogTemp, Warning, TEXT("KEY BINDINGS: %i"), InputComponent->AxisKeyBindings.Num());
+	/*UE_LOG(LogTemp, Warning, TEXT("BINDINGS: %i"), InputComponent->AxisBindings.Num());
+	UE_LOG(LogTemp, Warning, TEXT("KEY BINDINGS: %i"), InputComponent->AxisKeyBindings.Num());*/
 
 	if (InputComponent->AxisBindings.Num() > 0)
 		AxisBindings = InputComponent->AxisBindings;
@@ -61,9 +61,11 @@ void ATazioVehicle::ToggleManualDriving()
 		//InputComponent->AxisKeyBindings = AxisBindings;
 		//UE_LOG(LogTemp, Warning, TEXT("Manual: %i"), InputComponent->AxisBindings.Num());*/
 		InputComponent->AxisBindings = AxisBindings;
+		UE_LOG(LogTemp, Warning, TEXT("Manual mode activated"));
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("AI control mode activated"));
 		InputComponent->AxisBindings.Empty();
 	}
 
@@ -106,11 +108,11 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
+	//UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
 	/*if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
-	/*GetVehicleMovementComponent()->SetThrottleInput(control->VX);
-	GetVehicleMovementComponent()->SetSteeringInput(-control->Ydot);*/
+	GetVehicleMovementComponent()->SetThrottleInput(control.VX);
+	GetVehicleMovementComponent()->SetSteeringInput(-control.Ydot);
 }
 
 void ATazioVehicle::Tick(float Delta)

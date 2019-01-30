@@ -60,7 +60,6 @@ TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(const FIMUMessage
 
 FControlMessage UMessageSerializerComponent::DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink)
 {
-	UE_LOG(LogTemp, Warning, TEXT("RECEIVED BYTES: %d"), bytes.Num());
 	return DeserializeMessage<FControlMessage>(bytes, Simulink);
 }
 
