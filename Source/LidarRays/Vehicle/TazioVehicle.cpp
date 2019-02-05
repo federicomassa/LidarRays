@@ -17,6 +17,13 @@ ATazioVehicle::ATazioVehicle()
 {
 }
 
+ATazioVehicle::~ATazioVehicle()
+{
+	if (DynamicModel)
+		delete DynamicModel;
+}
+
+
 AUDPSender* ATazioVehicle::GetLidarSender()
 {
 	return LidarSender;
@@ -111,18 +118,49 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 	UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
 	/*if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
-	GetVehicleMovementComponent()->SetThrottleInput(control.VX);
-	GetVehicleMovementComponent()->SetSteeringInput(-control.Ydot);
+
+	if (bPhysXSimulation)
+	{
+		GetVehicleMovementComponent()->SetThrottleInput(control.VX);
+		GetVehicleMovementComponent()->SetSteeringInput(-control.Ydot);
+	}
+	else
+	{
+		std::map<std::string, float> originalControls;
+		originalControls["Throttle"] = control.VX;
+		originalControls["Steering"] = -control.Ydot;
+
+		DynamicModel->run(originalControls, lastDeltaTime);
+	}
 }
 
 void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
+
+	lastDeltaTime = Delta;
 }
 
 void ATazioVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+
+	DynamicModel = VehicleModel::generateVehicleModel(VehicleModelType);
+
+	if (DynamicModel)
+		bPhysXSimulation = false;
+
+	if (DynamicModel)
+		DynamicModel->initModel();
 }
+
+void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (DynamicModel)
+		DynamicModel->closeModel();
+
+	Super::EndPlay(EndPlayReason);
+}
+
 
 #undef LOCTEXT_NAMESPACE

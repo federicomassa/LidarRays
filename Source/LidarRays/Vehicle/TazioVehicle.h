@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WheeledVehicle.h"
 #include "UDPSender.h" 
+#include "VehicleModel.h"
 #include "UDPReceiver.h"
 #include "CriticalSection.h"
 #include "ControlMessage.h"
@@ -42,10 +43,23 @@ class ATazioVehicle : public AWheeledVehicle
 
 	bool ManualDriving = true;
 
+
+	// Vehicle model
+	UPROPERTY(EditAnywhere, Category = Model)
+	EVehicleModelEnum VehicleModelType = EVehicleModelEnum::VM_PhysX;
+
+	VehicleModel* DynamicModel = nullptr;
+
+	bool bPhysXSimulation = true;
+
 	TArray < FInputAxisBinding > AxisBindings;
+
+	float lastDeltaTime = 0.f;
 
 public:
 	ATazioVehicle();
+	~ATazioVehicle();
+
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPSender* GetLidarSender();
@@ -71,6 +85,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 
 	void ToggleManualDriving();
 

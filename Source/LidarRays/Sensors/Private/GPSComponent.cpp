@@ -27,12 +27,12 @@ UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PositionRandom
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	//csv_file.open("D:/gps_truth.csv");
+	csv_file.open("D:/gps_truth.csv");
 }
 
 UGPSComponent::~UGPSComponent()
 {
-	//csv_file.close();
+	csv_file.close();
 }
 
 void UGPSComponent::BeginPlay()
@@ -183,7 +183,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSTruthMessage.y = -CurrentWorldLocation.Y*0.01;
 	GPSTruthMessage.z = CurrentWorldLocation.Z*0.01;
 
-	//csv_file << GPSTruthMessage.x << "," << GPSTruthMessage.y << '\n';
+	csv_file << GPSTruthMessage.x << "," << GPSTruthMessage.y << '\n';
 
 	// Velocity in truth is relative: x longitudinal, y to the left
 	GPSTruthMessage.vx = RelativeVelocity.X*0.01;

@@ -22,7 +22,11 @@ public class LidarRays : ModuleRules
         // Utility
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Utility/Public"));
 
+        // Vehicle
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Vehicle"));
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Vehicle/Models"));
 
+ 
         //// Boost to serialize
         //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
 

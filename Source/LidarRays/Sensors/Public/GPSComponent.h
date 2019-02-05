@@ -42,7 +42,7 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 	std::normal_distribution<float> PositionRandomNoise;
 	std::normal_distribution<float> YawRandomNoise;
 
-	//std::ofstream csv_file;
+	std::ofstream csv_file;
 
 public:
 
