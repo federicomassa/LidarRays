@@ -76,3 +76,8 @@ bool VehicleModel::isControlCompatible(std::map<std::string, float> map)
 
 	return true;
 }
+
+std::map<std::string, float> VehicleModel::getWorldState() const
+{
+	return statesToWorld(currentState);
+}

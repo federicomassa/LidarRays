@@ -41,8 +41,15 @@ std::map<std::string, float> UnicycleModel::controlsToModel(const std::map<std::
 {
 	std::map<std::string, float> outControl;
 
-	outControl["Force"] = inControl.at("Throttle")*params.at("m");
-	outControl["Omega"] = inControl.at("Steering");
+	try
+	{
+		outControl["Force"] = inControl.at("Throttle")*params.at("m")*1000;
+		outControl["Omega"] = inControl.at("Steering");
+	}
+	catch (std::exception& e)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UnicycleModel::controlsToModel --- %s"), *FString(e.what()));
+	}
 
 	return outControl;
 }
@@ -51,14 +58,21 @@ std::map<std::string, float> UnicycleModel::statesToModel(const std::map<std::st
 {
 	std::map<std::string, float> outState;
 
-	outState["x"] = inState.at("x");
-	outState["y"] = inState.at("y");
+	try
+	{
+		outState["x"] = inState.at("x");
+		outState["y"] = inState.at("y");
 
-	// This method is only called at initialization
-	outState["v"] = 0.f;
+		// This method is only called at initialization
+		outState["v"] = 0.f;
 
-	outState["theta"] = inState.at("yaw");
-	
+		outState["theta"] = inState.at("yaw")*3.14159/180.f;
+	}
+	catch (std::exception& e)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UnicycleModel::statesToModel --- %s"), *FString(e.what()));
+	}
+
 	return outState;
 
 }
@@ -67,8 +81,15 @@ std::map<std::string, float> UnicycleModel::controlsToWorld(const std::map<std::
 {
 	std::map<std::string, float> outControl;
 
-	outControl["Throttle"] = inControl.at("Force")/params.at("m");
-	outControl["Steering"] = inControl.at("Omega");
+	try
+	{
+		outControl["Throttle"] = inControl.at("Force") / params.at("m");
+		outControl["Steering"] = inControl.at("Omega");
+	}
+	catch (std::exception& e)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UnicycleModel::controlsToWorld --- %s"), *FString(e.what()));
+	}
 
 	return outControl;
 }
@@ -77,9 +98,16 @@ std::map<std::string, float> UnicycleModel::statesToWorld(const std::map<std::st
 {
 	std::map<std::string, float> outState;
 
-	outState["x"] = inState.at("x");
-	outState["y"] = inState.at("y");
-	outState["yaw"] = inState.at("theta");
+	try
+	{
+		outState["x"] = inState.at("x");
+		outState["y"] = inState.at("y");
+		outState["yaw"] = inState.at("theta")*180/3.14159;
+	}
+	catch (std::exception& e)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UnicycleModel::statesToWorld --- %s"), *FString(e.what()));
+	}
 
 	return outState;
 }

@@ -17,6 +17,7 @@ class USpringArmComponent;
 class UTextRenderComponent;
 class UInputComponent;
 class UAudioComponent;
+class USkeletalMeshComponent;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
@@ -55,6 +56,11 @@ class ATazioVehicle : public AWheeledVehicle
 	TArray < FInputAxisBinding > AxisBindings;
 
 	float lastDeltaTime = 0.f;
+
+	float lastThrottle = 0.f;
+	float lastSteer = 0.f;
+
+	USkeletalMeshComponent* Mesh = nullptr;
 
 public:
 	ATazioVehicle();
@@ -102,6 +108,9 @@ public:
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	void SendControls(const FControlMessage& ControlMessage);
+
+	void SetThrottle(float value);
+	void SetSteer(float value);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

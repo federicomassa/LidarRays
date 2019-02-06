@@ -70,6 +70,8 @@ public:
 	// Check if argument is compatible with controlVars
 	bool isControlCompatible(std::map<std::string, float> map);
 
+	std::map<std::string, float> getWorldState() const;
+
 	virtual ~VehicleModel() {}
 };
 	
