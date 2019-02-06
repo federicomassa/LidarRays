@@ -208,7 +208,7 @@ void ATazioVehicle::BeginPlay()
 		FVector newWorldState;
 		newWorldState.X = newState.at("x");
 		newWorldState.Y = newState.at("y");
-		newWorldState.Z = initLocation.Z;
+		newWorldState.Z = initLocation.Z + 10.f;
 
 		Mesh->SetWorldLocation(newWorldState);
 		Mesh->SetWorldRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));

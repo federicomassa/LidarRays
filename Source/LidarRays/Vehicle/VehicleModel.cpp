@@ -11,6 +11,10 @@ VehicleModel* VehicleModel::generateVehicleModel(EVehicleModelEnum modelType)
 	{
 		return new UnicycleModel();
 	}
+	else if (modelType == EVehicleModelEnum::VM_SingleTrack)
+	{
+		return new SingleTrackModel();
+	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("VehicleModel::generateVehicleModel --- unrecognized vehicle model type! Have you updated this function with the new model?"));

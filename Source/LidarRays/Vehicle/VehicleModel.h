@@ -10,7 +10,8 @@ UENUM(BlueprintType)
 enum class EVehicleModelEnum : uint8
 {
 	VM_PhysX UMETA(DisplayName = "PhysX"),
-	VM_Unicycle UMETA(DisplayName = "Unicycle")
+	VM_Unicycle UMETA(DisplayName = "Unicycle"),
+	VM_SingleTrack UMETA(DisplayName = "SingleTrack")
 };
 
 class VehicleModel
@@ -44,6 +45,7 @@ protected:
 	// Convert input state vars to world state vars if necessary
 	virtual std::map<std::string, float> statesToWorld(const std::map<std::string, float>& inState) const { return inState; };
 
+	// Here you can simulate a low level control (relation between control request and control applied) 
 	// Send controls to model. NB Control in model variables. Sets lastControlsApplied in modelVariables
 	virtual void requestControl(std::map<std::string, float> controlRequest) = 0;
 

@@ -7,6 +7,10 @@ void UnicycleModel::initModel()
 {
 	params["m"] = 1000.f;
 
+	// Friction
+	params["mu"] = 1000;
+	params["b"] = 10;
+
 	stateVars.insert("x");
 	stateVars.insert("y");
 	stateVars.insert("v");
@@ -31,9 +35,21 @@ void UnicycleModel::executeModel(float DeltaTime)
 {
 	std::map<std::string, float> oldState = currentState;
 
+	int vSign;
+	if (oldState.at("v") > 0)
+		vSign = 1;
+	else if (oldState.at("v") < 0)
+		vSign = -1;
+	else
+		vSign = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("Friction sign: %d"), vSign);
+	UE_LOG(LogTemp, Warning, TEXT("Friction: %f"), vSign*params.at("mu"));
+
 	currentState.at("x") = oldState.at("x") + oldState.at("v")*std::cos(oldState.at("theta"))*DeltaTime;
 	currentState.at("y") = oldState.at("y") + oldState.at("v")*std::sin(oldState.at("theta"))*DeltaTime;
-	currentState.at("v") = oldState.at("v") + lastControlsApplied.at("Force")/params.at("m")*DeltaTime;
+	currentState.at("v") = oldState.at("v") + (lastControlsApplied.at("Force") - vSign*params.at("mu") - oldState.at("v")*params.at("b")) / params.at("m")*DeltaTime;
+
 	currentState.at("theta") = oldState.at("theta") + lastControlsApplied.at("Omega")*DeltaTime;
 }
 
@@ -43,7 +59,7 @@ std::map<std::string, float> UnicycleModel::controlsToModel(const std::map<std::
 
 	try
 	{
-		outControl["Force"] = inControl.at("Throttle")*params.at("m")*1000;
+		outControl["Force"] = inControl.at("Throttle")*params.at("m")*10;
 		outControl["Omega"] = inControl.at("Steering");
 	}
 	catch (std::exception& e)
@@ -60,11 +76,11 @@ std::map<std::string, float> UnicycleModel::statesToModel(const std::map<std::st
 
 	try
 	{
-		outState["x"] = inState.at("x");
-		outState["y"] = inState.at("y");
+		outState["x"] = inState.at("x")/100.f;
+		outState["y"] = inState.at("y")/100.f;
 
 		// This method is only called at initialization
-		outState["v"] = 0.f;
+		outState["v"] = 0.f/100.f;
 
 		outState["theta"] = inState.at("yaw")*3.14159/180.f;
 	}
@@ -100,8 +116,8 @@ std::map<std::string, float> UnicycleModel::statesToWorld(const std::map<std::st
 
 	try
 	{
-		outState["x"] = inState.at("x");
-		outState["y"] = inState.at("y");
+		outState["x"] = inState.at("x")*100.f;
+		outState["y"] = inState.at("y")*100.f;
 		outState["yaw"] = inState.at("theta")*180/3.14159;
 	}
 	catch (std::exception& e)
