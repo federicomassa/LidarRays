@@ -8,8 +8,8 @@ void UnicycleModel::initModel()
 	params["m"] = 1000.f;
 
 	// Friction
-	params["mu"] = 1000;
-	params["b"] = 10;
+	params["mu"] = 0;
+	params["b"] = 0;
 
 	stateVars.insert("x");
 	stateVars.insert("y");
@@ -43,8 +43,8 @@ void UnicycleModel::executeModel(double DeltaTime)
 	else
 		vSign = 0;
 
-	UE_LOG(LogTemp, Warning, TEXT("Friction sign: %d"), vSign);
-	UE_LOG(LogTemp, Warning, TEXT("Friction: %f"), vSign*params.at("mu"));
+	//UE_LOG(LogTemp, Warning, TEXT("Friction sign: %d"), vSign);
+	//UE_LOG(LogTemp, Warning, TEXT("Friction: %f"), vSign*params.at("mu"));
 
 	currentState.at("x") = oldState.at("x") + oldState.at("v")*std::cos(oldState.at("theta"))*DeltaTime;
 	currentState.at("y") = oldState.at("y") + oldState.at("v")*std::sin(oldState.at("theta"))*DeltaTime;
@@ -60,7 +60,7 @@ std::map<std::string, double> UnicycleModel::controlsToModel(const std::map<std:
 	try
 	{
 		outControl["Force"] = inControl.at("Throttle")*params.at("m")*10;
-		outControl["Omega"] = inControl.at("Steering");
+		outControl["Omega"] = inControl.at("Steering")*2.0;
 	}
 	catch (std::exception& e)
 	{
@@ -100,7 +100,7 @@ std::map<std::string, double> UnicycleModel::controlsToWorld(const std::map<std:
 	try
 	{
 		outControl["Throttle"] = inControl.at("Force") / params.at("m");
-		outControl["Steering"] = inControl.at("Omega");
+		outControl["Steering"] = inControl.at("Omega")/2.0;
 	}
 	catch (std::exception& e)
 	{
@@ -126,4 +126,18 @@ std::map<std::string, double> UnicycleModel::statesToWorld(const std::map<std::s
 	}
 
 	return outState;
+}
+
+std::array<double, 3> UnicycleModel::getVelocity()
+{
+	std::array<double, 3> velocity;
+
+	// cm/s
+	velocity[0] = currentState.at("v")*std::cos(currentState.at("theta"))*100;
+	velocity[1] = -currentState.at("v")*std::sin(currentState.at("theta"))*100;
+	velocity[2] = 0.0;
+
+	//UE_LOG(LogTemp, Warning, TEXT("UNICYCLE VELOCITY: %f, %f"), velocity[0], velocity[1]);
+
+	return velocity;
 }

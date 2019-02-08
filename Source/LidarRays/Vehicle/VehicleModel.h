@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <array>
 
 UENUM(BlueprintType)
 enum class EVehicleModelEnum : uint8
@@ -55,6 +56,9 @@ public:
 
 	// Close model
 	virtual void closeModel() {};
+
+	// Get velocity
+	virtual std::array<double, 3> getVelocity() = 0;
 	
 	// Check states and controls compatibility and apply them to the model. Update currentState and lastControlsApplied
 	void run(std::map<std::string, double> controlRequest, double DeltaTime);

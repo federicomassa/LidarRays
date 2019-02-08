@@ -6,8 +6,8 @@
 void SingleTrackModel::initModel()
 {
 	// Distance from center to front and rear axles (meters)
-	params["La"] = 1.245870f;
-	params["Lr"] = 1.245870f;
+	params["La"] = 1.510;
+	params["Lr"] = 1.388f;
 
 	// Brake and traction front/rear repartition  
 	params["Bb"] = 1.44f;
@@ -80,7 +80,7 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	double vdot1 = -currentState.at("u")*currentState.at("r");
 	double vdot2 = getF1t() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
 	double vdot3 = -getF1l() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
-	double vdot4 = getF2l() / params.at("m");
+	double vdot4 = getF2t() / params.at("m");
 	UE_LOG(LogTemp, Warning, TEXT("VDOT: %f, %f, %f, %f"), vdot1, vdot2, vdot3, vdot4);
 	double vdot = vdot1 + vdot2 + vdot3 + vdot4;
 
@@ -322,5 +322,18 @@ bool SingleTrackModel::isBraking()
 		return true;
 	}
 }
+
+std::array<double, 3> SingleTrackModel::getVelocity()
+{
+	std::array<double, 3> velocity;
+
+	// cm/s
+	velocity[0] = (currentState.at("u")*std::cos(currentState.at("psi")) - currentState.at("v")*std::sin(currentState.at("psi")))*100;
+	velocity[1] = -(currentState.at("u")*std::sin(currentState.at("psi")) + currentState.at("v")*std::cos(currentState.at("psi")))*100;
+	velocity[2] = 0.0;
+
+	return velocity;
+}
+
 
 

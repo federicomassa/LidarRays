@@ -2,9 +2,12 @@
 
 #include "TazioVehicle.h"
 #include "Components/InputComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "WheeledVehicleMovementComponent4W.h"
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
+#include "KinematicMovementComponent.h"
+#include <array>
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "ControlMessage.h"
@@ -129,7 +132,7 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
+	//UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
 	/*if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
 
@@ -139,12 +142,44 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 		GetVehicleMovementComponent()->SetSteeringInput(-control.Ydot);
 	}
 	else
+	{	
+		controls.insert(control);
+	}
+}
+
+void ATazioVehicle::Tick(float Delta)
+{
+	Super::Tick(Delta);
+	//UE_LOG(LogTemp, Warning, TEXT("TICK!"));
+
+	lastDeltaTime = Delta;
+	if (IsManualDriveMode())
 	{
+		FControlMessage control;
+		control.VX = lastThrottle;
+		control.Ydot = lastSteer;
+
+		controls.insert(control);
+	}
+
+	if (IsManualDriveMode() && bPhysXSimulation)
+	{ 
+		FControlMessage control;
+		control.VX = lastThrottle;
+		control.Ydot = lastSteer;
+
+		SendControls(control);
+	}
+	else if (!bPhysXSimulation && !(controls.isEmpty()))
+	{
+		FControlMessage control = controls.pop();
+
 		std::map<std::string, double> originalControls;
 		originalControls["Throttle"] = control.VX;
 		originalControls["Steering"] = control.Ydot;
 
-		DynamicModel->run(originalControls, lastDeltaTime);
+
+		DynamicModel->run(originalControls, Delta);
 
 		std::map<std::string, double> currentState = DynamicModel->getWorldState();
 
@@ -155,22 +190,10 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 
 		SetActorLocation(FVector(currentState.at("x"), currentState.at("y"), GetActorLocation().Z));
 		SetActorRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
-	}
-}
 
-void ATazioVehicle::Tick(float Delta)
-{
-	Super::Tick(Delta);
-
-	lastDeltaTime = Delta;
-
-	if (IsManualDriveMode())
-	{ 
-		FControlMessage control;
-		control.VX = lastThrottle;
-		control.Ydot = -lastSteer;
-
-		SendControls(control);
+		std::array<double, 3> velocity = DynamicModel->getVelocity();
+		//UE_LOG(LogTemp, Warning, TEXT("SETTING VELOCITY: %f, %f, %f"), velocity[0], velocity[1], velocity[2]);
+		ModelMovementComponent->Velocity = FVector(velocity[0], velocity[1], velocity[2]);
 	}
 }
 
@@ -179,18 +202,29 @@ void ATazioVehicle::BeginPlay()
 	Super::BeginPlay();
 
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
+	PhysicsMovementComponent = FindComponentByClass<UWheeledVehicleMovementComponent4W>();
 
 	DynamicModel = VehicleModel::generateVehicleModel(VehicleModelType);
 
 	if (DynamicModel)
 	{
+		// Remove physics movement component, add model movement component
 		UE_LOG(LogTemp, Warning, TEXT("DYNAMIC MODEL"));
+		PhysicsMovementComponent->DestroyComponent();
+
+		ModelMovementComponent = NewObject<UKinematicMovementComponent>(this);
+		AddOwnedComponent(ModelMovementComponent);
+
 		Mesh->SetSimulatePhysics(false);
 	}
 
 	if (DynamicModel)
 	{
 		DynamicModel->initModel();
+
+		// Create pawn movement component
+		
+
 
 		std::map<std::string, double> initState;
 		FVector initLocation = GetActorLocation();
@@ -225,14 +259,14 @@ void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ATazioVehicle::SetThrottle(float value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Throttle"));
+	//UE_LOG(LogTemp, Warning, TEXT("Throttle"));
 	lastThrottle = value;
 }
 
 void ATazioVehicle::SetSteer(float value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Steer"));
-	lastSteer = value;
+	//UE_LOG(LogTemp, Warning, TEXT("Steer"));
+	lastSteer = -value;
 }
 
 

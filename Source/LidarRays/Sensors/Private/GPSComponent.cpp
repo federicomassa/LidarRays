@@ -130,7 +130,6 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSMessage.z = GPSLocation.Z + ZCurrentNoise;
 
 
-
 	GPSMessage.yaw = (GPSRotation.Yaw)*PI / 180 + YawCurrentNoise;
 	GPSMessage.pitch = 0.0f;
 	GPSMessage.roll = 0.0f;
@@ -144,6 +143,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//UE_LOG(LogTemp, Warning, TEXT("GPS Yaw: %f"), GPSMessage.yaw);
 
 	FVector Velocity = Owner->GetVelocity();
+	//UE_LOG(LogTemp, Warning, TEXT("GPS OWNER VELOCITY: %s"), *Velocity.ToString());
+
+	//UE_LOG(LogTemp, Warning, TEXT("Current World Rotation: %s"), *CurrentWorldRotation.ToString());
+
+
 	FVector RelativeVelocity = CurrentWorldRotation.UnrotateVector(Velocity);
 	RelativeVelocity = FVector(-RelativeVelocity.Y, -RelativeVelocity.X, RelativeVelocity.Z);
 

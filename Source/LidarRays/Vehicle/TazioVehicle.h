@@ -9,6 +9,7 @@
 #include "UDPReceiver.h"
 #include "CriticalSection.h"
 #include "ControlMessage.h"
+#include "Buffer.h"
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -18,6 +19,8 @@ class UTextRenderComponent;
 class UInputComponent;
 class UAudioComponent;
 class USkeletalMeshComponent;
+class UWheeledVehicleMovementComponent4W;
+class UPawnMovementComponent;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
@@ -44,7 +47,6 @@ class ATazioVehicle : public AWheeledVehicle
 
 	bool ManualDriving = true;
 
-
 	// Vehicle model
 	UPROPERTY(EditAnywhere, Category = Model)
 	EVehicleModelEnum VehicleModelType = EVehicleModelEnum::VM_PhysX;
@@ -61,6 +63,12 @@ class ATazioVehicle : public AWheeledVehicle
 	float lastSteer = 0.f;
 
 	USkeletalMeshComponent* Mesh = nullptr;
+
+	UWheeledVehicleMovementComponent4W* PhysicsMovementComponent = nullptr;
+	UPawnMovementComponent* ModelMovementComponent = nullptr;
+
+	// When in kinematic model mode, controls are consumed inside Tick, possibly with a different frequency wrt the controller frequency
+	Buffer<FControlMessage> controls;
 
 public:
 	ATazioVehicle();

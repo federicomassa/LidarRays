@@ -20,6 +20,8 @@ public:
 	std::map<std::string, double> controlsToWorld(const std::map<std::string, double>& inControl) const override;
 	std::map<std::string, double> statesToWorld(const std::map<std::string, double>& inState) const override;
 
+	std::array<double, 3> getVelocity() override;
+
 private:
 	bool isBraking();
 
