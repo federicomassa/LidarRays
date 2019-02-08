@@ -35,11 +35,22 @@ class LIDARRAYS_API UGPSComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = Noise)
 	float PositionStdDev = 0.3f;
 
+	UPROPERTY(EditAnywhere, Category = Noise)
+	float PosXBias = 0.f;
+
+	UPROPERTY(EditAnywhere, Category = Noise)
+	float PosYBias = 0.f;
+
 	// deg
 	UPROPERTY(EditAnywhere, Category = Noise)
 	float YawStdDev = 1.f;
 
-	std::normal_distribution<float> PositionRandomNoise;
+	UPROPERTY(EditAnywhere, Category = Noise)
+	float YawBias = 0.f;
+
+
+	std::normal_distribution<float> PosXRandomNoise;
+	std::normal_distribution<float> PosYRandomNoise;
 	std::normal_distribution<float> YawRandomNoise;
 
 	std::ofstream csv_file;

@@ -23,7 +23,7 @@ VehicleModel* VehicleModel::generateVehicleModel(EVehicleModelEnum modelType)
 	return nullptr;
 }
 
-void VehicleModel::setState(std::map<std::string, float> state)
+void VehicleModel::setState(std::map<std::string, double> state)
 {
 	currentState = statesToModel(state);
 
@@ -31,10 +31,10 @@ void VehicleModel::setState(std::map<std::string, float> state)
 		UE_LOG(LogTemp, Error, TEXT("VehicleModel::setState --- currentState is incompatible with model. Something is wrong in the model or in the input"));
 }
 
-void VehicleModel::run(std::map<std::string, float> worldControlRequest, float DeltaTime)
+void VehicleModel::run(std::map<std::string, double> worldControlRequest, double DeltaTime)
 {
 	// Convert controls to model variables
-	std::map<std::string, float> controlRequest = controlsToModel(worldControlRequest);
+	std::map<std::string, double> controlRequest = controlsToModel(worldControlRequest);
 
 	if (!isControlCompatible(controlRequest))
 		UE_LOG(LogTemp, Error, TEXT("VehicleModel::run --- could not convert control request to model variables. Something is wrong either in the input or in the model"));
@@ -51,7 +51,7 @@ void VehicleModel::run(std::map<std::string, float> worldControlRequest, float D
 }
 
 
-bool VehicleModel::isStateCompatible(std::map<std::string, float> map)
+bool VehicleModel::isStateCompatible(std::map<std::string, double> map)
 {	
 	// Check size
 	if (map.size() != stateVars.size())
@@ -66,7 +66,7 @@ bool VehicleModel::isStateCompatible(std::map<std::string, float> map)
 	return true;
 }
 
-bool VehicleModel::isControlCompatible(std::map<std::string, float> map)
+bool VehicleModel::isControlCompatible(std::map<std::string, double> map)
 {
 	// Check size
 	if (map.size() != controlVars.size())
@@ -81,7 +81,7 @@ bool VehicleModel::isControlCompatible(std::map<std::string, float> map)
 	return true;
 }
 
-std::map<std::string, float> VehicleModel::getWorldState() const
+std::map<std::string, double> VehicleModel::getWorldState() const
 {
 	return statesToWorld(currentState);
 }

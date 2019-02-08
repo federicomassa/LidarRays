@@ -140,13 +140,13 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 	}
 	else
 	{
-		std::map<std::string, float> originalControls;
+		std::map<std::string, double> originalControls;
 		originalControls["Throttle"] = control.VX;
-		originalControls["Steering"] = -control.Ydot;
+		originalControls["Steering"] = control.Ydot;
 
 		DynamicModel->run(originalControls, lastDeltaTime);
 
-		std::map<std::string, float> currentState = DynamicModel->getWorldState();
+		std::map<std::string, double> currentState = DynamicModel->getWorldState();
 
 		FRotator currentRotation = GetActorRotation();
 
@@ -192,7 +192,7 @@ void ATazioVehicle::BeginPlay()
 	{
 		DynamicModel->initModel();
 
-		std::map<std::string, float> initState;
+		std::map<std::string, double> initState;
 		FVector initLocation = GetActorLocation();
 		FRotator initRotation = GetActorRotation();
 
@@ -204,14 +204,14 @@ void ATazioVehicle::BeginPlay()
 
 		DynamicModel->setState(initState);
 
-		std::map<std::string, float> newState = DynamicModel->getWorldState();
+		std::map<std::string, double> newState = DynamicModel->getWorldState();
 		FVector newWorldState;
 		newWorldState.X = newState.at("x");
 		newWorldState.Y = newState.at("y");
 		newWorldState.Z = initLocation.Z + 10.f;
 
-		Mesh->SetWorldLocation(newWorldState);
-		Mesh->SetWorldRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));
+		SetActorLocation(newWorldState);
+		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));
 	}
 }
 

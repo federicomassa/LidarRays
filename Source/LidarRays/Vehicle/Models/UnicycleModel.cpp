@@ -25,15 +25,15 @@ void UnicycleModel::closeModel()
 
 }
 
-void UnicycleModel::requestControl(std::map<std::string, float> controlRequest)
+void UnicycleModel::requestControl(std::map<std::string, double> controlRequest)
 {
 	lastControlsApplied = controlRequest;
 }
 
 
-void UnicycleModel::executeModel(float DeltaTime)
+void UnicycleModel::executeModel(double DeltaTime)
 {
-	std::map<std::string, float> oldState = currentState;
+	std::map<std::string, double> oldState = currentState;
 
 	int vSign;
 	if (oldState.at("v") > 0)
@@ -53,9 +53,9 @@ void UnicycleModel::executeModel(float DeltaTime)
 	currentState.at("theta") = oldState.at("theta") + lastControlsApplied.at("Omega")*DeltaTime;
 }
 
-std::map<std::string, float> UnicycleModel::controlsToModel(const std::map<std::string, float>& inControl) const
+std::map<std::string, double> UnicycleModel::controlsToModel(const std::map<std::string, double>& inControl) const
 {
-	std::map<std::string, float> outControl;
+	std::map<std::string, double> outControl;
 
 	try
 	{
@@ -70,19 +70,19 @@ std::map<std::string, float> UnicycleModel::controlsToModel(const std::map<std::
 	return outControl;
 }
 
-std::map<std::string, float> UnicycleModel::statesToModel(const std::map<std::string, float>& inState) const
+std::map<std::string, double> UnicycleModel::statesToModel(const std::map<std::string, double>& inState) const
 {
-	std::map<std::string, float> outState;
+	std::map<std::string, double> outState;
 
 	try
 	{
 		outState["x"] = inState.at("x")/100.f;
-		outState["y"] = inState.at("y")/100.f;
+		outState["y"] = -inState.at("y")/100.f;
 
 		// This method is only called at initialization
 		outState["v"] = 0.f/100.f;
 
-		outState["theta"] = inState.at("yaw")*3.14159/180.f;
+		outState["theta"] = -inState.at("yaw")*3.14159/180.f;
 	}
 	catch (std::exception& e)
 	{
@@ -93,9 +93,9 @@ std::map<std::string, float> UnicycleModel::statesToModel(const std::map<std::st
 
 }
 
-std::map<std::string, float> UnicycleModel::controlsToWorld(const std::map<std::string, float>& inControl) const
+std::map<std::string, double> UnicycleModel::controlsToWorld(const std::map<std::string, double>& inControl) const
 {
-	std::map<std::string, float> outControl;
+	std::map<std::string, double> outControl;
 
 	try
 	{
@@ -110,15 +110,15 @@ std::map<std::string, float> UnicycleModel::controlsToWorld(const std::map<std::
 	return outControl;
 }
 
-std::map<std::string, float> UnicycleModel::statesToWorld(const std::map<std::string, float>& inState) const
+std::map<std::string, double> UnicycleModel::statesToWorld(const std::map<std::string, double>& inState) const
 {
-	std::map<std::string, float> outState;
+	std::map<std::string, double> outState;
 
 	try
 	{
 		outState["x"] = inState.at("x")*100.f;
-		outState["y"] = inState.at("y")*100.f;
-		outState["yaw"] = inState.at("theta")*180/3.14159;
+		outState["y"] = -inState.at("y")*100.f;
+		outState["yaw"] = -inState.at("theta")*180/3.14159;
 	}
 	catch (std::exception& e)
 	{

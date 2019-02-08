@@ -29,10 +29,10 @@ void SingleTrackModel::initModel()
 	// ?
 	params["Jz"] = 1260.f;
 
-	params["max_traction"] = 5000;
+	params["max_traction"] = 3000;
 	params["max_brake"] = 12000;
 
-	params["max_steering"] = 45 * 3.14159 / 180;
+	params["max_steering"] = 3.14159 / 6.0;
 
 	// Longitudinal velocity, lateral velocity, yaw rate, center position, yaw
 	stateVars.insert("u");
@@ -55,13 +55,13 @@ void SingleTrackModel::closeModel()
 
 }
 
-void SingleTrackModel::requestControl(std::map<std::string, float> controlRequest)
+void SingleTrackModel::requestControl(std::map<std::string, double> controlRequest)
 {
 	lastControlsApplied = controlRequest;
 }
 
 
-void SingleTrackModel::executeModel(float DeltaTime)
+void SingleTrackModel::executeModel(double DeltaTime)
 {
 	if (currentState.at("u") == 0)
 	{
@@ -69,31 +69,31 @@ void SingleTrackModel::executeModel(float DeltaTime)
 		return;
 	}
 		
-	float udot1 = currentState.at("v")*currentState.at("r");
-	float udot2 = -getF1t() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
-	float udot3 = -getF1l() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
-	float udot4 = -getF2l() / params.at("m");
+	double udot1 = currentState.at("v")*currentState.at("r");
+	double udot2 = -getF1t() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
+	double udot3 = -getF1l() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
+	double udot4 = -getF2l() / params.at("m");
 
 	UE_LOG(LogTemp, Warning, TEXT("UDOT: %f, %f, %f, %f"), udot1, udot2, udot3, udot4);
-	float udot = udot1 + udot2 + udot3 + udot4;
+	double udot = udot1 + udot2 + udot3 + udot4;
 
-	float vdot1 = -currentState.at("u")*currentState.at("r");
-	float vdot2 = getF1t() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
-	float vdot3 = -getF1l() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
-	float vdot4 = getF2l() / params.at("m");
+	double vdot1 = -currentState.at("u")*currentState.at("r");
+	double vdot2 = getF1t() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
+	double vdot3 = -getF1l() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
+	double vdot4 = getF2l() / params.at("m");
 	UE_LOG(LogTemp, Warning, TEXT("VDOT: %f, %f, %f, %f"), vdot1, vdot2, vdot3, vdot4);
-	float vdot = vdot1 + vdot2 + vdot3 + vdot4;
+	double vdot = vdot1 + vdot2 + vdot3 + vdot4;
 
-	float rdot1 = params.at("La")*getF1t() / params.at("Jz")*std::cos(lastControlsApplied.at("delta"));
-	float rdot2 = -params.at("La")*getF1l() / params.at("Jz")*std::sin(lastControlsApplied.at("delta"));
-	float rdot3 = -params.at("Lr")*getF2t() / params.at("Jz");
+	double rdot1 = params.at("La")*getF1t() / params.at("Jz")*std::cos(lastControlsApplied.at("delta"));
+	double rdot2 = -params.at("La")*getF1l() / params.at("Jz")*std::sin(lastControlsApplied.at("delta"));
+	double rdot3 = -params.at("Lr")*getF2t() / params.at("Jz");
 	UE_LOG(LogTemp, Warning, TEXT("RDOT: %f, %f, %f"), rdot1, rdot2, rdot3);
 
-	float rdot = rdot1 + rdot2 + rdot3;
+	double rdot = rdot1 + rdot2 + rdot3;
 
-	float xGdot = currentState.at("u")*std::cos(currentState.at("psi")) - currentState.at("v")*std::sin(currentState.at("psi"));
-	float yGdot = currentState.at("u")*std::sin(currentState.at("psi")) + currentState.at("v")*std::cos(currentState.at("psi"));
-	float psidot = currentState.at("r");
+	double xGdot = currentState.at("u")*std::cos(currentState.at("psi")) - currentState.at("v")*std::sin(currentState.at("psi"));
+	double yGdot = currentState.at("u")*std::sin(currentState.at("psi")) + currentState.at("v")*std::cos(currentState.at("psi"));
+	double psidot = currentState.at("r");
 
 	currentState.at("u") += udot * DeltaTime;
 	currentState.at("v") += vdot * DeltaTime;
@@ -114,9 +114,9 @@ void SingleTrackModel::executeModel(float DeltaTime)
 		currentState.at("psi"));
 }
 
-std::map<std::string, float> SingleTrackModel::controlsToModel(const std::map<std::string, float>& inControl) const
+std::map<std::string, double> SingleTrackModel::controlsToModel(const std::map<std::string, double>& inControl) const
 {
-	std::map<std::string, float> outControl;
+	std::map<std::string, double> outControl;
 
 	try
 	{
@@ -138,12 +138,14 @@ std::map<std::string, float> SingleTrackModel::controlsToModel(const std::map<st
 		UE_LOG(LogTemp, Error, TEXT("SingleTrackModel::controlsToModel --- %s"), *FString(e.what()));
 	}
 
+	UE_LOG(LogTemp, Error, TEXT("Controls: %f, %f --> %f, %f, %f"), inControl.at("Throttle"), inControl.at("Steering"), outControl.at("FT"), outControl.at("FB"), outControl.at("delta"));
+
 	return outControl;
 }
 
-std::map<std::string, float> SingleTrackModel::statesToModel(const std::map<std::string, float>& inState) const
+std::map<std::string, double> SingleTrackModel::statesToModel(const std::map<std::string, double>& inState) const
 {
-	std::map<std::string, float> outState;
+	std::map<std::string, double> outState;
 
 	try
 	{
@@ -154,9 +156,9 @@ std::map<std::string, float> SingleTrackModel::statesToModel(const std::map<std:
 		outState["v"] = 0.f;
 		outState["r"] = 0.f;
 		outState["xG"] = inState.at("x")/100.f;
-		outState["yG"] = inState.at("y") / 100.f;
+		outState["yG"] = -inState.at("y") / 100.f;
 
-		outState["psi"] = inState.at("yaw")*3.14159/180.f;
+		outState["psi"] = -inState.at("yaw")*3.14159/180.f;
 	}
 	catch (std::exception& e)
 	{
@@ -167,9 +169,9 @@ std::map<std::string, float> SingleTrackModel::statesToModel(const std::map<std:
 
 }
 
-std::map<std::string, float> SingleTrackModel::controlsToWorld(const std::map<std::string, float>& inControl) const
+std::map<std::string, double> SingleTrackModel::controlsToWorld(const std::map<std::string, double>& inControl) const
 {
-	std::map<std::string, float> outControl;
+	std::map<std::string, double> outControl;
 
 	try
 	{
@@ -190,15 +192,15 @@ std::map<std::string, float> SingleTrackModel::controlsToWorld(const std::map<st
 	return outControl;
 }
 
-std::map<std::string, float> SingleTrackModel::statesToWorld(const std::map<std::string, float>& inState) const
+std::map<std::string, double> SingleTrackModel::statesToWorld(const std::map<std::string, double>& inState) const
 {
-	std::map<std::string, float> outState;
+	std::map<std::string, double> outState;
 
 	try
 	{
 		outState["x"] = inState.at("xG")*100.f;
-		outState["y"] = inState.at("yG")*100.f;
-		outState["yaw"] = inState.at("psi")*180/3.14159;
+		outState["y"] = -inState.at("yG")*100.f;
+		outState["yaw"] = -inState.at("psi")*180/3.14159;
 	}
 	catch (std::exception& e)
 	{
@@ -208,9 +210,9 @@ std::map<std::string, float> SingleTrackModel::statesToWorld(const std::map<std:
 	return outState;
 }
 
-float SingleTrackModel::getAlpha1()
+double SingleTrackModel::getAlpha1()
 {
-	float argument = 100000000;
+	double argument = 0;
 
 	if (currentState.at("u") > 0.01)
 		argument = (currentState.at("v") + currentState.at("r")*params.at("La")) / currentState.at("u");
@@ -220,11 +222,11 @@ float SingleTrackModel::getAlpha1()
 	return (lastControlsApplied.at("delta") - std::atan(argument));
 }
 
-float SingleTrackModel::getAlpha2()
+double SingleTrackModel::getAlpha2()
 {
-	float argument = 100000000;
+	double argument = 0;
 
-	float result;
+	double result;
 
 	if (currentState.at("u") > 0.01)
 		argument = (currentState.at("v") - currentState.at("r")*params.at("Lr")) / currentState.at("u");
@@ -234,14 +236,14 @@ float SingleTrackModel::getAlpha2()
 	return result;
 }
 
-float SingleTrackModel::getF1t()
+double SingleTrackModel::getF1t()
 {
 	try
 	{
-		float alpha1 = getAlpha1();
-		float argument = params.at("B1")*alpha1 - params.at("E1")*(params.at("B1")*alpha1 - std::atan(params.at("B1")*alpha1));
+		double alpha1 = getAlpha1();
+		double argument = params.at("B1")*alpha1 - params.at("E1")*(params.at("B1")*alpha1 - std::atan(params.at("B1")*alpha1));
 
-		float result = params.at("D1")*std::sin(params.at("C1")*std::atan(argument));
+		double result = params.at("D1")*std::sin(params.at("C1")*std::atan(argument));
 
 		UE_LOG(LogTemp, Warning, TEXT("F1T: %f, %f, %f"), alpha1, argument, result);
 		return result;
@@ -254,12 +256,12 @@ float SingleTrackModel::getF1t()
 	
 }
 
-float SingleTrackModel::getF2t()
+double SingleTrackModel::getF2t()
 {
 	try
 	{
-		float alpha2 = getAlpha2();
-		float argument = params.at("B2")*alpha2 - params.at("E2")*(params.at("B2")*alpha2 - std::atan(params.at("B2")*alpha2));
+		double alpha2 = getAlpha2();
+		double argument = params.at("B2")*alpha2 - params.at("E2")*(params.at("B2")*alpha2 - std::atan(params.at("B2")*alpha2));
 		return (params.at("D2")*std::sin(params.at("C2")*std::atan(argument)));
 	}
 	catch (std::exception& e)
@@ -270,7 +272,7 @@ float SingleTrackModel::getF2t()
 
 }
 
-float SingleTrackModel::getF1l()
+double SingleTrackModel::getF1l()
 {
 	try
 	{
@@ -287,7 +289,7 @@ float SingleTrackModel::getF1l()
 
 }
 
-float SingleTrackModel::getF2l()
+double SingleTrackModel::getF2l()
 {
 	try
 	{
@@ -306,11 +308,11 @@ float SingleTrackModel::getF2l()
 
 bool SingleTrackModel::isBraking()
 {
-	if (lastControlsApplied.at("FT") > 0 && lastControlsApplied.at("FB") == 0)
+	if (lastControlsApplied.at("FT") >= 0 && lastControlsApplied.at("FB") == 0)
 	{
 		return false;
 	}
-	else if (lastControlsApplied.at("FT") == 0 && lastControlsApplied.at("FB") >= 0)
+	else if (lastControlsApplied.at("FT") == 0 && lastControlsApplied.at("FB") > 0)
 	{
 		return true;
 	}

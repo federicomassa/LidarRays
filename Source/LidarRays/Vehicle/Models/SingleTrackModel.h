@@ -11,27 +11,27 @@ public:
 	void initModel() override;
 	void closeModel() override;
 
-	void requestControl(std::map<std::string, float> controlRequest) override;
-	void executeModel(float DeltaTime) override;
+	void requestControl(std::map<std::string, double> controlRequest) override;
+	void executeModel(double DeltaTime) override;
 
-	std::map<std::string, float> controlsToModel(const std::map<std::string, float>& inControl) const override;
-	std::map<std::string, float> statesToModel(const std::map<std::string, float>& inState) const override;
+	std::map<std::string, double> controlsToModel(const std::map<std::string, double>& inControl) const override;
+	std::map<std::string, double> statesToModel(const std::map<std::string, double>& inState) const override;
 
-	std::map<std::string, float> controlsToWorld(const std::map<std::string, float>& inControl) const override;
-	std::map<std::string, float> statesToWorld(const std::map<std::string, float>& inState) const override;
+	std::map<std::string, double> controlsToWorld(const std::map<std::string, double>& inControl) const override;
+	std::map<std::string, double> statesToWorld(const std::map<std::string, double>& inState) const override;
 
 private:
 	bool isBraking();
 
 	// Slip angles
-	float getAlpha1();
-	float getAlpha2();
+	double getAlpha1();
+	double getAlpha2();
 
 	// Lateral tyre forces
-	float getF1t();
-	float getF2t();
+	double getF1t();
+	double getF2t();
 
 	// Longitudinal tyre forces
-	float getF1l();
-	float getF2l();
+	double getF1l();
+	double getF2l();
 };

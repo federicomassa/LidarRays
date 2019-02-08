@@ -21,7 +21,7 @@
 //#endif
 
 
-UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PositionRandomNoise(0.0, PositionStdDev), YawRandomNoise(0.0, YawStdDev)
+UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PosXRandomNoise(PosXBias, PositionStdDev), PosYRandomNoise(PosYBias, PositionStdDev), YawRandomNoise(0.0, YawStdDev)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -117,8 +117,8 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 
 	// Add noise to measure
-	float XCurrentNoise = PositionRandomNoise(RandomGenerator);
-	float YCurrentNoise = PositionRandomNoise(RandomGenerator);
+	float XCurrentNoise = PosXRandomNoise(RandomGenerator);
+	float YCurrentNoise = PosYRandomNoise(RandomGenerator);
 	float ZCurrentNoise = 0.f;
 
 	float YawCurrentNoise = YawRandomNoise(RandomGenerator)*PI/180;
