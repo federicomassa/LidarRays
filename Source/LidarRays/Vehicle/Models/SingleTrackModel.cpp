@@ -63,11 +63,11 @@ void SingleTrackModel::requestControl(std::map<std::string, double> controlReque
 
 void SingleTrackModel::executeModel(double DeltaTime)
 {
-	if (currentState.at("u") == 0)
-	{
-		UE_LOG(LogTemp, Error, TEXT("SingleTrackModel::executeModel --- longitudinal velocity cannot be zero"));
-		return;
-	}
+	//if (currentState.at("u") == 0)
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("SingleTrackModel::executeModel --- longitudinal velocity cannot be zero"));
+	//	return;
+	//}
 		
 	double udot1 = currentState.at("v")*currentState.at("r");
 	double udot2 = -getF1t() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
@@ -102,8 +102,9 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	currentState.at("yG") += yGdot * DeltaTime;
 	currentState.at("psi") += psidot * DeltaTime;
 
-	if (currentState.at("u") < 0.01)
-		currentState.at("u") = 0.01;
+	if (currentState.at("u") < 0.0)
+		currentState.at("u") = 0.0;
+
 
 	UE_LOG(LogTemp, Error, TEXT("NEW STATE: %f, %f, %f, %f, %f, %f"),
 		currentState.at("u"),
@@ -212,28 +213,31 @@ std::map<std::string, double> SingleTrackModel::statesToWorld(const std::map<std
 
 double SingleTrackModel::getAlpha1()
 {
-	double argument = 0;
+	double argument = 0.0;
 
 	if (currentState.at("u") > 0.01)
+	{
 		argument = (currentState.at("v") + currentState.at("r")*params.at("La")) / currentState.at("u");
+		return (lastControlsApplied.at("delta") - std::atan(argument));
+	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Alpha1 argument: %f"), argument);
 
-	return (lastControlsApplied.at("delta") - std::atan(argument));
+
+	return 0.0;
 }
 
 double SingleTrackModel::getAlpha2()
 {
-	double argument = 0;
-
-	double result;
+	double argument = 0.0;
 
 	if (currentState.at("u") > 0.01)
+	{
 		argument = (currentState.at("v") - currentState.at("r")*params.at("Lr")) / currentState.at("u");
+		return -std::atan(argument);
+	}
 
-	result = -std::atan(argument);
-
-	return result;
+	return 0.0;
 }
 
 double SingleTrackModel::getF1t()
@@ -331,6 +335,11 @@ std::array<double, 3> SingleTrackModel::getVelocity()
 	velocity[0] = (currentState.at("u")*std::cos(currentState.at("psi")) - currentState.at("v")*std::sin(currentState.at("psi")))*100;
 	velocity[1] = -(currentState.at("u")*std::sin(currentState.at("psi")) + currentState.at("v")*std::cos(currentState.at("psi")))*100;
 	velocity[2] = 0.0;
+
+
+	//velocity[0] = currentState.at("u");
+	//velocity[1] = currentState.at("v");
+	//velocity[2] = 0.0;
 
 	return velocity;
 }

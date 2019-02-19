@@ -27,6 +27,9 @@ class LIDARRAYS_API UIMUComponent : public UActorComponent
 	float LastVx;
 	float LastVy;
 	float LastVz;
+	float LastPitch;
+	float LastYaw;
+	float LastRoll;
 
 public:
 
