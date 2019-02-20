@@ -53,8 +53,6 @@ class ATazioVehicle : public AWheeledVehicle
 
 	VehicleModel* DynamicModel = nullptr;
 
-	bool bPhysXSimulation = true;
-
 	TArray < FInputAxisBinding > AxisBindings;
 
 	float lastDeltaTime = 0.f;
@@ -74,6 +72,8 @@ public:
 	ATazioVehicle();
 	~ATazioVehicle();
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bPhysXSimulation = true;
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPSender* GetLidarSender();

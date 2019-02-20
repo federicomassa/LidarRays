@@ -210,12 +210,14 @@ void ATazioVehicle::BeginPlay()
 	{
 		// Remove physics movement component, add model movement component
 		UE_LOG(LogTemp, Warning, TEXT("DYNAMIC MODEL"));
+		Mesh->SetSimulatePhysics(false);
+
+
 		PhysicsMovementComponent->DestroyComponent();
 
 		ModelMovementComponent = NewObject<UKinematicMovementComponent>(this);
 		AddOwnedComponent(ModelMovementComponent);
 
-		Mesh->SetSimulatePhysics(false);
 	}
 
 	if (DynamicModel)
@@ -244,7 +246,7 @@ void ATazioVehicle::BeginPlay()
 		newWorldState.Y = newState.at("y");
 		newWorldState.Z = initLocation.Z + 10.f;
 
-		SetActorLocation(newWorldState);
+		SetActorLocation(newWorldState, false, nullptr, ETeleportType::TeleportPhysics);
 		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));
 	}
 }
