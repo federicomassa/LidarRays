@@ -13,9 +13,14 @@
 #include <string>
 #include <GameFramework/Actor.h>
 
-AUDPReceiver::AUDPReceiver(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) 
+AUDPReceiver::AUDPReceiver()
 { 
 	ListenSocket = NULL; 
+}
+
+AUDPReceiver::~AUDPReceiver()
+{
+	UE_LOG(LogTemp, Warning, TEXT("!!!!!!!!!!!UDP RECEIVER DESTRUCTOR!!!!!!!!!!!!!!"));
 }
 
 void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)

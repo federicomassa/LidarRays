@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehicle.h"
-#include "UDPSender.h" 
 #include "VehicleModel.h"
-#include "UDPReceiver.h"
 #include "CriticalSection.h"
 #include "ControlMessage.h"
 #include "Buffer.h"
@@ -21,34 +19,35 @@ class UAudioComponent;
 class USkeletalMeshComponent;
 class UWheeledVehicleMovementComponent4W;
 class UPawnMovementComponent;
+class UTazioGameInstance;
+class AUDPSender;
+class AUDPReceiver;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
 {
 	GENERATED_BODY()
 
+	// Game instance to access permanent variables
+	UTazioGameInstance* GameInstance = nullptr;
+
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPSender* LidarSender = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPSender* IMUSender = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPSender* GPSSender = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPSender* GPSTruthSender = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = UDP)
 	AUDPReceiver* ControlReceiver = nullptr;
 
 	bool ManualDriving = true;
 
-	// Vehicle model
-	UPROPERTY(EditAnywhere, Category = Model)
+	//// Vehicle model
+	//UPROPERTY(EditAnywhere, Category = Model)
 	EVehicleModelEnum VehicleModelType = EVehicleModelEnum::VM_PhysX;
 
 	VehicleModel* DynamicModel = nullptr;
@@ -71,6 +70,9 @@ class ATazioVehicle : public AWheeledVehicle
 public:
 	ATazioVehicle();
 	~ATazioVehicle();
+
+	// Called on BeginPlay
+	void Init();
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bPhysXSimulation = true;

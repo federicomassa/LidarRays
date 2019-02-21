@@ -14,7 +14,7 @@ struct FAnyCustomData;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDataReceivedDelegate, const TArray<uint8>&, Data);
 
 UCLASS()
-class AUDPReceiver : public AActor
+class UNREALUDP_API AUDPReceiver : public AActor
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = UDP)
 	int32 BufferSize = 2 * 1024 * 1024;
 public:
-	AUDPReceiver(const FObjectInitializer& ObjectInitializer);
+	AUDPReceiver();
+	~AUDPReceiver();
 
 public:
 	FSocket* ListenSocket;

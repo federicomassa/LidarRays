@@ -9,13 +9,13 @@
 #include "UDPSender.generated.h"
 
 UCLASS()
-class AUDPSender : public AActor
+class UNREALUDP_API AUDPSender : public AActor
 {
 	GENERATED_BODY()
 	
 public:
-	AUDPSender(const FObjectInitializer& ObjectInitializer);
-
+	AUDPSender();
+	~AUDPSender();
 private:
 	bool isUDP;
 	

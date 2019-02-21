@@ -5,7 +5,7 @@
 #include "AnyCustomData.generated.h"
 
 USTRUCT(BlueprintType)
-struct FAnyCustomData {
+struct UNREALUDP_API FAnyCustomData {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Joy Color") 

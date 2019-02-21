@@ -4,7 +4,7 @@
 #include "ArrayWrapper.generated.h"
 
 UCLASS()
-class UArrayWrapper : public UObject
+class UNREALUDP_API UArrayWrapper : public UObject
 {
 	GENERATED_BODY()
 

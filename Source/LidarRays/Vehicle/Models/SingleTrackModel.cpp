@@ -74,20 +74,20 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	double udot3 = -getF1l() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
 	double udot4 = -getF2l() / params.at("m");
 
-	UE_LOG(LogTemp, Warning, TEXT("UDOT: %f, %f, %f, %f"), udot1, udot2, udot3, udot4);
+	//UE_LOG(LogTemp, Warning, TEXT("UDOT: %f, %f, %f, %f"), udot1, udot2, udot3, udot4);
 	double udot = udot1 + udot2 + udot3 + udot4;
 
 	double vdot1 = -currentState.at("u")*currentState.at("r");
 	double vdot2 = getF1t() / params.at("m")*std::cos(lastControlsApplied.at("delta"));
 	double vdot3 = -getF1l() / params.at("m")*std::sin(lastControlsApplied.at("delta"));
 	double vdot4 = getF2t() / params.at("m");
-	UE_LOG(LogTemp, Warning, TEXT("VDOT: %f, %f, %f, %f"), vdot1, vdot2, vdot3, vdot4);
+	//UE_LOG(LogTemp, Warning, TEXT("VDOT: %f, %f, %f, %f"), vdot1, vdot2, vdot3, vdot4);
 	double vdot = vdot1 + vdot2 + vdot3 + vdot4;
 
 	double rdot1 = params.at("La")*getF1t() / params.at("Jz")*std::cos(lastControlsApplied.at("delta"));
 	double rdot2 = -params.at("La")*getF1l() / params.at("Jz")*std::sin(lastControlsApplied.at("delta"));
 	double rdot3 = -params.at("Lr")*getF2t() / params.at("Jz");
-	UE_LOG(LogTemp, Warning, TEXT("RDOT: %f, %f, %f"), rdot1, rdot2, rdot3);
+	//UE_LOG(LogTemp, Warning, TEXT("RDOT: %f, %f, %f"), rdot1, rdot2, rdot3);
 
 	double rdot = rdot1 + rdot2 + rdot3;
 
@@ -106,13 +106,13 @@ void SingleTrackModel::executeModel(double DeltaTime)
 		currentState.at("u") = 0.0;
 
 
-	UE_LOG(LogTemp, Error, TEXT("NEW STATE: %f, %f, %f, %f, %f, %f"),
-		currentState.at("u"),
-		currentState.at("v"),
-		currentState.at("r"),
-		currentState.at("xG"),
-		currentState.at("yG"),
-		currentState.at("psi"));
+	//UE_LOG(LogTemp, Error, TEXT("NEW STATE: %f, %f, %f, %f, %f, %f"),
+	//	currentState.at("u"),
+	//	currentState.at("v"),
+	//	currentState.at("r"),
+	//	currentState.at("xG"),
+	//	currentState.at("yG"),
+	//	currentState.at("psi"));
 }
 
 std::map<std::string, double> SingleTrackModel::controlsToModel(const std::map<std::string, double>& inControl) const
@@ -139,7 +139,7 @@ std::map<std::string, double> SingleTrackModel::controlsToModel(const std::map<s
 		UE_LOG(LogTemp, Error, TEXT("SingleTrackModel::controlsToModel --- %s"), *FString(e.what()));
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Controls: %f, %f --> %f, %f, %f"), inControl.at("Throttle"), inControl.at("Steering"), outControl.at("FT"), outControl.at("FB"), outControl.at("delta"));
+	//UE_LOG(LogTemp, Error, TEXT("Controls: %f, %f --> %f, %f, %f"), inControl.at("Throttle"), inControl.at("Steering"), outControl.at("FT"), outControl.at("FB"), outControl.at("delta"));
 
 	return outControl;
 }
@@ -221,7 +221,7 @@ double SingleTrackModel::getAlpha1()
 		return (lastControlsApplied.at("delta") - std::atan(argument));
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Alpha1 argument: %f"), argument);
+	//UE_LOG(LogTemp, Warning, TEXT("Alpha1 argument: %f"), argument);
 
 
 	return 0.0;
@@ -249,7 +249,7 @@ double SingleTrackModel::getF1t()
 
 		double result = params.at("D1")*std::sin(params.at("C1")*std::atan(argument));
 
-		UE_LOG(LogTemp, Warning, TEXT("F1T: %f, %f, %f"), alpha1, argument, result);
+		//UE_LOG(LogTemp, Warning, TEXT("F1T: %f, %f, %f"), alpha1, argument, result);
 		return result;
 	}
 	catch (std::exception& e)

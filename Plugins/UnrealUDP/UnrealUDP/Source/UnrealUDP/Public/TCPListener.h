@@ -10,7 +10,7 @@
 #include "TCPListener.generated.h"
 
 UCLASS()
-class ATCPListener : public AActor
+class UNREALUDP_API ATCPListener : public AActor
 {
 	GENERATED_BODY()
 	

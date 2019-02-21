@@ -7,6 +7,9 @@
 #include "Engine/Engine.h"
 #include "GameFramework/Controller.h"
 #include "KinematicMovementComponent.h"
+#include "TazioGameInstance.h"
+#include "UDPSender.h"
+#include "UDPReceiver.h"
 #include <array>
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
@@ -85,9 +88,6 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	InputComponent = PlayerInputComponent;
 
-	if (VehicleModelType != EVehicleModelEnum::VM_PhysX)
-		bPhysXSimulation = false;
-
 	UE_LOG(LogTemp, Warning, TEXT("Setting Player input: %i"), bPhysXSimulation);
 
 	//// set up gameplay key bindings
@@ -102,12 +102,6 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	PlayerInputComponent->BindAxis("Throttle", this, &ATazioVehicle::SetThrottle);
 	PlayerInputComponent->BindAxis("Steer", this, &ATazioVehicle::SetSteer);
-
-	if (!bPhysXSimulation)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Setting INPUT!"));
-		//PlayerInputComponent->BindAxis("Test", this, &ATazioVehicle::SetSteer);
-	}
 
 	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &ATazioVehicle::ToggleManualDriving);
 
@@ -188,6 +182,8 @@ void ATazioVehicle::Tick(float Delta)
 		//Mesh->SetWorldLocation(FVector(currentState.at("x"), currentState.at("y"), Mesh->GetWorldLocation().Z));
 		//Mesh->SetWorldRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
 
+		UE_LOG(LogTemp, Warning, TEXT("NEW STATE: %f, %f"), currentState.at("x"), currentState.at("y"));
+
 		SetActorLocation(FVector(currentState.at("x"), currentState.at("y"), GetActorLocation().Z));
 		SetActorRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
 
@@ -197,14 +193,45 @@ void ATazioVehicle::Tick(float Delta)
 	}
 }
 
+void ATazioVehicle::Init()
+{
+	check(GetGameInstance());
+	GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	check(GameInstance != nullptr);
+
+	// =============== Setup communication ================
+	LidarSender = NewObject<AUDPSender>(this);
+	LidarSender->Start("", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
+
+	GPSSender = NewObject<AUDPSender>(this);
+	GPSSender->Start("", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
+
+	GPSTruthSender = NewObject<AUDPSender>(this);
+	GPSTruthSender->Start("", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
+
+	IMUSender = NewObject<AUDPSender>(this);
+	IMUSender->Start("", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
+
+	ControlReceiver = NewObject<AUDPReceiver>(this);
+	ControlReceiver->Start("", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
+
+	// ===================== Vehicle Model ============================
+	VehicleModelType = GameInstance->VehicleModel;
+	DynamicModel = VehicleModel::generateVehicleModel(VehicleModelType);
+
+	if (VehicleModelType != EVehicleModelEnum::VM_PhysX)
+		bPhysXSimulation = false;
+}
+
 void ATazioVehicle::BeginPlay()
 {
-	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Warning, TEXT("TAZIO CIAO!"));
+
+	Init();
 
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
 	PhysicsMovementComponent = FindComponentByClass<UWheeledVehicleMovementComponent4W>();
-
-	DynamicModel = VehicleModel::generateVehicleModel(VehicleModelType);
 
 	if (DynamicModel)
 	{
@@ -249,6 +276,8 @@ void ATazioVehicle::BeginPlay()
 		SetActorLocation(newWorldState, false, nullptr, ETeleportType::TeleportPhysics);
 		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));
 	}
+
+	Super::BeginPlay();
 }
 
 void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -261,13 +290,13 @@ void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ATazioVehicle::SetThrottle(float value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Throttle"));
+	UE_LOG(LogTemp, Warning, TEXT("Throttle"));
 	lastThrottle = value;
 }
 
 void ATazioVehicle::SetSteer(float value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Steer"));
+	UE_LOG(LogTemp, Warning, TEXT("Steer"));
 	lastSteer = -value;
 }
 

@@ -8,10 +8,15 @@
 // endian conversion
 #include <boost/endian/conversion.hpp>
 
-AUDPSender::AUDPSender(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+AUDPSender::AUDPSender()
 {
 	SenderSocket = NULL;
 	ShowOnScreenDebugMessages = true;
+}
+
+AUDPSender::~AUDPSender()
+{
+	UE_LOG(LogTemp, Warning, TEXT("!!!!!!!!!!!UDP SENDER DESTRUCTOR!!!!!!!!!!!!!!"));
 }
 
 bool AUDPSender::SendData(TArray<uint8> Data)
