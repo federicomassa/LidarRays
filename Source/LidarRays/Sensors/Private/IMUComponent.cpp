@@ -4,6 +4,8 @@
 #include "EngineGlobals.h"
 #include <GameFramework/Actor.h>
 #include <Components/SkeletalMeshComponent.h>
+#include "SensorManager.h"
+#include "TazioVehicle.h"
 #include <DrawDebugHelpers.h>
 
 
@@ -24,25 +26,15 @@ void UIMUComponent::BeginPlay()
 
 	InitTime = GetWorld()->GetTimeSeconds();
 
-	Owner = GetOwner();
+	Owner = Cast<ATazioVehicle>(GetOwner());
 	World = GetWorld();
+
+	check(Owner);
+	check(World);
+
 	Mesh = Owner->FindComponentByClass<USkeletalMeshComponent>();
 
-
-	if (!Owner)
-	{
-		UE_LOG(LogTemp, Error, TEXT("IMU component has no owner"));
-	}
-
-	if (!World)
-	{
-		UE_LOG(LogTemp, Error, TEXT("IMU component has no world"));
-	}
-
-	if (!Mesh)
-	{
-		UE_LOG(LogTemp, Error, TEXT("IMU component has no skeletal mesh"));
-	}
+	check(Mesh);
 }
 
 void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -181,7 +173,7 @@ void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 
 	// Broadcast IMU Message
-	OnIMUAvailable.Broadcast(IMUReading);
+	Owner->GetSensorManager()->SendIMUMessage(IMUReading);
 
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), LinearAcceleration.X, LinearAcceleration.Y, LinearAcceleration.Z);
 	//UE_LOG(LogTemp, Warning, TEXT("Inserting: x: %f, y: %f, z: %f"), IMUReading.AngularVelocity[0], IMUReading.AngularVelocity[1], IMUReading.AngularVelocity[2]);

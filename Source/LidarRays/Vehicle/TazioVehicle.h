@@ -22,6 +22,8 @@ class UPawnMovementComponent;
 class UTazioGameInstance;
 class AUDPSender;
 class AUDPReceiver;
+class USensorManager;
+class UMessageSerializerComponent;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
@@ -31,17 +33,33 @@ class ATazioVehicle : public AWheeledVehicle
 	// Game instance to access permanent variables
 	UTazioGameInstance* GameInstance = nullptr;
 
+	USensorManager* SensManager = nullptr;
+	UMessageSerializerComponent* MessageSerializerComponent;
+
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
 
+	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
+
+	//FGCObjectScopeGuard LidarGuard;
+	//FGCObjectScopeGuard IMUGuard;
+	//FGCObjectScopeGuard GPSGuard;
+	//FGCObjectScopeGuard GPSTruthGuard;
+	//FGCObjectScopeGuard ControlGuard;
+
+	UPROPERTY()
 	AUDPSender* LidarSender = nullptr;
 
+	UPROPERTY()
 	AUDPSender* IMUSender = nullptr;
 
+	UPROPERTY()
 	AUDPSender* GPSSender = nullptr;
 
+	UPROPERTY()
 	AUDPSender* GPSTruthSender = nullptr;
 
+	UPROPERTY()
 	AUDPReceiver* ControlReceiver = nullptr;
 
 	bool ManualDriving = true;
@@ -91,6 +109,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetControlReceiver();	
+
+	USensorManager* GetSensorManager();
 
 	// Begin Pawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

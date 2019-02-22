@@ -18,12 +18,10 @@ public:
 	~AUDPSender();
 private:
 	bool isUDP;
-	
-	bool isFirst = true;
-
 public:
 	TSharedPtr<FInternetAddr> RemoteAddr; 
-	FSocket* SenderSocket;
+
+	FSocket* SenderSocket = nullptr;
 
 	UFUNCTION(BlueprintCallable, Category=UDPSender)
 		bool Start(const FString& YourChosenSocketName, const FString& TheIP, const int32 ThePort, bool UDP = false);

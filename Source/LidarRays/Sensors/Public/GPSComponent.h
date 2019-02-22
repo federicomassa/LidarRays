@@ -9,16 +9,14 @@
 
 class AActor;
 class UWorld;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSAvailableDelegate, const FOdometryMessage&, GPSData);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGPSTruthAvailableDelegate, const FOdometryMessage&, GPSTruthData);
+class ATazioVehicle;
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UGPSComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	AActor* Owner = nullptr;
+	ATazioVehicle* Owner = nullptr;
 	UWorld* World = nullptr;
 	USkeletalMeshComponent* Mesh;;
 
@@ -67,12 +65,6 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(BlueprintAssignable, Category = Sensors)
-		FGPSAvailableDelegate OnGPSAvailable;
-
-	UPROPERTY(BlueprintAssignable, Category = Sensors)
-		FGPSTruthAvailableDelegate OnGPSTruthAvailable;
 
 private:
 	void ToggleGPS();

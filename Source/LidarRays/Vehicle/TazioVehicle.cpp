@@ -8,6 +8,8 @@
 #include "GameFramework/Controller.h"
 #include "KinematicMovementComponent.h"
 #include "TazioGameInstance.h"
+#include <GCObjectScopeGuard.h>
+#include "SensorManager.h"
 #include "UDPSender.h"
 #include "UDPReceiver.h"
 #include <array>
@@ -28,8 +30,15 @@ ATazioVehicle::~ATazioVehicle()
 {
 	if (DynamicModel)
 		delete DynamicModel;
+
+	if (SensManager)
+		delete SensManager;
 }
 
+USensorManager* ATazioVehicle::GetSensorManager()
+{
+	return SensManager;
+}
 
 AUDPSender* ATazioVehicle::GetLidarSender()
 {
@@ -182,8 +191,6 @@ void ATazioVehicle::Tick(float Delta)
 		//Mesh->SetWorldLocation(FVector(currentState.at("x"), currentState.at("y"), Mesh->GetWorldLocation().Z));
 		//Mesh->SetWorldRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
 
-		UE_LOG(LogTemp, Warning, TEXT("NEW STATE: %f, %f"), currentState.at("x"), currentState.at("y"));
-
 		SetActorLocation(FVector(currentState.at("x"), currentState.at("y"), GetActorLocation().Z));
 		SetActorRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
 
@@ -200,20 +207,26 @@ void ATazioVehicle::Init()
 	check(GameInstance != nullptr);
 
 	// =============== Setup communication ================
-	LidarSender = NewObject<AUDPSender>(this);
-	LidarSender->Start("", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
+	LidarSender = NewObject<AUDPSender>();
+	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
+	UE_LOG(LogTemp, Warning, TEXT("Lidar: %s:%d"), *GameInstance->LidarSendIP, GameInstance->LidarPort);
 
-	GPSSender = NewObject<AUDPSender>(this);
-	GPSSender->Start("", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
 
-	GPSTruthSender = NewObject<AUDPSender>(this);
-	GPSTruthSender->Start("", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
+	GPSSender = NewObject<AUDPSender>();
+	GPSSender->Start("GPS", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
+	UE_LOG(LogTemp, Warning, TEXT("GPS: %s:%d"), *GameInstance->GPSSendIP, GameInstance->GPSPort);
 
-	IMUSender = NewObject<AUDPSender>(this);
-	IMUSender->Start("", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
+	GPSTruthSender = NewObject<AUDPSender>();
+	GPSTruthSender->Start("GPSTruth", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
+	UE_LOG(LogTemp, Warning, TEXT("GPS Truth: %s:%d"), *GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort);
 
-	ControlReceiver = NewObject<AUDPReceiver>(this);
-	ControlReceiver->Start("", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
+	IMUSender = NewObject<AUDPSender>();
+	IMUSender->Start("IMU", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
+	UE_LOG(LogTemp, Warning, TEXT("IMU: %s:%d"), *GameInstance->IMUSendIP, GameInstance->IMUPort);
+
+	ControlReceiver = NewObject<AUDPReceiver>();
+	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
+	UE_LOG(LogTemp, Warning, TEXT("Control: %s:%d"), *GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	// ===================== Vehicle Model ============================
 	VehicleModelType = GameInstance->VehicleModel;
@@ -221,12 +234,14 @@ void ATazioVehicle::Init()
 
 	if (VehicleModelType != EVehicleModelEnum::VM_PhysX)
 		bPhysXSimulation = false;
+
+	SensManager = NewObject<USensorManager>();
+	SensManager->Init(this);
 }
 
 void ATazioVehicle::BeginPlay()
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("TAZIO CIAO!"));
+	Super::BeginPlay();
 
 	Init();
 
@@ -236,7 +251,6 @@ void ATazioVehicle::BeginPlay()
 	if (DynamicModel)
 	{
 		// Remove physics movement component, add model movement component
-		UE_LOG(LogTemp, Warning, TEXT("DYNAMIC MODEL"));
 		Mesh->SetSimulatePhysics(false);
 
 
@@ -276,8 +290,6 @@ void ATazioVehicle::BeginPlay()
 		SetActorLocation(newWorldState, false, nullptr, ETeleportType::TeleportPhysics);
 		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)), ETeleportType::TeleportPhysics);
 	}
-
-	Super::BeginPlay();
 }
 
 void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)

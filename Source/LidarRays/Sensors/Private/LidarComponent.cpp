@@ -2,6 +2,8 @@
 
 #include "LidarComponent.h"
 #include <Engine/World.h>
+#include "SensorManager.h"
+#include "TazioVehicle.h"
 #include <GameFramework/Actor.h>
 #include <DrawDebugHelpers.h>
 
@@ -28,20 +30,11 @@ void ULidarComponent::BeginPlay()
 
 	InitTime = GetWorld()->GetTimeSeconds();
 
-	Owner = GetOwner();
+	Owner = Cast<ATazioVehicle>(GetOwner());
 	World = GetWorld();
 
-	if (!Owner)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Lidar component has no owner"));
-	}
-
-	if (!World)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Lidar component has no world"));
-	}
-
-	//Scan = NewObject<ULidarMessage>();
+	check(Owner);
+	check(World);
 }
 
 
@@ -162,7 +155,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		// Delegate broadcast
 		Scan.Points.shrink_to_fit();
 		
-		OnLidarAvailable.Broadcast(Scan);
+		Owner->GetSensorManager()->SendLidarMessage(Scan);
 		//isFirst = false;
 	}
 

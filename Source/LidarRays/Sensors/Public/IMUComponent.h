@@ -7,16 +7,15 @@
 
 class AActor;
 class UWorld;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIMUAvailableDelegate, const FIMUMessage&, IMUData);
-
+class ATazioVehicle;
 
 UCLASS(ClassGroup = (Sensors), meta = (BlueprintSpawnableComponent))
 class LIDARRAYS_API UIMUComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	AActor* Owner = nullptr;
+
+	ATazioVehicle* Owner = nullptr;
 	UWorld* World = nullptr;
 	USkeletalMeshComponent* Mesh;;
 
@@ -43,8 +42,5 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(BlueprintAssignable, Category = IMU)
-	FIMUAvailableDelegate OnIMUAvailable;
 
 };

@@ -21,10 +21,6 @@ AUDPSender::~AUDPSender()
 
 bool AUDPSender::SendData(TArray<uint8> Data)
 {
-	// ======= FIXME DEBUG ========
-	if (!isFirst) return false;
-	// ============================
-
 	if (!SenderSocket)
 	{
 		ScreenMsg("No sender socket"); 

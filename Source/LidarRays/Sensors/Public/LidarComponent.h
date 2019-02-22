@@ -9,15 +9,14 @@
 
 class AActor;
 class UWorld;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLidarAvailableDelegate, const FLidarMessage&, LidarScan);
+class ATazioVehicle;
 
 UCLASS( ClassGroup=(Sensors), meta=(BlueprintSpawnableComponent) )
 class LIDARRAYS_API ULidarComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	AActor* Owner = nullptr;
+	ATazioVehicle* Owner = nullptr;
 	UWorld* World = nullptr;
 	//ULidarMessage* Scan = nullptr;
 
@@ -95,9 +94,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(BlueprintAssignable, Category = Lidar)
-	FLidarAvailableDelegate OnLidarAvailable;
 
 	UPROPERTY(EditAnywhere, Category = Lidar)
 	bool DebugLines = false;

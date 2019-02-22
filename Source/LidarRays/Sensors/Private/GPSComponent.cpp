@@ -3,6 +3,8 @@
 #include <Engine/World.h>
 #include "EngineGlobals.h"
 #include <GameFramework/Actor.h>
+#include "TazioVehicle.h"
+#include "SensorManager.h"
 #include <Components/SkeletalMeshComponent.h>
 #include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
@@ -39,36 +41,22 @@ void UGPSComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Owner = GetOwner();
+	Owner = Cast<ATazioVehicle>(GetOwner());
 	World = GetWorld();
 	Mesh = Owner->FindComponentByClass<USkeletalMeshComponent>();
 
+	check(Owner);
+	check(World);
+	check(Mesh);
+
 	UInputComponent* Input = Owner->FindComponentByClass<UInputComponent>();
-	if (!Input)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Cannot find Input Component from GPSComponent!"));
-	}
+	check(Input);
 
 	Input->BindAction("ToggleGPS", IE_Pressed, this, &UGPSComponent::ToggleGPS);
 
 
 	InitLocation = Owner->GetActorLocation();
 	InitRotation = Owner->GetActorRotation();
-
-	if (!Owner)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GPS component has no owner"));
-	}
-
-	if (!World)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GPS component has no world"));
-	}
-
-	if (!Mesh)
-	{
-		UE_LOG(LogTemp, Error, TEXT("GPS component has no skeletal mesh"));
-	}
 }
 
 void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -177,7 +165,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
  // ========================================= BUILD GPS MESSAGE ====================================== //
 
 	// Broadcast GPS Message
-	OnGPSAvailable.Broadcast(GPSMessage);
+	Owner->GetSensorManager()->SendGPSMessage(GPSMessage);
 
 // ========================================= BUILD GPS TRUTH MESSAGE ================================= //
 	//UOdometryMessage* GPSTruthMessage = NewObject<UOdometryMessage>();
@@ -213,7 +201,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	/*UE_LOG(LogTemp, Warning, TEXT("GPS X, Y, Z:  %f, %f, %f"), GPSTruthMessage.x, GPSTruthMessage.y, GPSTruthMessage.z);
 	UE_LOG(LogTemp, Warning, TEXT("GPS VX, VY, VZ:  %f, %f, %f"), GPSTruthMessage.vx, GPSTruthMessage.vy, GPSTruthMessage.vz);
 	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage.roll, -GPSTruthMessage.pitch, -GPSTruthMessage.yaw);*/
-	OnGPSTruthAvailable.Broadcast(GPSTruthMessage);
+	Owner->GetSensorManager()->SendGPSTruthMessage(GPSTruthMessage);
 }
 
 void UGPSComponent::ToggleGPS()
