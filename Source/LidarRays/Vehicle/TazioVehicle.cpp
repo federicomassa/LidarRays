@@ -274,7 +274,7 @@ void ATazioVehicle::BeginPlay()
 		newWorldState.Z = initLocation.Z + 10.f;
 
 		SetActorLocation(newWorldState, false, nullptr, ETeleportType::TeleportPhysics);
-		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)));
+		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)), ETeleportType::TeleportPhysics);
 	}
 
 	Super::BeginPlay();
@@ -290,13 +290,13 @@ void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ATazioVehicle::SetThrottle(float value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Throttle"));
+	//UE_LOG(LogTemp, Warning, TEXT("Throttle"));
 	lastThrottle = value;
 }
 
 void ATazioVehicle::SetSteer(float value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Steer"));
+	//UE_LOG(LogTemp, Warning, TEXT("Steer"));
 	lastSteer = -value;
 }
 
