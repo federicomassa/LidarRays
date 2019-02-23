@@ -207,24 +207,24 @@ void ATazioVehicle::Init()
 	check(GameInstance != nullptr);
 
 	// =============== Setup communication ================
-	LidarSender = NewObject<AUDPSender>();
+	LidarSender = NewObject<AUDPSender>(this);
 	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
 	UE_LOG(LogTemp, Warning, TEXT("Lidar: %s:%d"), *GameInstance->LidarSendIP, GameInstance->LidarPort);
 
 
-	GPSSender = NewObject<AUDPSender>();
+	GPSSender = NewObject<AUDPSender>(this);
 	GPSSender->Start("GPS", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
 	UE_LOG(LogTemp, Warning, TEXT("GPS: %s:%d"), *GameInstance->GPSSendIP, GameInstance->GPSPort);
 
-	GPSTruthSender = NewObject<AUDPSender>();
+	GPSTruthSender = NewObject<AUDPSender>(this);
 	GPSTruthSender->Start("GPSTruth", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
 	UE_LOG(LogTemp, Warning, TEXT("GPS Truth: %s:%d"), *GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort);
 
-	IMUSender = NewObject<AUDPSender>();
+	IMUSender = NewObject<AUDPSender>(this);
 	IMUSender->Start("IMU", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
 	UE_LOG(LogTemp, Warning, TEXT("IMU: %s:%d"), *GameInstance->IMUSendIP, GameInstance->IMUPort);
 
-	ControlReceiver = NewObject<AUDPReceiver>();
+	ControlReceiver = NewObject<AUDPReceiver>(this);
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 	UE_LOG(LogTemp, Warning, TEXT("Control: %s:%d"), *GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 

@@ -19,6 +19,7 @@ class LIDARRAYS_API USensorManager : public UObject
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
 	ATazioVehicle* Owner;
 
 public:
@@ -34,10 +35,16 @@ public:
 	UFUNCTION()
 	void ReceiveControlMessage(const TArray<uint8>& data);
 
+	// NB not making them UPROPERTY because they are set from TazioVehicle and if that is destroyed, then these do not make sense anymore.
+
 	AUDPSender* LidarSender = nullptr;
+
 	AUDPSender* IMUSender = nullptr;
+
 	AUDPSender* GPSSender = nullptr;
+
 	AUDPSender* GPSTruthSender = nullptr;
+
 	AUDPReceiver* ControlReceiver = nullptr;
 
 	UMessageSerializerComponent* MessageSerializerComponent = nullptr;

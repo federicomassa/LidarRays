@@ -33,7 +33,9 @@ class ATazioVehicle : public AWheeledVehicle
 	// Game instance to access permanent variables
 	UTazioGameInstance* GameInstance = nullptr;
 
+	UPROPERTY()
 	USensorManager* SensManager = nullptr;
+
 	UMessageSerializerComponent* MessageSerializerComponent;
 
 	// Reference to controller component
@@ -47,6 +49,7 @@ class ATazioVehicle : public AWheeledVehicle
 	//FGCObjectScopeGuard GPSTruthGuard;
 	//FGCObjectScopeGuard ControlGuard;
 
+public:
 	UPROPERTY()
 	AUDPSender* LidarSender = nullptr;
 
@@ -61,6 +64,8 @@ class ATazioVehicle : public AWheeledVehicle
 
 	UPROPERTY()
 	AUDPReceiver* ControlReceiver = nullptr;
+
+private:
 
 	bool ManualDriving = true;
 
