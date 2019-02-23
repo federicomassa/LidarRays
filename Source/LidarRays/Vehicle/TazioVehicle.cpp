@@ -30,9 +30,6 @@ ATazioVehicle::~ATazioVehicle()
 {
 	if (DynamicModel)
 		delete DynamicModel;
-
-	if (SensManager)
-		delete SensManager;
 }
 
 USensorManager* ATazioVehicle::GetSensorManager()

@@ -42,13 +42,6 @@ class ATazioVehicle : public AWheeledVehicle
 	UInputComponent* InputComponent = nullptr;
 
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
-
-	//FGCObjectScopeGuard LidarGuard;
-	//FGCObjectScopeGuard IMUGuard;
-	//FGCObjectScopeGuard GPSGuard;
-	//FGCObjectScopeGuard GPSTruthGuard;
-	//FGCObjectScopeGuard ControlGuard;
-
 public:
 	UPROPERTY()
 	AUDPSender* LidarSender = nullptr;
@@ -85,6 +78,8 @@ private:
 	USkeletalMeshComponent* Mesh = nullptr;
 
 	UWheeledVehicleMovementComponent4W* PhysicsMovementComponent = nullptr;
+
+	UPROPERTY()
 	UPawnMovementComponent* ModelMovementComponent = nullptr;
 
 	// When in kinematic model mode, controls are consumed inside Tick, possibly with a different frequency wrt the controller frequency
