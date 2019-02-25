@@ -49,12 +49,6 @@ void UGPSComponent::BeginPlay()
 	check(World);
 	check(Mesh);
 
-	UInputComponent* Input = Owner->FindComponentByClass<UInputComponent>();
-	check(Input);
-
-	Input->BindAction("ToggleGPS", IE_Pressed, this, &UGPSComponent::ToggleGPS);
-
-
 	InitLocation = Owner->GetActorLocation();
 	InitRotation = Owner->GetActorRotation();
 }

@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "WheeledVehicle.h"
-#include "VehicleModel.h"
-#include "CriticalSection.h"
-#include "ControlMessage.h"
 #include "Buffer.h"
+#include "Definitions.h"
+#include "ControlMessage.h"
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -24,6 +23,7 @@ class AUDPSender;
 class AUDPReceiver;
 class USensorManager;
 class UMessageSerializerComponent;
+class VehicleModel;
 
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle

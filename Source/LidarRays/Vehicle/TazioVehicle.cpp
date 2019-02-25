@@ -11,7 +11,10 @@
 #include <GCObjectScopeGuard.h>
 #include "SensorManager.h"
 #include "UDPSender.h"
+#include "ControlMessage.h"
 #include "UDPReceiver.h"
+#include "VehicleModel.h"
+#include "GPSComponent.h"
 #include <array>
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
@@ -64,9 +67,6 @@ AUDPReceiver* ATazioVehicle::GetControlReceiver()
 
 void ATazioVehicle::ToggleManualDriving()
 {
-	UE_LOG(LogTemp, Warning, TEXT("BINDINGS: %i"), InputComponent->AxisBindings.Num());
-	UE_LOG(LogTemp, Warning, TEXT("KEY BINDINGS: %i"), InputComponent->AxisKeyBindings.Num());
-
 	if (InputComponent->AxisBindings.Num() > 0)
 		AxisBindings = InputComponent->AxisBindings;
 
@@ -99,42 +99,23 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	//// set up gameplay key bindings
 	//check(PlayerInputComponent);
 
-	///*PlayerInputComponent->BindAxis("MoveForward", this, &ATazioVehicle::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight", this, &ATazioVehicle::MoveRight);
-	//PlayerInputComponent->BindAxis(LookUpBinding);
-	//PlayerInputComponent->BindAxis(LookRightBinding);*/
-
-	//UE_LOG(LogTemp, Warning, TEXT("BINDINGS: %i"), InputComponent->AxisBindings.Num());
-
 	PlayerInputComponent->BindAxis("Throttle", this, &ATazioVehicle::SetThrottle);
 	PlayerInputComponent->BindAxis("Steer", this, &ATazioVehicle::SetSteer);
 
 	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &ATazioVehicle::ToggleManualDriving);
 
+	UGPSComponent* GPSComponent = FindComponentByClass<UGPSComponent>();
+	check(GPSComponent);
+
+	PlayerInputComponent->BindAction("ToggleGPS", IE_Pressed, GPSComponent, &UGPSComponent::ToggleGPS);
+
+
 	AxisBindings = InputComponent->AxisBindings;
-
 }
-
-//void ATazioVehicle::SendControls(UIncomingMessage* msg)
-//{
-//	TwistMessage<cereal::BinaryInputArchive>* twist = dynamic_cast<TwistMessage<cereal::BinaryInputArchive>*>(msg->message);
-//	if (twist)
-//	{
-//		GetVehicleMovementComponent()->SetThrottleInput(twist->Linear[0]);
-//		GetVehicleMovementComponent()->SetSteeringInput(-twist->Angular[2]);
-//	}
-//	else
-//	{
-//		UE_LOG(LogTemp, Error, TEXT("ATazioVehicle::SendControls: Invalid control type message arrived"));
-//	}
-//}
-
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
-	/*if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Force: %f, Steer: %f"), control->VX, control->Ydot);*/
 
 	if (bPhysXSimulation)
 	{
@@ -206,24 +187,18 @@ void ATazioVehicle::Init()
 	// =============== Setup communication ================
 	LidarSender = NewObject<AUDPSender>(this);
 	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
-	UE_LOG(LogTemp, Warning, TEXT("Lidar: %s:%d"), *GameInstance->LidarSendIP, GameInstance->LidarPort);
-
 
 	GPSSender = NewObject<AUDPSender>(this);
 	GPSSender->Start("GPS", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
-	UE_LOG(LogTemp, Warning, TEXT("GPS: %s:%d"), *GameInstance->GPSSendIP, GameInstance->GPSPort);
 
 	GPSTruthSender = NewObject<AUDPSender>(this);
 	GPSTruthSender->Start("GPSTruth", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
-	UE_LOG(LogTemp, Warning, TEXT("GPS Truth: %s:%d"), *GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort);
 
 	IMUSender = NewObject<AUDPSender>(this);
 	IMUSender->Start("IMU", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
-	UE_LOG(LogTemp, Warning, TEXT("IMU: %s:%d"), *GameInstance->IMUSendIP, GameInstance->IMUPort);
 
 	ControlReceiver = NewObject<AUDPReceiver>(this);
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
-	UE_LOG(LogTemp, Warning, TEXT("Control: %s:%d"), *GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	// ===================== Vehicle Model ============================
 	VehicleModelType = GameInstance->VehicleModel;
@@ -263,13 +238,9 @@ void ATazioVehicle::BeginPlay()
 		DynamicModel->initModel();
 
 		// Create pawn movement component
-		
-
-
 		std::map<std::string, double> initState;
 		FVector initLocation = GetActorLocation();
 		FRotator initRotation = GetActorRotation();
-
 
 		initState["x"] = initLocation.X;
 		initState["y"] = initLocation.Y;

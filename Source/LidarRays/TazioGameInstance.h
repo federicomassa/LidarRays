@@ -56,4 +56,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	bool isCommunicationUDP = true;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 Contestants = 1;
+
+
 };
