@@ -41,7 +41,7 @@ void ATazioReplayVehicle::FillBuffer()
 	}
 }
 
-void ATazioReplayVehicle::AddTrajectoryPoint()
+bool ATazioReplayVehicle::AddTrajectoryPoint()
 {
 	std::string line;
 
@@ -51,7 +51,7 @@ void ATazioReplayVehicle::AddTrajectoryPoint()
 		replay_file.seekg(0,replay_file.beg);
 		isFirst = true;
 		hasReset = true;
-		return;
+		return false;
 	}
 
 	std::getline(replay_file, line);
@@ -68,17 +68,18 @@ void ATazioReplayVehicle::AddTrajectoryPoint()
 	FString firstElement = Parser.GetRows()[0][0];
 	
 	if (!firstElement.IsNumeric())
-		return;
+		return false;
 
 	TrajectoryPoint point;
-	point.time = FCString::Atof(Parser.GetRows()[0][0]);
-	point.x = FCString::Atof(Parser.GetRows()[0][1]);
-	point.y = FCString::Atof(Parser.GetRows()[0][2]);
-	point.z = FCString::Atof(Parser.GetRows()[0][3]);
-	point.theta = FCString::Atof(Parser.GetRows()[0][4]);
-	point.v = FCString::Atof(Parser.GetRows()[0][5]);
+	point.time = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][0]));
+	point.x = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][1]));
+	point.y = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][2]));
+	point.z = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][3]));
+	point.theta = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][4]));
+	point.v = std::atof(TCHAR_TO_ANSI(Parser.GetRows()[0][5]));
 
 	trajectory.insert(point);
+	return true;
 }
 
 void ATazioReplayVehicle::Tick(float Delta)
@@ -88,7 +89,7 @@ void ATazioReplayVehicle::Tick(float Delta)
 	if (replay_file.fail())
 		return;
 
-	UE_LOG(LogTemp, Warning, TEXT("REPLAY TICKING"));
+	UE_LOG(LogTemp, Warning, TEXT("REPLAY TICKING: %f"), Delta);
 
 
 	float CurrentTime = GetWorld()->GetTimeSeconds();
@@ -106,15 +107,27 @@ void ATazioReplayVehicle::Tick(float Delta)
 		hasReset = false;
 	}
 
-	// Peek oldest point
 	TrajectoryPoint oldestPoint = trajectory.peek(trajectory.capacity() - 1);
 	TrajectoryPoint penultimatePoint = trajectory.peek(trajectory.capacity() - 2);
 
 	// Pop only if you are past the penultimate point --> the oldest point is useless
-	if (CurrentTime - InitTime > penultimatePoint.time)
+	while (true)
 	{
-		trajectory.pop();
-		AddTrajectoryPoint();
+		// At each time current time must be within oldest and penultimate	
+		oldestPoint = trajectory.peek(trajectory.capacity() - 1);
+		penultimatePoint = trajectory.peek(trajectory.capacity() - 2);
+
+		if (CurrentTime - InitTime > penultimatePoint.time)
+		{
+			trajectory.pop();
+			if (AddTrajectoryPoint())
+				continue;
+			else
+				return;
+		}
+
+		if (CurrentTime - InitTime >= oldestPoint.time && CurrentTime - InitTime < penultimatePoint.time)
+			break;
 	}
 
 	double points_delta_time = penultimatePoint.time - oldestPoint.time;
@@ -137,8 +150,10 @@ void ATazioReplayVehicle::Tick(float Delta)
 	double new_theta = oldestPoint.theta + points_delta_theta / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 	double new_v = oldestPoint.v + points_delta_v / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 
-	UE_LOG(LogTemp, Warning, TEXT("Deltas: %f, %f, %f, %f, %f, %f"), points_delta_time, points_delta_x, points_delta_y, points_delta_z, points_delta_theta, points_delta_v);
-	UE_LOG(LogTemp, Warning, TEXT("New: %f, %f, %f, %f, %f, %f"), CurrentTime, new_x, new_y, new_z, new_theta, new_v);
+	/*UE_LOG(LogTemp, Warning, TEXT("Deltas: %f, %f, %f, %f, %f, %f"), points_delta_time, points_delta_x, points_delta_y, points_delta_z, points_delta_theta, points_delta_v);
+	UE_LOG(LogTemp, Warning, TEXT("New: %f, %f, %f, %f, %f, %f"), CurrentTime, new_x, new_y, new_z, new_theta, new_v);*/
+
+	UE_LOG(LogTemp, Warning, TEXT("Interp delta time: %f"), CurrentTime - InitTime - oldestPoint.time);
 
 	SetActorLocation(FVector(new_x * 100, new_y * 100, new_z * 100));
 	SetActorRotation(FRotator(0.f, new_theta*180.f/PI, 0.f));

@@ -12,6 +12,7 @@
 #include "SensorManager.h"
 #include "UDPSender.h"
 #include "ControlMessage.h"
+#include <iomanip>
 #include "UDPReceiver.h"
 #include "VehicleModel.h"
 #include "GPSComponent.h"
@@ -202,12 +203,12 @@ void ATazioVehicle::Tick(float Delta)
 		FVector Location = GetActorLocation();
 		float Yaw = GetActorRotation().Yaw;
 
-		trajectory_dump << GetWorld()->GetTimeSeconds() - InitRecordingTime << ',';
-		trajectory_dump << Location.X/100.f << ',';
-		trajectory_dump << Location.Y/100.f << ',';
-		trajectory_dump << Location.Z/100.f << ',';
-		trajectory_dump << Yaw*PI/180.f << ',';
-		trajectory_dump << GetVelocity().X/100.f;
+		trajectory_dump << double(GetWorld()->GetTimeSeconds()) - double(InitRecordingTime) << ',';
+		trajectory_dump << double(Location.X)/100.0 << ',';
+		trajectory_dump << double(Location.Y)/100.0 << ',';
+		trajectory_dump << double(Location.Z)/100.0 << ',';
+		trajectory_dump << double(Yaw)*PI/180.0 << ',';
+		trajectory_dump << double(GetVelocity().X)/100.0;
 	}
 } 
 
@@ -255,6 +256,7 @@ void ATazioVehicle::BeginPlay()
 
 	FString DumpPath = GameInstance->DumpTrajectory;
 	trajectory_dump.open(TCHAR_TO_ANSI(*DumpPath));
+	trajectory_dump << std::fixed << std::setprecision(10);
 
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
 	PhysicsMovementComponent = FindComponentByClass<UWheeledVehicleMovementComponent4W>();

@@ -95,6 +95,7 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	double yGdot = currentState.at("u")*std::sin(currentState.at("psi")) + currentState.at("v")*std::cos(currentState.at("psi"));
 	double psidot = currentState.at("r");
 
+
 	currentState.at("u") += udot * DeltaTime;
 	currentState.at("v") += vdot * DeltaTime;
 	currentState.at("r") += rdot * DeltaTime;
@@ -105,6 +106,11 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	if (currentState.at("u") < 0.0)
 		currentState.at("u") = 0.0;
 
+	if (currentState.at("u") < 0.01)
+	{
+		currentState.at("r") = 0.0;
+		currentState.at("v") = 0.0;
+	}
 
 	//UE_LOG(LogTemp, Error, TEXT("NEW STATE: %f, %f, %f, %f, %f, %f"),
 	//	currentState.at("u"),
@@ -242,6 +248,9 @@ double SingleTrackModel::getAlpha2()
 
 double SingleTrackModel::getF1t()
 {
+	if (currentState.at("u") < 0.01)
+		return 0.0;
+
 	try
 	{
 		double alpha1 = getAlpha1();
@@ -262,6 +271,9 @@ double SingleTrackModel::getF1t()
 
 double SingleTrackModel::getF2t()
 {
+	if (currentState.at("u") < 0.01)
+		return 0.0;
+
 	try
 	{
 		double alpha2 = getAlpha2();

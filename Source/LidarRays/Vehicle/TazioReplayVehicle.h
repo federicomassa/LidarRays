@@ -22,7 +22,7 @@ class ATazioReplayVehicle : public APawn
 	float InitTime = -1.f;
 
 private:
-	void AddTrajectoryPoint();
+	bool AddTrajectoryPoint();
 	void FillBuffer();
 public:
 	ATazioReplayVehicle();
