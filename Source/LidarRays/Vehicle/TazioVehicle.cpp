@@ -33,6 +33,9 @@ ATazioVehicle::~ATazioVehicle()
 {
 	if (DynamicModel)
 		delete DynamicModel;
+
+	if (trajectory_dump.is_open())
+		trajectory_dump.close();
 }
 
 USensorManager* ATazioVehicle::GetSensorManager()
@@ -109,6 +112,8 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	PlayerInputComponent->BindAction("ToggleGPS", IE_Pressed, GPSComponent, &UGPSComponent::ToggleGPS);
 
+	PlayerInputComponent->BindAction("RecordTrajectory", IE_Pressed, this, &ATazioVehicle::ToggleRecordTrajectory);
+
 
 	AxisBindings = InputComponent->AxisBindings;
 }
@@ -126,6 +131,11 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 	{	
 		controls.insert(control);
 	}
+}
+
+void ATazioVehicle::ToggleRecordTrajectory()
+{
+	isRecordingTrajectory = !isRecordingTrajectory;
 }
 
 void ATazioVehicle::Tick(float Delta)
@@ -176,7 +186,30 @@ void ATazioVehicle::Tick(float Delta)
 		//UE_LOG(LogTemp, Warning, TEXT("SETTING VELOCITY: %f, %f, %f"), velocity[0], velocity[1], velocity[2]);
 		ModelMovementComponent->Velocity = FVector(velocity[0], velocity[1], velocity[2]);
 	}
-}
+
+	if (isRecordingTrajectory && trajectory_dump.good())
+	{
+		if (isFirst)
+		{
+			InitRecordingTime = GetWorld()->GetTimeSeconds();
+			isFirst = false;
+		}
+		else
+		{
+			trajectory_dump << '\n';
+		}
+
+		FVector Location = GetActorLocation();
+		float Yaw = GetActorRotation().Yaw;
+
+		trajectory_dump << GetWorld()->GetTimeSeconds() - InitRecordingTime << ',';
+		trajectory_dump << Location.X/100.f << ',';
+		trajectory_dump << Location.Y/100.f << ',';
+		trajectory_dump << Location.Z/100.f << ',';
+		trajectory_dump << Yaw*PI/180.f << ',';
+		trajectory_dump << GetVelocity().X/100.f;
+	}
+} 
 
 void ATazioVehicle::Init()
 {
@@ -216,6 +249,12 @@ void ATazioVehicle::BeginPlay()
 	Super::BeginPlay();
 
 	Init();
+
+	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	check(GameInstance);
+
+	FString DumpPath = GameInstance->DumpTrajectory;
+	trajectory_dump.open(TCHAR_TO_ANSI(*DumpPath));
 
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
 	PhysicsMovementComponent = FindComponentByClass<UWheeledVehicleMovementComponent4W>();

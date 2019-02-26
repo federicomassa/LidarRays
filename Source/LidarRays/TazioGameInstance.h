@@ -62,6 +62,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FString ReplayTrajectoryPath = "";
 
-
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FString DumpTrajectory = "";
 
 };

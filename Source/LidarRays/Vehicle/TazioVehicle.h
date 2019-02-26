@@ -7,6 +7,7 @@
 #include "Buffer.h"
 #include "Definitions.h"
 #include "ControlMessage.h"
+#include <fstream>
 #include "TazioVehicle.generated.h"
 
 class UPhysicalMaterial;
@@ -40,6 +41,13 @@ class ATazioVehicle : public AWheeledVehicle
 
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
+
+	// File where to dump trajectory in csv
+	std::ofstream trajectory_dump;
+	float InitRecordingTime = -1.f;
+	bool isFirst = true;
+	bool isRecordingTrajectory = false;
+
 
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
@@ -125,6 +133,7 @@ protected:
 
 
 	void ToggleManualDriving();
+	void ToggleRecordTrajectory();
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	bool IsManualDriveMode() const

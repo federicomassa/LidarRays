@@ -78,25 +78,6 @@ void ATazioReplayVehicle::AddTrajectoryPoint()
 	point.theta = FCString::Atof(Parser.GetRows()[0][4]);
 	point.v = FCString::Atof(Parser.GetRows()[0][5]);
 
-	UE_LOG(LogTemp, Warning, TEXT("Parse: %s, %s, %s, %s, %s, %s"), 
-		Parser.GetRows()[0][0], 
-		Parser.GetRows()[0][1],
-		Parser.GetRows()[0][2],
-		Parser.GetRows()[0][3],
-		Parser.GetRows()[0][4],
-		Parser.GetRows()[0][5]);
-
-	UE_LOG(LogTemp, Warning, TEXT("Parse: %f, %f, %f, %f, %f, %f"),
-		FCString::Atof(Parser.GetRows()[0][0]),
-		FCString::Atof(Parser.GetRows()[0][1]),
-		FCString::Atof(Parser.GetRows()[0][2]),
-		FCString::Atof(Parser.GetRows()[0][3]),
-		FCString::Atof(Parser.GetRows()[0][4]),
-		FCString::Atof(Parser.GetRows()[0][5]));
-
-
-
-
 	trajectory.insert(point);
 }
 
@@ -104,7 +85,11 @@ void ATazioReplayVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
-	UE_LOG(LogTemp, Warning, TEXT("TICKING"));
+	if (replay_file.fail())
+		return;
+
+	UE_LOG(LogTemp, Warning, TEXT("REPLAY TICKING"));
+
 
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 
@@ -146,16 +131,15 @@ void ATazioReplayVehicle::Tick(float Delta)
 
 	double points_delta_v = penultimatePoint.v - oldestPoint.v;
 	
-	double new_x = penultimatePoint.x + points_delta_x / points_delta_time * (CurrentTime - InitTime - penultimatePoint.time);
-	double new_y = penultimatePoint.y + points_delta_y / points_delta_time * (CurrentTime - InitTime - penultimatePoint.time);
-	double new_z = penultimatePoint.z + points_delta_z / points_delta_time * (CurrentTime - InitTime - penultimatePoint.time);
-	double new_theta = penultimatePoint.theta + points_delta_theta / points_delta_time * (CurrentTime - InitTime - penultimatePoint.time);
-	double new_v = penultimatePoint.v + points_delta_v / points_delta_time * (CurrentTime - InitTime - penultimatePoint.time);
+	double new_x = oldestPoint.x + points_delta_x / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
+	double new_y = oldestPoint.y + points_delta_y / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
+	double new_z = oldestPoint.z + points_delta_z / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
+	double new_theta = oldestPoint.theta + points_delta_theta / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
+	double new_v = oldestPoint.v + points_delta_v / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 
 	UE_LOG(LogTemp, Warning, TEXT("Deltas: %f, %f, %f, %f, %f, %f"), points_delta_time, points_delta_x, points_delta_y, points_delta_z, points_delta_theta, points_delta_v);
 	UE_LOG(LogTemp, Warning, TEXT("New: %f, %f, %f, %f, %f, %f"), CurrentTime, new_x, new_y, new_z, new_theta, new_v);
 
-
 	SetActorLocation(FVector(new_x * 100, new_y * 100, new_z * 100));
-	SetActorRotation(FRotator(0.f, new_theta, 0.f));
+	SetActorRotation(FRotator(0.f, new_theta*180.f/PI, 0.f));
 }
