@@ -59,5 +59,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 Contestants = 1;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FString ReplayTrajectoryPath = "";
+
+
 
 };
