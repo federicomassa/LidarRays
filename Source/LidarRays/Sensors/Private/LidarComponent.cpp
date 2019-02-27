@@ -57,7 +57,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		FLidarMessage Scan;
 
 		//Scan.Empty();
-		Scan.Points.reserve(NumLidars*VerLayers*HorPoints);
+		Scan.Points.reserve(LidarPoses.Num()*VerLayers*HorPoints);
 		
 		/*if (!isFirst)
 			UE_LOG(LogTemp, Warning, TEXT("Lidar frequency: %f"), 1.f / (World->GetTimeSeconds() - LastLidarScanTime));*/
@@ -67,8 +67,8 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		Scan.timestamp = LastLidarScanTime;
 
-		//FVector CurrentLocation = Owner->GetActorLocation();
-		FVector CurrentLocation = GetLidarLocation();
+		FVector CurrentLocation = Owner->GetActorLocation();
+		//FVector CurrentLocation = GetLidarLocation();
 		FRotator CurrentRotation = Owner->GetActorRotation();
 
 		/*TSet<UActorComponent*> components = Owner->GetComponents();
@@ -83,23 +83,26 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 		int count = 0;
 
-		for (int lidar = 0; lidar < NumLidars; lidar++)
+		for (int lidar = 0; lidar < LidarPoses.Num(); lidar++)
 		{
 			for (int layer = 0; layer < VerLayers; layer++)
 			{
 				for (int point = 0; point < HorPoints; point++)
 				{
+					FVector CurrentLidarLocation = CurrentRotation.RotateVector(LidarPoses[lidar].GetLocation());
+					FRotator CurrentLidarRotation = LidarPoses[lidar].GetRotation().Rotator();
 
 					FQuat CurrentQuat(CurrentRotation);
 					FQuat LayerQuat(FRotator(FirstLidarVerOffset + layer * VerResolution, 0.f, 0.f));
-					FQuat HorScanQuat(FRotator(0.f, FirstLidarHorOffset + lidar * HorSeparation + point * HorResolution, 0.f));
+					//FQuat HorScanQuat(FRotator(0.f, FirstLidarHorOffset + lidar * HorSeparation + point * HorResolution, 0.f));
+					FQuat HorScanQuat(FRotator(0.f, CurrentLidarRotation.Yaw - HorPoints*HorResolution/2.0 + point * HorResolution, 0.f));
 
 					FRotator ThisRotation = (CurrentQuat*HorScanQuat*LayerQuat).Rotator();
 					FVector EndLocation = CurrentLocation + LidarRange * (ThisRotation.Vector());
 
 					bool isValidHit = World->LineTraceSingleByChannel(
 						Hit,
-						CurrentLocation,
+						CurrentLocation + CurrentLidarLocation,
 						EndLocation,
 						ECollisionChannel::ECC_Visibility
 					);
@@ -134,7 +137,7 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 							else
 								DebugColor = FColor::Black;
 
-							DrawDebugLine(GetWorld(), CurrentLocation, Hit.Location, DebugColor, false, -1.f);
+							DrawDebugLine(GetWorld(), CurrentLocation + CurrentLidarLocation, Hit.Location, DebugColor, false, -1.f);
 
 						}
 					}
@@ -188,5 +191,5 @@ void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 FVector ULidarComponent::GetLidarLocation() const
 {
-	return (Owner->GetActorLocation() + FVector(0.f, 0.f, ZOffset));
+	return (Owner->GetActorLocation() + FVector(400.f, 0.f, 50.0));
 }

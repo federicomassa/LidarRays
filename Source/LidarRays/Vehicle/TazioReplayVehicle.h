@@ -23,6 +23,9 @@ class ATazioReplayVehicle : public APawn
 	bool hasReset = false;
 	float InitTime = -1.f;
 
+	// should replay trajectory
+	bool isValid = true;
+
 	// Send vehicle state via UDP
 	UPROPERTY()
 	AUDPSender* StateSender = nullptr;

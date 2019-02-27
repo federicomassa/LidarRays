@@ -53,7 +53,9 @@ void ATazioReplayVehicle::BeginPlay()
 			PlayerIndex = FCString::Atoi(*Match);
 	}
 
-	check(PlayerIndex != -1);
+	if (PlayerIndex == -1)
+		isValid = false;
+
 
 	// Ports start from the one indicated in game instance upwards (-1 because player 0 has a different port)
 	int SenderPort = GameInstance->OpponentStatePort + PlayerIndex - 1;
@@ -61,7 +63,11 @@ void ATazioReplayVehicle::BeginPlay()
 	StateSender->Start(GetActorLabel() + FString("_Sender"), SenderIP, SenderPort, true);
 
 	MessageSerializerComponent = FindComponentByClass<UMessageSerializerComponent>();
-	checkf(MessageSerializerComponent, TEXT("TazioReplayVehicle --- cannot find message serializer component. Please inherit from this class and provide that component"));
+	if (MessageSerializerComponent == nullptr)
+	{
+		isValid = false;
+		UE_LOG(LogTemp, Error, TEXT("TazioReplayVehicle::BeginPlay --- Message serializer component not found"));
+	}
 }
 
 void ATazioReplayVehicle::FillBuffer()
@@ -117,7 +123,7 @@ void ATazioReplayVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
-	if (replay_file.fail())
+	if (replay_file.fail() || !isValid)
 		return;
 
 	UE_LOG(LogTemp, Warning, TEXT("REPLAY TICKING: %f"), Delta);

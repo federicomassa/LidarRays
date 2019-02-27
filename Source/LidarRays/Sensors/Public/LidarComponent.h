@@ -50,25 +50,12 @@ class LIDARRAYS_API ULidarComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, Category = Lidar)
 	float LidarFrequency = 25; // Hz
 
-	// FIXME const angular separation among lidars. Not true in reality
-	UPROPERTY(EditAnywhere, Category = Lidar)
-	float HorSeparation = 90; //deg
-
-	// Number of lidar sensors
-	UPROPERTY(EditAnywhere, Category = Lidar)
-	int NumLidars = 4;
-
-	// First lidar yaw offset with respect to car FIXME correct once HorSeparation has been fixed
-	UPROPERTY(EditAnywhere, Category = Lidar)
-	float FirstLidarHorOffset = 45;
-
 	// First lidar roll offset with respect to car FIXME correct once lidars have been set up in the generic position
 	UPROPERTY(EditAnywhere, Category = Lidar)
 	float FirstLidarVerOffset = 0.f;
 
-	// TODO Add custom lidar positioning: for now only fixed offset in Z
 	UPROPERTY(EditAnywhere, Category = Lidar)
-	float ZOffset = 0.f;
+	TArray<FTransform> LidarPoses;
 
 public:	
 	// Sets default values for this component's properties
