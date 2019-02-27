@@ -4,7 +4,10 @@
 #include "TazioGameInstance.h"
 #include "Csv/CsvParser.h"
 #include <Engine/World.h>
+#include "OdometryMessage.h"
 #include <fstream>
+#include "UDPSender.h"
+#include "MessageSerializerComponent.h"
 #include <string>
 
 ATazioReplayVehicle::ATazioReplayVehicle()
@@ -14,6 +17,8 @@ ATazioReplayVehicle::ATazioReplayVehicle()
 void ATazioReplayVehicle::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UE_LOG(LogTemp, Warning, TEXT("Label: %s"), *GetActorLabel());
 
 	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
 	check(GameInstance);
@@ -31,6 +36,32 @@ void ATazioReplayVehicle::BeginPlay()
 
 	FillBuffer();
 	
+	// Initialize UDP sender
+	StateSender = NewObject<AUDPSender>(this);
+
+	FString SenderIP = GameInstance->OpponentStateSendIP;
+
+	// Players have label Player_<index>
+	FRegexPattern PlayerStartRegex("Player_([0-9]+)");
+	FRegexMatcher Matcher(PlayerStartRegex, GetName());
+	int PlayerIndex = -1;
+
+	if (Matcher.FindNext())
+	{
+		FString Match = Matcher.GetCaptureGroup(1);
+		if (Match.IsNumeric())
+			PlayerIndex = FCString::Atoi(*Match);
+	}
+
+	check(PlayerIndex != -1);
+
+	// Ports start from the one indicated in game instance upwards (-1 because player 0 has a different port)
+	int SenderPort = GameInstance->OpponentStatePort + PlayerIndex - 1;
+
+	StateSender->Start(GetActorLabel() + FString("_Sender"), SenderIP, SenderPort, true);
+
+	MessageSerializerComponent = FindComponentByClass<UMessageSerializerComponent>();
+	checkf(MessageSerializerComponent, TEXT("TazioReplayVehicle --- cannot find message serializer component. Please inherit from this class and provide that component"));
 }
 
 void ATazioReplayVehicle::FillBuffer()
@@ -144,17 +175,32 @@ void ATazioReplayVehicle::Tick(float Delta)
 
 	double points_delta_v = penultimatePoint.v - oldestPoint.v;
 	
+	// Linear interpolation to find actual pose
 	double new_x = oldestPoint.x + points_delta_x / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 	double new_y = oldestPoint.y + points_delta_y / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 	double new_z = oldestPoint.z + points_delta_z / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 	double new_theta = oldestPoint.theta + points_delta_theta / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 	double new_v = oldestPoint.v + points_delta_v / points_delta_time * (CurrentTime - InitTime - oldestPoint.time);
 
-	/*UE_LOG(LogTemp, Warning, TEXT("Deltas: %f, %f, %f, %f, %f, %f"), points_delta_time, points_delta_x, points_delta_y, points_delta_z, points_delta_theta, points_delta_v);
-	UE_LOG(LogTemp, Warning, TEXT("New: %f, %f, %f, %f, %f, %f"), CurrentTime, new_x, new_y, new_z, new_theta, new_v);*/
-
-	UE_LOG(LogTemp, Warning, TEXT("Interp delta time: %f"), CurrentTime - InitTime - oldestPoint.time);
-
+	// Set new actor pose
 	SetActorLocation(FVector(new_x * 100, new_y * 100, new_z * 100));
 	SetActorRotation(FRotator(0.f, new_theta*180.f/PI, 0.f));
+
+	// Now serialize message and send it
+	FOdometryMessage Pose;
+	Pose.x = new_x;
+	Pose.y = -new_y;
+	Pose.z = new_z;
+
+	// FIXME temp
+	Pose.vx = 0.0;
+	Pose.vy = 0.0;
+	Pose.vz = 0.0;
+
+	Pose.pitch = 0.0;
+	Pose.roll = 0.0;
+	Pose.yaw = -new_theta;
+
+	TArray<uint8> serialized_pose = MessageSerializerComponent->SerializeOdometryMessage(Pose, true);
+	StateSender->SendData(serialized_pose);
 }

@@ -25,6 +25,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 	// A valid map must have at least as many player starts as number of contestants
 	check(StartingPoints.Num() >= GameInstance->Contestants);
 
+	// Search for actors with name "PlayerStart_<index>"
 	FRegexPattern PlayerStartRegex("PlayerStart_([0-9]+)");
 
 	APawn* Character = nullptr;
@@ -56,28 +57,25 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 			FVector PlayerLocation = Start->GetActorLocation();
 			FRotator PlayerRotation = Start->GetActorRotation();
 
-			//if (PlayerIndex == 0)
-			//	GetWorld()->SpawnActor(CharacterClass, &PlayerLocation, &PlayerRotation);
-			//else
-			//	GetWorld()->SpawnActor(OpponentsClass, &PlayerLocation, &PlayerRotation);
+			FActorSpawnParameters params;
+			params.Name = FName(*(FString("Player_") + FString::FromInt(PlayerIndex)));
 
 			if (PlayerIndex == 0)
 			{
-				//			Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &FVector::ZeroVector, &FRotator::ZeroRotator));
+				//	Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &FVector::ZeroVector, &FRotator::ZeroRotator));
 				FVector Location = Start->GetActorLocation();
 				FRotator Rotation = Start->GetActorRotation();
 
 				// WARNING check if it does deep copy inside spawn actor
-				Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &Location, &Rotation));
+				Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &Location, &Rotation, params));
 				Character->SetActorLocation(Start->GetActorLocation());
 				Character->SetActorRotation(Start->GetActorRotation());
 			}
 			else
 			{
-				/*AActor* Opponent = GetWorld()->SpawnActor(OpponentsClass, &FVector::ZeroVector, &FRotator::ZeroRotator);*/
 				FVector Location = Start->GetActorLocation();
 				FRotator Rotation = Start->GetActorRotation();
-				AActor* Opponent = GetWorld()->SpawnActor(OpponentsClass, &Location, &Rotation);
+				AActor* Opponent = GetWorld()->SpawnActor(OpponentsClass, &Location, &Rotation, params);
 				Opponent->SetActorLocation(Start->GetActorLocation());
 				Opponent->SetActorRotation(Start->GetActorRotation());
 			}

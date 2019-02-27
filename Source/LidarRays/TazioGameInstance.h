@@ -54,6 +54,12 @@ public:
 	int32 ControlPort = 7790;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FString OpponentStateSendIP = "127.0.0.1";
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 OpponentStatePort = 9000;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	bool isCommunicationUDP = true;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

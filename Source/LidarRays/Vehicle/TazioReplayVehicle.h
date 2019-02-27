@@ -9,6 +9,8 @@
 #include <fstream>
 #include "TazioReplayVehicle.generated.h"
 
+class AUDPSender;
+class UMessageSerializerComponent;
 
 UCLASS(config=Game)
 class ATazioReplayVehicle : public APawn
@@ -20,6 +22,13 @@ class ATazioReplayVehicle : public APawn
 	bool isFirst = true;
 	bool hasReset = false;
 	float InitTime = -1.f;
+
+	// Send vehicle state via UDP
+	UPROPERTY()
+	AUDPSender* StateSender = nullptr;
+
+	UPROPERTY()
+	UMessageSerializerComponent* MessageSerializerComponent = nullptr;
 
 private:
 	bool AddTrajectoryPoint();
