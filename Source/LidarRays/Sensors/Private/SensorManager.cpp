@@ -48,25 +48,27 @@ void USensorManager::SendLidarMessage(FLidarMessage msg)
 
 void USensorManager::SendIMUMessage(FIMUMessage msg)
 {
-	TArray<uint8> data = MessageSerializerComponent->SerializeIMUMessage(msg);
+	TArray<uint8> data = MessageSerializerComponent->SerializeIMUMessage(msg, true);
 	IMUSender->SendData(data);
 }
 
 void USensorManager::SendGPSMessage(FOdometryMessage msg)
 {
-	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg);
+	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg, true);
 	GPSSender->SendData(data);
 }
 
 void USensorManager::SendGPSTruthMessage(FOdometryMessage msg)
 {
-	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg);
+	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg, true);
+
+	UE_LOG(LogTemp, Warning, TEXT("WTF: %f"), msg.x);
 	GPSTruthSender->SendData(data);
 }
 
 void USensorManager::ReceiveControlMessage(const TArray<uint8>& data)
 {
-	FControlMessage msg = MessageSerializerComponent->DeserializeControlMessage(data);
+	FControlMessage msg = MessageSerializerComponent->DeserializeControlMessage(data, true);
 	Owner->SendControls(msg);
 }
 

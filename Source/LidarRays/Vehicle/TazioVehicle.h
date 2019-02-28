@@ -90,9 +90,6 @@ private:
 	UPROPERTY()
 	UPawnMovementComponent* ModelMovementComponent = nullptr;
 
-	// When in kinematic model mode, controls are consumed inside Tick, possibly with a different frequency wrt the controller frequency
-	Buffer<FControlMessage> controls;
-
 public:
 	ATazioVehicle();
 	~ATazioVehicle();

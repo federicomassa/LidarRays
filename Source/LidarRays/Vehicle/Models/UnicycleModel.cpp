@@ -60,7 +60,7 @@ std::map<std::string, double> UnicycleModel::controlsToModel(const std::map<std:
 	try
 	{
 		outControl["Force"] = inControl.at("Throttle")*params.at("m")*10;
-		outControl["Omega"] = inControl.at("Steering")*2.0;
+		outControl["Omega"] = -inControl.at("Steering");
 	}
 	catch (std::exception& e)
 	{

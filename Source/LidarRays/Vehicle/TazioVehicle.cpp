@@ -121,17 +121,8 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Force: %f, Steer: %f"), control.VX, control.Ydot);
-
-	if (bPhysXSimulation)
-	{
-		GetVehicleMovementComponent()->SetThrottleInput(control.VX);
-		GetVehicleMovementComponent()->SetSteeringInput(-control.Ydot);
-	}
-	else
-	{	
-		controls.insert(control);
-	}
+	lastThrottle = control.VX;
+	lastSteer = -control.Ydot;
 }
 
 void ATazioVehicle::ToggleRecordTrajectory()
@@ -142,34 +133,22 @@ void ATazioVehicle::ToggleRecordTrajectory()
 void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
-	//UE_LOG(LogTemp, Warning, TEXT("TICK!"));
 
-	lastDeltaTime = Delta;
-	if (IsManualDriveMode())
+
+	if (bPhysXSimulation)
 	{
-		FControlMessage control;
-		control.VX = lastThrottle;
-		control.Ydot = lastSteer;
+		GetVehicleMovementComponent()->SetThrottleInput(lastThrottle);
+		GetVehicleMovementComponent()->SetSteeringInput(lastSteer);
 
-		controls.insert(control);
+		// Consume control
+		lastThrottle = 0.0;
+		lastSteer = 0.0;
 	}
-
-	if (IsManualDriveMode() && bPhysXSimulation)
-	{ 
-		FControlMessage control;
-		control.VX = lastThrottle;
-		control.Ydot = lastSteer;
-
-		SendControls(control);
-	}
-	else if (!bPhysXSimulation && !(controls.isEmpty()))
+	else
 	{
-		FControlMessage control = controls.pop();
-
 		std::map<std::string, double> originalControls;
-		originalControls["Throttle"] = control.VX;
-		originalControls["Steering"] = control.Ydot;
-
+		originalControls["Throttle"] = lastThrottle;
+		originalControls["Steering"] = lastSteer;
 
 		DynamicModel->run(originalControls, Delta);
 
@@ -186,8 +165,13 @@ void ATazioVehicle::Tick(float Delta)
 		std::array<double, 3> velocity = DynamicModel->getVelocity();
 		//UE_LOG(LogTemp, Warning, TEXT("SETTING VELOCITY: %f, %f, %f"), velocity[0], velocity[1], velocity[2]);
 		ModelMovementComponent->Velocity = FVector(velocity[0], velocity[1], velocity[2]);
+
+		// Consume control
+		lastThrottle = 0.0;
+		lastSteer = 0.0;
 	}
 
+	// Dump trajectory to csv file
 	if (isRecordingTrajectory && trajectory_dump.good())
 	{
 		if (isFirst)
@@ -318,7 +302,7 @@ void ATazioVehicle::SetThrottle(float value)
 void ATazioVehicle::SetSteer(float value)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Steer"));
-	lastSteer = -value;
+	lastSteer = value;
 }
 
 

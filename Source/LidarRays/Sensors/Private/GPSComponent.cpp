@@ -192,9 +192,11 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	GPSTruthMessage.pose_covariance[28] = 0.f;
 	GPSTruthMessage.pose_covariance[35] = FMath::Pow(YawStdDev*PI/180, 2);
 
-	/*UE_LOG(LogTemp, Warning, TEXT("GPS X, Y, Z:  %f, %f, %f"), GPSTruthMessage.x, GPSTruthMessage.y, GPSTruthMessage.z);
+	UE_LOG(LogTemp, Warning, TEXT("GPS X, Y, Z:  %f, %f, %f"), GPSTruthMessage.x, GPSTruthMessage.y, GPSTruthMessage.z);
 	UE_LOG(LogTemp, Warning, TEXT("GPS VX, VY, VZ:  %f, %f, %f"), GPSTruthMessage.vx, GPSTruthMessage.vy, GPSTruthMessage.vz);
-	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage.roll, -GPSTruthMessage.pitch, -GPSTruthMessage.yaw);*/
+	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage.roll, -GPSTruthMessage.pitch, -GPSTruthMessage.yaw);
+
+
 	Owner->GetSensorManager()->SendGPSTruthMessage(GPSTruthMessage);
 }
 

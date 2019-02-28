@@ -138,7 +138,7 @@ std::map<std::string, double> SingleTrackModel::controlsToModel(const std::map<s
 			outControl["FB"] = -inControl.at("Throttle")*params.at("max_brake");
 		}
 
-		outControl["delta"] = inControl.at("Steering")*params.at("max_steering");
+		outControl["delta"] = -inControl.at("Steering")*params.at("max_steering");
 	}
 	catch (std::exception& e)
 	{
