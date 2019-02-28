@@ -29,10 +29,11 @@ void SingleTrackModel::initModel()
 	// ?
 	params["Jz"] = 1260.f;
 
-	params["max_traction"] = 3000;
-	params["max_brake"] = 12000;
+	params["max_traction"] = 12000;
+	params["max_brake"] = 15000;
 
 	params["max_steering"] = 3.14159 / 6.0;
+	params["max_v"] = 200.0/3.6; // m/s
 
 	// Longitudinal velocity, lateral velocity, yaw rate, center position, yaw
 	stateVars.insert("u");
@@ -58,6 +59,25 @@ void SingleTrackModel::closeModel()
 void SingleTrackModel::requestControl(std::map<std::string, double> controlRequest)
 {
 	lastControlsApplied = controlRequest;
+	
+	// Saturations
+	if (lastControlsApplied.at("FT") > params.at("max_traction"))
+		lastControlsApplied.at("FT") = params.at("max_traction");
+
+	if (lastControlsApplied.at("FT") < 0.0)
+		lastControlsApplied.at("FT") = 0.0;
+
+	if (lastControlsApplied.at("FB") > params.at("max_brake"))
+		lastControlsApplied.at("FB") = params.at("max_brake");
+
+	if (lastControlsApplied.at("FB") < 0.0)
+		lastControlsApplied.at("FB") = 0.0;
+
+	if (lastControlsApplied.at("delta") > params.at("max_steering"))
+		lastControlsApplied.at("delta") = params.at("max_steering");
+
+	if (lastControlsApplied.at("delta") < -params.at("max_steering"))
+		lastControlsApplied.at("delta") = -params.at("max_steering");
 }
 
 
@@ -103,6 +123,7 @@ void SingleTrackModel::executeModel(double DeltaTime)
 	currentState.at("yG") += yGdot * DeltaTime;
 	currentState.at("psi") += psidot * DeltaTime;
 
+	// Saturations
 	if (currentState.at("u") < 0.0)
 		currentState.at("u") = 0.0;
 
@@ -111,6 +132,9 @@ void SingleTrackModel::executeModel(double DeltaTime)
 		currentState.at("r") = 0.0;
 		currentState.at("v") = 0.0;
 	}
+
+	if (currentState.at("v") > params.at("max_v"))
+		currentState.at("v") = params.at("max_v");
 
 	//UE_LOG(LogTemp, Error, TEXT("NEW STATE: %f, %f, %f, %f, %f, %f"),
 	//	currentState.at("u"),
@@ -138,7 +162,7 @@ std::map<std::string, double> SingleTrackModel::controlsToModel(const std::map<s
 			outControl["FB"] = -inControl.at("Throttle")*params.at("max_brake");
 		}
 
-		outControl["delta"] = -inControl.at("Steering")*params.at("max_steering");
+		outControl["delta"] = inControl.at("Steering")*params.at("max_steering");
 	}
 	catch (std::exception& e)
 	{

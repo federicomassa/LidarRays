@@ -126,9 +126,6 @@ void ATazioReplayVehicle::Tick(float Delta)
 	if (replay_file.fail() || !isValid)
 		return;
 
-	UE_LOG(LogTemp, Warning, TEXT("REPLAY TICKING: %f"), Delta);
-
-
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 
 	if (isFirst)

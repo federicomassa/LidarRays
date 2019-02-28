@@ -16,7 +16,6 @@ AUDPSender::AUDPSender()
 
 AUDPSender::~AUDPSender()
 {
-	UE_LOG(LogTemp, Warning, TEXT("!!!!!!!!!!!UDP SENDER DESTRUCTOR!!!!!!!!!!!!!!"));
 }
 
 bool AUDPSender::SendData(TArray<uint8> Data)

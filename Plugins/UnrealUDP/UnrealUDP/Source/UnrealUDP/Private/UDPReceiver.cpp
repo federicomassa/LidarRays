@@ -20,10 +20,11 @@ AUDPReceiver::AUDPReceiver()
 
 AUDPReceiver::~AUDPReceiver()
 {
-	UE_LOG(LogTemp, Warning, TEXT("!!!!!!!!!!!UDP RECEIVER DESTRUCTOR!!!!!!!!!!!!!!"));
+	if (UDPReceiver)
+		Finalize();
 }
 
-void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AUDPReceiver::Finalize()
 {
 	delete UDPReceiver;
 	UDPReceiver = nullptr;
@@ -32,6 +33,12 @@ void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		ListenSocket->Close();
 		ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(ListenSocket);
 	}
+}
+
+void AUDPReceiver::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Finalize();
+
 	Super::EndPlay(EndPlayReason);
 }
 

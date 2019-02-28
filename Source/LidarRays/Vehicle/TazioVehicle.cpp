@@ -122,7 +122,7 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
 	lastThrottle = control.VX;
-	lastSteer = -control.Ydot;
+	lastSteer = control.Ydot;
 }
 
 void ATazioVehicle::ToggleRecordTrajectory()

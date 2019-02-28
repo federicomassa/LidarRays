@@ -61,8 +61,6 @@ void USensorManager::SendGPSMessage(FOdometryMessage msg)
 void USensorManager::SendGPSTruthMessage(FOdometryMessage msg)
 {
 	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg, true);
-
-	UE_LOG(LogTemp, Warning, TEXT("WTF: %f"), msg.x);
 	GPSTruthSender->SendData(data);
 }
 

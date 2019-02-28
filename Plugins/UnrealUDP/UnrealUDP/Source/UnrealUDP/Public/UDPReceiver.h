@@ -22,6 +22,8 @@ private:
 	//BUFFER SIZE
 	UPROPERTY(EditAnywhere, Category = UDP)
 	int32 BufferSize = 2 * 1024 * 1024;
+
+	void Finalize();
 public:
 	AUDPReceiver();
 	~AUDPReceiver();
