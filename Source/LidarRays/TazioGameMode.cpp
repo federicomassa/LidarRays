@@ -66,7 +66,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 				FVector Location = Start->GetActorLocation();
 				FRotator Rotation = Start->GetActorRotation();
 
-				// WARNING check if it does deep copy inside spawn actor
+				// WARNING check if it does deep copy inside spawn actor. It does in 4.19
 				Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &Location, &Rotation, params));
 				Character->SetActorLocation(Start->GetActorLocation());
 				Character->SetActorRotation(Start->GetActorRotation());
