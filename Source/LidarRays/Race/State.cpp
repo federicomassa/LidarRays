@@ -5,7 +5,6 @@
 #include <iostream>
 
 using namespace std;
-using namespace LogFunctions;
 
 State::State(const StateMap &s)
 {
@@ -21,7 +20,7 @@ State::State(const State& q)
 	state = q.GetStateMap();
 }
 
-int State::Size() const
+size_t State::Size() const
 {
     return state.size();
 }
@@ -70,7 +69,7 @@ State State::operator*(const double& k) const
 
 State State::operator/(const double& k) const
 {
-	Require(k != 0, "State::operator/", "Requested division for zero");
+	LogFunctions::Require(k != 0, "State::operator/", "Requested division for zero");
 	
 	State result = *this;
 	
@@ -226,17 +225,17 @@ void CheckConsistency(const string &className, const State &q1, const State &q2)
 {
     string errorString = "States should be of same type";
 
-    Require(q1.Size() == q2.Size(), className, errorString);
+    LogFunctions::Require(q1.Size() == q2.Size(), className, errorString);
 
 	
     for (StateMap::const_iterator var = q1.GetStateMap().begin(); var != q1.GetStateMap().end(); var++)
-        Require(q2.GetStateMap().find(var->first) != q2.GetStateMap().end(),
+        LogFunctions::Require(q2.GetStateMap().find(var->first) != q2.GetStateMap().end(),
                 className, errorString);
 		
 	// Check also the viceversa, but avoiding repetitions
 	for (StateMap::const_iterator var = q2.GetStateMap().begin(); var != q2.GetStateMap().end(); var++)
 		if (q1.GetStateMap().find(var->first) == q1.GetStateMap().end())
-			Require(q1.GetStateMap().find(var->first) != q1.GetStateMap().end(),
+			LogFunctions::Require(q1.GetStateMap().find(var->first) != q1.GetStateMap().end(),
                 className, errorString);
 	
 }

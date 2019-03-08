@@ -1,10 +1,6 @@
 
 #include "ExtValue.h"
 
-/**
- * COMMENT
- */
-
 using namespace std;
 
 void ExtValue::extendValue(EvalMode mode)

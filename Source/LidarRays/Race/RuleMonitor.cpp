@@ -90,7 +90,7 @@ void RuleMonitor::processActions(double time)
 
 	  if (!r.isProcessed() && !ruleFound)
 	    {
-	      r.check(*aMan.targetStates, *aMan.neighborsStates, p.first.triggerTime, p.first.endTime, time);
+	      r.evaluate(*aMan.targetStates, *aMan.neighborsStates, p.first.triggerTime, p.first.endTime, time);
 	      processedRules.insert(processedRules.begin(), r);
 	    }
 	}

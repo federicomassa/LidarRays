@@ -77,7 +77,7 @@ bool SubEvent::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<
 	EnvironmentParameters currEnv = env.begin().value();
 	Agent currSelf = self.begin().value();
 	
-	bool result;
+	bool result = false;
 	
 	// ==================== OR/NOR case ===================== //
 	if (mode == OR || mode == NOR)
@@ -86,8 +86,6 @@ bool SubEvent::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<
 		// evaluate based on latest measurement
 		
 		AgentVector currOthers = others.begin().value();
-		
-		
 		
 		// Initialize to neutral element of logical operation
 		if (mode == OR)

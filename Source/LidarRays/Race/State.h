@@ -23,7 +23,7 @@ public:
     explicit State ( const StateMap & );
 	State (const State&);
     State();
-    int Size() const;
+    size_t Size() const;
     bool operator== ( const State & ) const;
     bool operator!= ( const State & ) const;
     State &operator= ( const State & );

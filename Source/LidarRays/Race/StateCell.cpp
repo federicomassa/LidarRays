@@ -7,7 +7,6 @@
 #include <vector>
 #include <algorithm>
 
-using namespace LogFunctions;
 using namespace std;
 
 StateCell::StateCell(const State &min, const State &max)
@@ -18,7 +17,7 @@ StateCell::StateCell(const State &min, const State &max)
         StateMap::const_iterator maxItr = max.find(minItr->first);
 
         if (minItr->second > maxItr->second)
-            Error("StateCell::StateCell", "Min state must be smaller than max state");
+            LogFunctions::Error("StateCell::StateCell", "Min state must be smaller than max state");
     }
 
     minState = min;
@@ -93,7 +92,7 @@ void StateCell::Weld(const StateCell &cell, const StateName &var)
         minState.at(var) = vertex[0];
         maxState.at(var) = vertex[3];
     } catch (out_of_range &) {
-        Error("StateCell::Weld", string(var) + " is not a valid state variable");
+        LogFunctions::Error("StateCell::Weld", string(var) + " is not a valid state variable");
     }
 }
 
@@ -146,7 +145,7 @@ bool StateCell::Slice(const StateCell &cell, StateRegion &reg) const
 				
 				
             } catch (std::out_of_range &) {
-                Error("StateCell::Slice", "Something is wrong with counter/vertex size");
+                LogFunctions::Error("StateCell::Slice", "Something is wrong with counter/vertex size");
             }
         }
 
@@ -197,7 +196,7 @@ bool StateCell::Slice(const StateCell &cell, StateRegion &reg) const
             }
 
         } catch (std::out_of_range &) {
-            Error("StateCell::Slice", "Out of range exception in counter update");
+            LogFunctions::Error("StateCell::Slice", "Out of range exception in counter update");
         }
 
 

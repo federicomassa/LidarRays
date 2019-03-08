@@ -41,7 +41,7 @@ namespace Race {
 		}
 	};
 
-	class LocalMonitorFatalException : std::exception
+	class LocalMonitorFatalException : public std::exception
 	{
 		const char* description;
 	public:
@@ -52,7 +52,7 @@ namespace Race {
 		}
 	};
 
-	class LocalMonitorWarningException : std::exception
+	class LocalMonitorWarningException : public std::exception
 	{
 		const char* description;
 	public:
@@ -63,7 +63,7 @@ namespace Race {
 		}
 	};
 
-	class LocalMonitorInfoException : std::exception
+	class LocalMonitorInfoException : public std::exception
 	{
 		const char* description;
 	public:

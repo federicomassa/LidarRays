@@ -9,17 +9,16 @@
 #include "TimedContainer.h"
 #include "EnvironmentParameters.h"
 #include "Properties.h"
-
-class SubEvent;
+#include "SubEvent.h"
 
 class Event
 {
 	std::string name;
 	std::string description;
-	std::set<const SubEvent*> subEvents;
+	std::set<SubEvent> subEvents;
 	
 public:
-	Event(const std::string& name, const std::set<const SubEvent*>& listOfSubevents, const std::string& description = "");
+	Event(const std::string& name, const std::set<SubEvent>& listOfSubevents, const std::string& description = "");
 	
 	Event(const Event&);
 	

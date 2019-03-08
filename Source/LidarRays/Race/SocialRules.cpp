@@ -15,7 +15,7 @@ Rule::~Rule()
 	count--;
 }
 
-void Rule::check(const TimedContainer<Agent>& targetStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
+void Rule::evaluate(const TimedContainer<Agent>& targetStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
 	const double& endTime, double currentTime)
 {
   checkResult = false;

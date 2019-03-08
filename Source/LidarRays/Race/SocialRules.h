@@ -47,8 +47,6 @@ class Rule {
   CheckMode mode;
 
   bool checkResult;
-  StateRegion positiveArea;
-  StateRegion negativeArea;
   
   void init(const std::string& cat, const std::set<Event>& eL, const std::string& n, const CheckMode& m);
   
@@ -59,7 +57,7 @@ class Rule {
   
   const std::set<Event>& getEventList() {return eList;}
   
-  void check(const TimedContainer<Agent>& monitorStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
+  void evaluate(const TimedContainer<Agent>& monitorStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
 	     const double& endTime, double currentTime);
   
   bool isProcessed() const;
