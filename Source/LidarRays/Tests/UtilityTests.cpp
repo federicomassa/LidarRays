@@ -11,8 +11,6 @@ DEFINE_LOG_CATEGORY(UtilityTestsLog);
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FUtilityTest, "Tazio.UtilityTests", EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 
-
-
 bool FUtilityTest::RunTest(const FString& Parameters)
 {
 	UE_LOG(UtilityTestsLog, Display, TEXT("Starting Utility Tests..."));

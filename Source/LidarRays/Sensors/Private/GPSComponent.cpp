@@ -55,9 +55,6 @@ void UGPSComponent::BeginPlay()
 
 void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	if (!isActive)
-		return;
-
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//if (DeltaTime < 0.02) return;
@@ -93,7 +90,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	FVector GPSLocation = InitRotation.UnrotateVector(CurrentWorldLocation - InitLocation)*0.01;
 	GPSLocation = FVector(GPSLocation.X, -GPSLocation.Y, GPSLocation.Z);
 
-	FRotator GPSRotation = FRotator(-CurrentWorldRotation.Pitch, -(CurrentWorldRotation.Yaw - InitRotation.Yaw) + 90, CurrentWorldRotation.Roll);
+	FRotator GPSRotation = FRotator(-CurrentWorldRotation.Pitch, -(CurrentWorldRotation.Yaw) + 90, CurrentWorldRotation.Roll);
 	/*UE_LOG(LogTemp, Warning, TEXT("GPS POSITION: %s"), *GPSLocation.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("GPS Orientation: %s"), *GPSRotation.ToString());*/
 
@@ -107,10 +104,9 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	//UE_LOG(LogTemp, Warning, TEXT("Noise: %f, %f"), PositionCurrentNoise, YawCurrentNoise);
 
-	GPSMessage.x = GPSLocation.X + XCurrentNoise;
-	GPSMessage.y = GPSLocation.Y + YCurrentNoise;
-	GPSMessage.z = GPSLocation.Z + ZCurrentNoise;
-
+	GPSMessage.x = CurrentWorldLocation.X*0.01 + XCurrentNoise;
+	GPSMessage.y = -CurrentWorldLocation.Y*0.01 + YCurrentNoise;
+	GPSMessage.z = CurrentWorldLocation.Z*0.01 + ZCurrentNoise;
 
 	GPSMessage.yaw = (GPSRotation.Yaw)*PI / 180 + YawCurrentNoise;
 	GPSMessage.pitch = 0.0f;
@@ -135,9 +131,18 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	for (int i = 0; i < 36; i++)
 	{
-		GPSMessage.pose_covariance[i] = 0;
+		// x,y,z covariances
+		if (i % 7 == 0 && i <= 17)
+		{
+			if (isActive)
+				GPSMessage.pose_covariance[i] = 0;
+			else
+				GPSMessage.pose_covariance[i] = 10000;
+		}
+		else
+			GPSMessage.pose_covariance[i] = 0;
 
-		// Angular velocity in IMU signal
+		// Angular velocity are in IMU signal
 		if (i > 17 && i % 7 == 0)
 			GPSMessage.twist_covariance[i] = -1;
 		else

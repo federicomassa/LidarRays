@@ -22,6 +22,9 @@ public class LidarRays : ModuleRules
         // Utility
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Utility/Public"));
 
+        // Race
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Race/"));
+
         // Vehicle
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Vehicle"));
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Vehicle/Models"));
