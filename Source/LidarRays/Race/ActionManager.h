@@ -15,12 +15,6 @@ class ActionManager {
 
   friend class RuleMonitor;
  private:
-  const int agentID;
-  const int targetID;
-  
-  /* Keeps track of the states of the monitored vehicle across the prefixed time span FIXME where? */
-  const TimedContainer<Agent>* targetStates;
-  const TimedContainer<AgentVector>* neighborsStates;
   /* List of actions that are being monitored. Populated during initialization. */
   std::set<Action*> listeners;
   /* Keeps track of the actions done by the monitored vehicle. */
@@ -40,7 +34,7 @@ class ActionManager {
   
  public:
   /* Constructor */
-  ActionManager(const int& aID, const int& tID, const TimedContainer<Agent>*, const TimedContainer<AgentVector>*);
+  ActionManager();
 
   /* clear memory */
   ~ActionManager();
@@ -49,7 +43,7 @@ class ActionManager {
   void init();
 
   /* Monitor vehicle's actions. */
-  void run(double time);
+  void run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates);
   
   /* allocate new object into listeners list. */
   void addListener(Action*);
@@ -59,7 +53,4 @@ class ActionManager {
 
   /* get active actions */
   std::vector<ActionInfo> getActiveActions() const;
-
-  const int& getAgentID() const {return agentID;}
-  const int& getTargetID() const {return targetID;}
 };

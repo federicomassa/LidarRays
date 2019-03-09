@@ -34,29 +34,24 @@ class Action
   
  protected:
   void addRuleCategory(const std::string& cat) {info.ruleCategoryList.insert(info.ruleCategoryList.begin(), cat);}
-  /* reference to ActionManager's monitor state history */
-  const TimedContainer<Agent>* targetStates;
-  const TimedContainer<AgentVector>* neighborsStates;
  public:
   Action();
   Action(const Action&);
 
-  void init(const TimedContainer<Agent>*, const TimedContainer<AgentVector>*);
-
   ActionInfo info;
   
   /* Trigger condition specifies the conditions that start the action */
-  virtual bool triggerCondition() = 0;
+  virtual bool triggerCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) = 0;
   /* End condition specifies the conditions that end the action */
-  virtual bool endCondition() = 0;
+  virtual bool endCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) = 0;
   /* Abort condition specifies the conditions that stop the listener of this action */
-  virtual bool abortCondition() = 0;
+  virtual bool abortCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) = 0;
 
   virtual ~Action() {};
 
   // Tick of action recognition loop, at time <time>.
   // Time should be in seconds
-  virtual void listen(double time);
+  virtual void listen(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates);
 
   // Add offset to trigger, end and abort time. Useful when 
   // actions are recognized after they actually started

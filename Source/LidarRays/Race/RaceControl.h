@@ -2,18 +2,30 @@
 
 #pragma once
 
-#include <map>
+#include <set>
 #include <string>
 #include <vector>
-#include "Timeseries.h"
+#include <list>
+#include "TimedContainer.h"
+#include "ActionManager.h"
+#include "Agent.h"
 #include "RaceExceptions.h"
+#include "RuleMonitor.h"
 
 class RaceControl
 {
-	std::map<std::string, Timeseries<double> > contestants;
-	std::vector<std::string> state_vars;
+	std::set<std::string> contestants;
+	std::set<std::string> state_vars;
+
+	std::list<ActionManager> agentManagers;
+	std::list<RuleMonitor> ruleMonitors;
+
 public:
 	RaceControl();
+
+	// Add contestants to the race
 	void RegisterContestant(std::string ID);
 
+	// After every initialization is carried out, set rules and managers
+	void Build();
 };

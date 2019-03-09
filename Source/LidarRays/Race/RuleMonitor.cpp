@@ -18,7 +18,7 @@ void RuleMonitor::buildRules()
     rules->build();
 }
 
-void RuleMonitor::run(double time) {  
+void RuleMonitor::run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) {
   /* error handling */
   if (rules == 0)
     LogFunctions::Error("RuleMonitor::run()", "Before checking, use setRules() method");
@@ -50,10 +50,10 @@ void RuleMonitor::run(double time) {
     }
 
   /* Now process actions taken by the register (processedActions list) */
-  processActions(time);  
+  processActions(time, targetStates, neighborsStates);  
 }
 
-void RuleMonitor::processActions(double time)
+void RuleMonitor::processActions(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 {
   
   std::pair<ActionInfo, std::set<Rule> > p;
@@ -61,7 +61,7 @@ void RuleMonitor::processActions(double time)
   /* list containing rules processed during this run. 
    It helps to avoid checking several time the same rule
   (different actions might share a rule) */
-  std::set<Rule> processedRules;
+  processedRules.clear();
   
   /* for each action recorded */
   for (int i = 0; i < processedActions.size(); i++)
@@ -90,8 +90,9 @@ void RuleMonitor::processActions(double time)
 
 	  if (!r.isProcessed() && !ruleFound)
 	    {
-	      r.evaluate(*aMan.targetStates, *aMan.neighborsStates, p.first.triggerTime, p.first.endTime, time);
+	      r.evaluate(*targetStates, *neighborsStates, p.first.triggerTime, p.first.endTime, time);
 	      processedRules.insert(processedRules.begin(), r);
+		
 	    }
 	}
     }

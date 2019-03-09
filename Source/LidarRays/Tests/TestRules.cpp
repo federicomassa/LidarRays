@@ -21,7 +21,7 @@ void TestRules::addSafetyRules()
   Event eSafety(std::string("Safety event name"), seList, std::string("Safety event description"));
   eList.insert(eSafety);
 
-  addRule("Safety Rule", eList, "You are not keeping the safety distance from the vehicle in front of you", CONTINUOUS);
+  addRule("TestCategory", eList, "You are not keeping the safety distance from the vehicle in front of you", CONTINUOUS);
 
   /* clear for re-use */
   seList.clear();

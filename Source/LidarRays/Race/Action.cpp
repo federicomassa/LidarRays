@@ -7,29 +7,21 @@ Action::Action()
 {
 }
 
-void Action::init(const TimedContainer<Agent>* _targetStates, const TimedContainer<AgentVector>* _neighborsStates)
-{
-  targetStates = _targetStates;
-  neighborsStates = _neighborsStates;
-  initRuleCategories();
-}
-
 Action::Action(const Action& a)
 {
   info.triggerTime = a.info.triggerTime;
   info.endTime = a.info.endTime;
-  targetStates = a.targetStates;
   info.status = a.info.status;
   info.name = a.info.name;
   info.ruleCategoryList = a.info.ruleCategoryList;
 }
 
-void Action::listen(double time)
+void Action::listen(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 {
   /* Init condition */
 	if (info.status == INACTIVE)
 	{
-		if (triggerCondition())
+		if (triggerCondition(time, targetStates, neighborsStates))
 		{
 			info.status = TRIGGERED;
 			info.triggerTime = time - getTriggerOffset();
@@ -39,13 +31,13 @@ void Action::listen(double time)
   /* Running */
 	else if (info.status == TRIGGERED)
 	{
-		if (endCondition())
+		if (endCondition(time, targetStates, neighborsStates))
 		{
 			info.status = ENDED;
 			info.endTime = time - getEndOffset();
 			return;
 		}
-		else if (abortCondition())
+		else if (abortCondition(time, targetStates, neighborsStates))
 		{
 			info.status = ABORTED;
 			info.endTime = time - getAbortOffset();

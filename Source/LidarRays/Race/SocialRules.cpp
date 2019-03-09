@@ -1,18 +1,14 @@
 #include "SocialRules.h"
 
-int Rule::count = 0;
 
 Rule::Rule()
 {
   lastCheckTime = -1;
   processed = false;
-  unique_id = count;
-  count++;
 }
 
 Rule::~Rule()
 {
-	count--;
 }
 
 void Rule::evaluate(const TimedContainer<Agent>& targetStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
@@ -71,6 +67,11 @@ void Rule::updateProcessStatus(const double& triggerTime, const double& endTime)
 
 bool Rule::isProcessed() const {return processed;}
 
+SocialRules::SocialRules()
+{
+
+}
+
 std::set<Rule> SocialRules::createRulesList(const std::set<std::string>& ruleCategoryList)
 {
 
@@ -89,4 +90,14 @@ std::set<Rule> SocialRules::createRulesList(const std::set<std::string>& ruleCat
 		}
 
 	return actionRules;
+}
+
+void SocialRules::setStateVars(std::set<std::string> states)
+{
+	state_vars = states;
+}
+
+std::set<std::string> SocialRules::getStateVars() const
+{
+	return state_vars;
 }

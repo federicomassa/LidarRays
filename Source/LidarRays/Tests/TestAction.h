@@ -12,14 +12,14 @@
 
 class TestAction : public Action
 {
-
+	double triggerTime;
  public:
   TestAction();
   ~TestAction();
 
-  bool triggerCondition();
-  bool endCondition();
-  bool abortCondition();
+  bool triggerCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
+  bool endCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
+  bool abortCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
   
   void initRuleCategories();
   std::string name() const {return actionName;}

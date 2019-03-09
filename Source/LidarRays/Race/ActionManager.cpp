@@ -5,9 +5,7 @@
 #include <cstdlib>
 #include <set>
 
-ActionManager::ActionManager(const int& aID, const int& tID, const TimedContainer<Agent>* oStates, const TimedContainer<AgentVector>* mStates) : agentID(aID), targetID(tID),
-																				     targetStates(oStates),
-																				     neighborsStates(mStates)
+ActionManager::ActionManager()
 {}
 
 ActionManager::~ActionManager()
@@ -22,13 +20,13 @@ void ActionManager::init()
   /* Add here any action that you want to be listened to with addListener. */
 }
 
-void ActionManager::run(double time)
+void ActionManager::run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 {
 	for (auto a = listeners.begin(); a != listeners.end(); a++)
     {
       
       /* Checks the conditions of this action and update its status. */
-      (*a)->listen(time);
+      (*a)->listen(time, targetStates,neighborsStates);
       
       if ((*a)->info.status != INACTIVE)
 	{
@@ -52,7 +50,6 @@ void ActionManager::resetAction(Action* a)
 
 void ActionManager::addListener(Action* a)
 {
-  a->init(targetStates, neighborsStates);
   listeners.insert(a);
 }
 

@@ -12,17 +12,34 @@ void TestAction::initRuleCategories()
   addRuleCategory("TestCategory");
 }
 
-bool TestAction::triggerCondition()
+bool TestAction::triggerCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 {  
-	return false;
+	// Silence warnings
+	(void*)targetStates;
+	(void*)neighborsStates;
+
+	triggerTime = time;
+	return true;
 }
 
-bool TestAction::endCondition()
+bool TestAction::endCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 { 
+	// Silence warnings
+	(void*)targetStates;
+	(void*)neighborsStates;
+
+	if (time > triggerTime + 10)
+		return true;
+
   return false;
 }
 
-bool TestAction::abortCondition()
+bool TestAction::abortCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
 {
+	// Silence warnings
+	(void*)targetStates;
+	(void*)neighborsStates;
+	(void)time;
+
   return false;
 }

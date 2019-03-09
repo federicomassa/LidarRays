@@ -25,8 +25,6 @@ class Rule {
   friend class SocialRules;
 
  private:
-	 static int count;
-	 int unique_id;
 
   /* This is the list of events that describes the forbidden situations for this rule category.
      In the case of the category "LeftLaneChange", an event could be like "left lane is occupied by someone else and you are not on 
@@ -34,6 +32,7 @@ class Rule {
   std::set<Event> eList;
   double lastCheckTime;
   bool processed;
+
 
   void updateProcessStatus(const double&, const double&);
 
@@ -72,14 +71,15 @@ class Rule {
 
   bool operator!=(const Rule& r) {return !((*this) == r);}
 
-  bool operator<(const Rule& r) const { return (unique_id < r.unique_id); }
+  bool operator<(const Rule& r) const { return (name < r.name); }
 
   const std::string& getCategory() const {return category;}
 };
 
 class SocialRules
 {
-  
+	std::set<std::string> state_vars;
+
  protected:
   std::set<Rule> rList;
   
@@ -104,14 +104,16 @@ class SocialRules
   void purge() {rList.clear();}
   
  public:
-  SocialRules() {}
+	 SocialRules();
   virtual ~SocialRules() {}
   /* build list of rules. The memory for the sub-events must be allocated here
    and will be freed by the destructor */
   virtual void build() = 0;
 
   std::set<Rule> createRulesList(const std::set<std::string>&);
-  
+
+  virtual void setStateVars(std::set<std::string> states);
+  virtual std::set<std::string> getStateVars() const;
 };
 
 

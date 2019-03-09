@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "RaceControl.h"
+#include "LogFunctions.h"
 
 using namespace Race;
 
@@ -16,7 +17,22 @@ void RaceControl::RegisterContestant(std::string ID)
 		throw UninitializedException("state_vars");
 	}
 
-	contestants[ID];
+	bool inserted = contestants.insert(ID).second;
+
+	// If contestant was not already registered
+	if (inserted)
+	{
+		ActionManager aMan;
+		// TODO CONTINUE FROM HERE
+	}
+	else
+	{
+		LogFunctions::Error("RaceControl::RegisterContestant", std::string("User ") + ID + " was already registered");
+	}
 }
 
+void RaceControl::Build()
+{
+
+}
 
