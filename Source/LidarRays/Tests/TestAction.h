@@ -12,7 +12,7 @@
 
 class TestAction : public Action
 {
-	double triggerTime;
+  double triggerTime;
  public:
   TestAction();
   ~TestAction();

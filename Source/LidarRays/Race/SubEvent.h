@@ -2,6 +2,7 @@
 #define SUBEVENT_H
 
 #include <string>
+#include <list>
 #include <map>
 
 #include "TimedContainer.h"
@@ -10,6 +11,7 @@
 #include "Properties.h"
 
 class StateRegion;
+class AgentTrajectory;
 
 class SubEvent
 {
@@ -19,9 +21,9 @@ public:
 	enum EvalMode {OR, NOR, SINGLE, NSINGLE};
 private:
 	EvalMode mode;
-	typedef StateRegion (*AreaFcn) (const Agent& self);
-	typedef bool (*InteractionFcn) (const Agent& self, const Agent& other, const EnvironmentParameters& env, const Properties& automatonProperties);
-	typedef bool (*SingleEvaluationFcn) (const Agent& self, const EnvironmentParameters& env, const Properties& automatonProperties);
+	typedef StateRegion (*AreaFcn) (const AgentTrajectory& targetStates);
+	typedef bool (*InteractionFcn) (const AgentTrajectory& targetStates, const AgentTrajectory& otherStates, const EnvironmentParameters& env, const Properties& automatonProperties);
+	typedef bool (*SingleEvaluationFcn) (const AgentTrajectory& targetStates, const EnvironmentParameters& env, const Properties& automatonProperties);
 	
 	
 	// 'single' sub-events, i.e. sub-events that can be evaluated
@@ -46,7 +48,7 @@ public:
 	bool operator<(const SubEvent&) const;
 	bool operator==(const SubEvent&) const;
 	
-	bool Evaluate(const TimedContainer<Agent>& self, const TimedContainer<AgentVector>& others, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
+	bool Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
 };
 
 #endif

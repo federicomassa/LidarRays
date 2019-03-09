@@ -1,4 +1,5 @@
 #include "RuleMonitor.h"
+#include "AgentTrajectory.h"
 #include <iostream>
 
 RuleMonitor::RuleMonitor(const ActionManager& aM): aMan(aM)
@@ -8,8 +9,6 @@ RuleMonitor::RuleMonitor(const ActionManager& aM): aMan(aM)
 
 RuleMonitor::~RuleMonitor()
 {
-  if (rules)
-    delete rules;
 }
 
 void RuleMonitor::buildRules()
@@ -18,7 +17,7 @@ void RuleMonitor::buildRules()
     rules->build();
 }
 
-void RuleMonitor::run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) {
+void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates) {
   /* error handling */
   if (rules == 0)
     LogFunctions::Error("RuleMonitor::run()", "Before checking, use setRules() method");
@@ -53,7 +52,7 @@ void RuleMonitor::run(double time, const TimedContainer<Agent>* targetStates, co
   processActions(time, targetStates, neighborsStates);  
 }
 
-void RuleMonitor::processActions(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
+void RuleMonitor::processActions(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
 {
   
   std::pair<ActionInfo, std::set<Rule> > p;
@@ -90,7 +89,7 @@ void RuleMonitor::processActions(double time, const TimedContainer<Agent>* targe
 
 	  if (!r.isProcessed() && !ruleFound)
 	    {
-	      r.evaluate(*targetStates, *neighborsStates, p.first.triggerTime, p.first.endTime, time);
+	      r.evaluate(targetStates, neighborsStates, p.first.triggerTime, p.first.endTime, time);
 	      processedRules.insert(processedRules.begin(), r);
 		
 	    }

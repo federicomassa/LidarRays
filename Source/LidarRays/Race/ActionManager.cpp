@@ -1,5 +1,5 @@
 #include "ActionManager.h"
-#include "Timeseries.h"
+#include "AgentTrajectory.h"
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -20,7 +20,7 @@ void ActionManager::init()
   /* Add here any action that you want to be listened to with addListener. */
 }
 
-void ActionManager::run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
+void ActionManager::run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
 {
 	for (auto a = listeners.begin(); a != listeners.end(); a++)
     {
@@ -41,19 +41,19 @@ void ActionManager::run(double time, const TimedContainer<Agent>* targetStates, 
   
 }
 
-void ActionManager::resetAction(Action* a)
+void ActionManager::resetAction(std::shared_ptr<Action> a)
 {
   a->info.status = INACTIVE;
   a->info.triggerTime = -1;
   a->info.endTime = -1;
 }
 
-void ActionManager::addListener(Action* a)
+void ActionManager::addListener(std::shared_ptr<Action> a)
 {
   listeners.insert(a);
 }
 
-void ActionManager::recordAction(Action* a)
+void ActionManager::recordAction(std::shared_ptr<Action> a)
 {
 	ActionInfo foundAction;
 	bool saveAction = false;
@@ -89,12 +89,6 @@ void ActionManager::recordAction(Action* a)
 
 void ActionManager::clearListeners()
 {
-	for (auto l = listeners.begin(); l != listeners.end(); l++)
-	{
-		if (*l)
-			delete (*l);
-	}
-
   listeners.clear();
 }
 

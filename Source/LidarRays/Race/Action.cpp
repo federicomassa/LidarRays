@@ -1,4 +1,5 @@
 #include "Action.h"
+#include "AgentTrajectory.h"
 #include <iostream>
 #include <sstream>
 #include "RaceExceptions.h"
@@ -16,7 +17,7 @@ Action::Action(const Action& a)
   info.ruleCategoryList = a.info.ruleCategoryList;
 }
 
-void Action::listen(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates)
+void Action::listen(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
 {
   /* Init condition */
 	if (info.status == INACTIVE)

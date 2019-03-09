@@ -15,11 +15,13 @@
 
 #include <utility>
 
+class AgentTrajectory;
+
 class RuleMonitor
 {
  private:
   const ActionManager& aMan;
-  SocialRules* rules;
+  std::shared_ptr<SocialRules> rules;
 
   /* every record is an action and its associated rules */
   std::vector<std::pair<ActionInfo, std::set<Rule> > > processedActions;
@@ -27,7 +29,7 @@ class RuleMonitor
   // Processed rules
   std::set<Rule> processedRules;
 
-  void processActions(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates);
+  void processActions(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
   void registerNewAction(ActionInfo);
   /* build rules */
   void buildRules();
@@ -39,7 +41,7 @@ class RuleMonitor
   ~RuleMonitor();
   
   /* take ownership */
-  void setRules(SocialRules* sr) {
+  void setRules(std::shared_ptr<SocialRules> sr) {
     if (sr == NULL)
       LogFunctions::Error("RuleMonitor::setRules", "Null pointer provided");
     
@@ -53,7 +55,7 @@ class RuleMonitor
   const ActionManager* getActionManager() {return &aMan;}
   
   /* check vehicle behaviour based on actions detected by the action manager */
-  void run(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates);
+  void run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
 
   /* accessor to processed actions */
   const std::vector<std::pair<ActionInfo, std::set<Rule> > >& getProcessedActions() const

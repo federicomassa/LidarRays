@@ -1,5 +1,5 @@
 #include "SocialRules.h"
-
+#include "AgentTrajectory.h"
 
 Rule::Rule()
 {
@@ -11,7 +11,7 @@ Rule::~Rule()
 {
 }
 
-void Rule::evaluate(const TimedContainer<Agent>& targetStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
+void Rule::evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const double& triggerTime,
 	const double& endTime, double currentTime)
 {
   checkResult = false;
@@ -22,7 +22,7 @@ void Rule::evaluate(const TimedContainer<Agent>& targetStates, const TimedContai
     {
 	  TimedContainer<EnvironmentParameters> env_param;
 	  Properties properties; 
-	  bool evaluation = e->Evaluate(targetStates, neighStates, env_param, properties);
+	  bool evaluation = e->Evaluate(targetStates, neighborStates, env_param, properties);
 
 	  checkResult = checkResult || evaluation;
     }

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <set>
+#include <list>
 #include <map>
 
 #include "Agent.h"
@@ -10,6 +11,8 @@
 #include "EnvironmentParameters.h"
 #include "Properties.h"
 #include "SubEvent.h"
+
+class AgentTrajectory;
 
 class Event
 {
@@ -28,7 +31,7 @@ public:
 	
 	const std::string& GetName() const;
 	
-	bool Evaluate(const TimedContainer<Agent>& self, const TimedContainer<AgentVector>& others, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
+	bool Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
 	
 };
 

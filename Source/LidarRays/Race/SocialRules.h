@@ -14,8 +14,10 @@
 #include "TimedContainer.h"
 #include <string>
 #include <set>
+#include <list>
 
 class SocialRules;
+class AgentTrajectory;
 
 /* Type that describes when the rule has to be evaluated:
  ex: at trigger time or at each instant */
@@ -56,7 +58,7 @@ class Rule {
   
   const std::set<Event>& getEventList() {return eList;}
   
-  void evaluate(const TimedContainer<Agent>& monitorStates, const TimedContainer<AgentVector>& neighStates, const double& triggerTime,
+  void evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const double& triggerTime,
 	     const double& endTime, double currentTime);
   
   bool isProcessed() const;

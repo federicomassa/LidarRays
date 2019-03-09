@@ -1,6 +1,7 @@
 #include "SubEvent.h"
 #include "StateRegion.h"
 #include "LogFunctions.h"
+#include "AgentTrajectory.h"
 
 using namespace std;
 using namespace LogFunctions;
@@ -66,7 +67,7 @@ const string& SubEvent::GetName() const
 	return name;
 }
 
-bool SubEvent::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<AgentVector>& others, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
+bool SubEvent::Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
 {
 	// A sub-event evaluates to true based on the logical condition, the sensor data available, the evaluation mode chosen in Automaton::DefineRules for this sub-event.
 	
@@ -75,53 +76,46 @@ bool SubEvent::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<
 	// the single agent (usually self during simulation, possibly an observed agent in Observer module) 
 	
 	EnvironmentParameters currEnv = env.begin().value();
-	Agent currSelf = self.begin().value();
 	
 	bool result = false;
 	
 	// ==================== OR/NOR case ===================== //
 	if (mode == OR || mode == NOR)
-	{
-		// TODO For now automaton can store in memory but sub-events can only
-		// evaluate based on latest measurement
-		
-		AgentVector currOthers = others.begin().value();
-		
+	{	
+
 		// Initialize to neutral element of logical operation
 		if (mode == OR)
 			result = false;
 		else if (mode == NOR)
 			result = true;
 		
-		for (auto currOther = currOthers.begin(); currOther != currOthers.end();
+		for (auto currOther = neighborsStates.begin(); currOther != neighborsStates.end();
 			 currOther++)
 			 {
+			// WARNING Area fcn takes a trajectory but only consider latest value of other agent
 				 if (mode == OR)
 				 {
 					 // If area fcn was linked to the sub-event, use it to verify that the agent lies inside that area, otherwise just use the logical condition					 
 					 if (areaFcn == nullptr)
-						result = result || interactionFcn(currSelf, currOther->second, currEnv, automatonProperties);
+						result = result || interactionFcn(targetStates, *currOther, currEnv, automatonProperties);
 					 else
-						 result = result || (interactionFcn(currSelf, currOther->second, currEnv, automatonProperties) && areaFcn(currSelf).Contains(currOther->second.GetState()));
+						 result = result || (interactionFcn(targetStates, *currOther, currEnv, automatonProperties) && areaFcn(targetStates).Contains(currOther->getTrajectory().latest().value()));
 				 }
 				 else if (mode == NOR)
 				 {
 					// If area fcn was linked to the sub-event, use it to verify that the agent lies inside that area, otherwise just use the logical condition
 					 if (areaFcn == nullptr)
-						result = result && !interactionFcn(currSelf, currOther->second, currEnv, automatonProperties);
+						result = result && !interactionFcn(targetStates, *currOther, currEnv, automatonProperties);
 					 else
-						 result = result && !(interactionFcn(currSelf, currOther->second, currEnv, automatonProperties) && areaFcn(currSelf).Contains(currOther->second.GetState()));
+						 result = result && !(interactionFcn(targetStates, *currOther, currEnv, automatonProperties) && areaFcn(targetStates).Contains(currOther->getTrajectory().latest().value()));
 				 }
 			 }
 	}
 	
 	// ==================== SINGLE/NSINGLE case ===================== //
 	else if (mode == SINGLE || mode == NSINGLE)
-	{
-		// TODO For now automaton can store in memory but sub-events can only
-		// evaluate based on latest measurement
-		
-		result = singleEvaluationFcn(currSelf, currEnv, automatonProperties);
+	{	
+		result = singleEvaluationFcn(targetStates, currEnv, automatonProperties);
 		
 		if (mode == NSINGLE)
 			result = !result;

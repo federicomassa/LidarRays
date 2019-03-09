@@ -1,4 +1,5 @@
 #include "Event.h"
+#include "AgentTrajectory.h"
 #include "LogFunctions.h"
 
 using namespace std;
@@ -35,7 +36,7 @@ bool Event::operator==(const Event& e) const
 	return equal;
 }
 
-bool Event::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<AgentVector>& others, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
+bool Event::Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
 {
 	// An event evaluates to true if the AND of its subevents evaluation 
 	// is true. NB each subevent is evaluated based on its EvalMode (OR, NOR, SINGLE, NSINGLE...)
@@ -45,7 +46,7 @@ bool Event::Evaluate(const TimedContainer<Agent>& self, const TimedContainer<Age
 	{
 		try
 		{	
-			evaluation = evaluation && sub->Evaluate(self, others, env, automatonProperties);
+			evaluation = evaluation && sub->Evaluate(targetStates, neighborsStates, env, automatonProperties);
 		}
 		catch (out_of_range&)
 		{
