@@ -58,7 +58,7 @@ class Rule {
   
   const std::set<Event>& getEventList() {return eList;}
   
-  void evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const double& triggerTime,
+  void evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const double& triggerTime,
 	     const double& endTime, double currentTime);
   
   bool isProcessed() const;

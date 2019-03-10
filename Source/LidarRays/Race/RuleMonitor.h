@@ -29,7 +29,7 @@ class RuleMonitor
   // Processed rules
   std::set<Rule> processedRules;
 
-  void processActions(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
+  void processActions(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
   void registerNewAction(ActionInfo);
   /* build rules */
   void buildRules();
@@ -55,7 +55,7 @@ class RuleMonitor
   const ActionManager* getActionManager() {return &aMan;}
   
   /* check vehicle behaviour based on actions detected by the action manager */
-  void run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
+  void run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
 
   /* accessor to processed actions */
   const std::vector<std::pair<ActionInfo, std::set<Rule> > >& getProcessedActions() const

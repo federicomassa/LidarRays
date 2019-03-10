@@ -4,6 +4,8 @@
 #include "LogFunctions.h"
 #include "Action.h"
 #include "SocialRules.h"
+#include <AgentTrajectory.h>
+
 
 using namespace Race;
 
@@ -23,19 +25,15 @@ void RaceControl::RegisterContestant(std::string ID)
 
 	if (inserted)
 	{
-		ActionManager aMan;
-		aMan.setID(ID);
-		const ActionManager& aMan_inserted = *(actionManagers.insert(aMan).first);
-
-		RuleMonitor rMon(aMan_inserted);
-
+		actionManagers.push_back(ActionManager());
+		actionManagers.back().setID(ID);
+		RuleMonitor rMon(actionManagers.back());
 	}
 }
 
 void RaceControl::AddListener(std::shared_ptr<Action> a)
 {
-	std::list<ActionManager>::iterator itr;
-	for (itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
+	for (auto itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
 	{
 		itr->addListener(a);
 	}
@@ -43,35 +41,35 @@ void RaceControl::AddListener(std::shared_ptr<Action> a)
 
 void RaceControl::SetRules(std::shared_ptr<SocialRules> rules)
 {
-	std::list<RuleMonitor>::iterator itr;
-	for (itr = ruleMonitors.begin(); itr != ruleMonitors.end(); itr++)
+	for (auto itr = ruleMonitors.begin(); itr != ruleMonitors.end(); itr++)
 	{
 		itr->setRules(rules);
 	}
 }
 
-void RaceControl::Run(double time, std::list<TimedContainer<Agent> > agentsState)
+void RaceControl::Run(double time, std::vector<AgentTrajectory> agentsState)
 {
 	for (auto itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
 	{
 		std::string currentID = itr->getID();
-		TimedContainer<Agent> self;
-		
+		AgentTrajectory self;
+		std::vector<AgentTrajectory> others;
+
 		// Fill self containers
 		for (auto agent = agentsState.begin(); agent != agentsState.end(); agent++)
 		{
 			// if self
-			if (agent->latest().value().GetID() == currentID)
+			if (agent->getID() == currentID) 
 			{
 				self = *agent;
 				break;
 			}
+			else
+			{
+				others.push_back(*agent);
+			}
 		}
-
-		// Fill others
-		// TODO
-
 		
-		//itr->run(time, targetStates, neighborsStates);
+		itr->run(time, self, others);
 	}
 }

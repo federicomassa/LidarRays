@@ -13,17 +13,19 @@
 #include "RuleMonitor.h"
 
 #include <memory>
+#include <vector>
 
 class Action;
 class SocialRules;
+class AgentTrajectory;
 
 class RaceControl
 {
 	std::set<std::string> contestants;
 	std::set<std::string> state_vars;
 
-	std::list<ActionManager> actionManagers;
-	std::list<RuleMonitor> ruleMonitors;
+	std::vector<ActionManager> actionManagers;
+	std::vector<RuleMonitor> ruleMonitors;
 
 public:
 	RaceControl();
@@ -38,5 +40,5 @@ public:
 	void SetRules(std::shared_ptr<SocialRules>);
 
 	// Function to be called to evaluate action and rules
-	void Run(double time, std::list<TimedContainer<Agent> > agentsState);
+	void Run(double time, std::vector<AgentTrajectory> agentsState);
 };

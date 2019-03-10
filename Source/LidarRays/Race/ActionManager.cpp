@@ -20,7 +20,7 @@ void ActionManager::init()
   /* Add here any action that you want to be listened to with addListener. */
 }
 
-void ActionManager::run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
+void ActionManager::run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates)
 {
 	for (auto a = listeners.begin(); a != listeners.end(); a++)
     {

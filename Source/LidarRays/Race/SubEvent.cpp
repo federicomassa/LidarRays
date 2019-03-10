@@ -67,7 +67,7 @@ const string& SubEvent::GetName() const
 	return name;
 }
 
-bool SubEvent::Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
+bool SubEvent::Evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
 {
 	// A sub-event evaluates to true based on the logical condition, the sensor data available, the evaluation mode chosen in Automaton::DefineRules for this sub-event.
 	

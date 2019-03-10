@@ -14,6 +14,7 @@ class AgentTrajectory
 
 public:
 	void setID(std::string id);
+	std::string getID() const;
 	void setParameters(AgentParameters params);
 	const TimedContainer<State>& getTrajectory() const;
 };

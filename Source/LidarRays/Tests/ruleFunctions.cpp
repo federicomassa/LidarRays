@@ -1,12 +1,13 @@
 #include "ruleFunctions.h"
+#include "AgentTrajectory.h"
 
-bool safety_1(const Agent& self, const Agent& other, const EnvironmentParameters& env, const Properties& automatonProperties)
+bool safety_1(const AgentTrajectory& targetStates, const AgentTrajectory& otherStates, const EnvironmentParameters& env, const Properties& automatonProperties) 
 {
 	// Avoid unused warning
 	automatonProperties;
 
-	double selfX = self.GetState().at("x");
-	double otherX = other.GetState().at("x");
+	double selfX = targetStates.getTrajectory().latest().value().at("x");
+	double otherX = otherStates.getTrajectory().latest().value().at("x");
 
 	return (selfX + env.at("safety_dist") < otherX);
 }

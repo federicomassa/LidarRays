@@ -17,9 +17,12 @@ class TestAction : public Action
   TestAction();
   ~TestAction();
 
-  bool triggerCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
-  bool endCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
-  bool abortCondition(double time, const TimedContainer<Agent>* targetStates, const TimedContainer<AgentVector>* neighborsStates) override;
+  /* Trigger condition specifies the conditions that start the action */
+  bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
+  /* End condition specifies the conditions that end the action */
+  bool endCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
+  /* Abort condition specifies the conditions that stop the listener of this action */
+  bool abortCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
   
   void initRuleCategories();
   std::string name() const {return actionName;}

@@ -48,7 +48,7 @@ public:
 	bool operator<(const SubEvent&) const;
 	bool operator==(const SubEvent&) const;
 	
-	bool Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
+	bool Evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const;
 };
 
 #endif

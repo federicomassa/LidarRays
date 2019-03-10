@@ -42,17 +42,17 @@ class Action
   ActionInfo info;
   
   /* Trigger condition specifies the conditions that start the action */
-  virtual bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates) = 0;
+  virtual bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) = 0;
   /* End condition specifies the conditions that end the action */
-  virtual bool endCondition(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates) = 0;
+  virtual bool endCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) = 0;
   /* Abort condition specifies the conditions that stop the listener of this action */
-  virtual bool abortCondition(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates) = 0;
+  virtual bool abortCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) = 0;
 
   virtual ~Action() {};
 
   // Tick of action recognition loop, at time <time>.
   // Time should be in seconds
-  virtual void listen(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
+  virtual void listen(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
 
   // Add offset to trigger, end and abort time. Useful when 
   // actions are recognized after they actually started

@@ -17,7 +17,7 @@ Action::Action(const Action& a)
   info.ruleCategoryList = a.info.ruleCategoryList;
 }
 
-void Action::listen(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
+void Action::listen(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates)
 {
   /* Init condition */
 	if (info.status == INACTIVE)

@@ -17,7 +17,7 @@ void RuleMonitor::buildRules()
     rules->build();
 }
 
-void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates) {
+void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) {
   /* error handling */
   if (rules == 0)
     LogFunctions::Error("RuleMonitor::run()", "Before checking, use setRules() method");
@@ -52,7 +52,7 @@ void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const st
   processActions(time, targetStates, neighborsStates);  
 }
 
-void RuleMonitor::processActions(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates)
+void RuleMonitor::processActions(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates)
 {
   
   std::pair<ActionInfo, std::set<Rule> > p;

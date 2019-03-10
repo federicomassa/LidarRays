@@ -49,7 +49,7 @@ class ActionManager {
   void init();
 
   /* Monitor vehicle's actions. */
-  void run(double time, const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates);
+  void run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
   
   /* allocate new object into listeners list. */
   void addListener(std::shared_ptr<Action>);

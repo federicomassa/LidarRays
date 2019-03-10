@@ -36,7 +36,7 @@ bool Event::operator==(const Event& e) const
 	return equal;
 }
 
-bool Event::Evaluate(const AgentTrajectory& targetStates, const std::list<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
+bool Event::Evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const TimedContainer<EnvironmentParameters>& env, const Properties& automatonProperties) const
 {
 	// An event evaluates to true if the AND of its subevents evaluation 
 	// is true. NB each subevent is evaluated based on its EvalMode (OR, NOR, SINGLE, NSINGLE...)

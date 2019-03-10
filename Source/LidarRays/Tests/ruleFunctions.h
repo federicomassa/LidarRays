@@ -8,6 +8,8 @@
 #include "Properties.h"
 #include "StateRegion.h"
 
-bool safety_1(const Agent& self, const Agent& other, const EnvironmentParameters& env, const Properties& automatonProperties);
+class AgentTrajectory;
+
+bool safety_1(const AgentTrajectory& targetStates, const AgentTrajectory& otherStates, const EnvironmentParameters& env, const Properties& automatonProperties);
 
 #endif
