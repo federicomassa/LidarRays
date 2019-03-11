@@ -20,3 +20,11 @@ const TimedContainer<State>& AgentTrajectory::getTrajectory() const
 {
 	return trajectory;
 }
+
+void AgentTrajectory::addState(double time, State s)
+{
+	if (trajectory.size() != 0)
+		CheckConsistency("AgentTrajectory::addState", s, trajectory.latest().value());
+
+	trajectory.insert(time, s);
+}

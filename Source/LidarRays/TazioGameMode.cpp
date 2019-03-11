@@ -8,9 +8,39 @@
 #include <GameFramework/Pawn.h>
 #include <Internationalization/Regex.h>
 
+#include "Tests/TestAction.h"
+#include "Tests/TestRules.h"
+#include "Tests/TestStateConversion.h"
+
+#include <sstream>
+#include <string>
+#include <memory>
+
 void ATazioGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ATazioGameMode::Tick(float DeltaTime)
+{
+	for (auto contestant : contestants)
+	{
+		State s;
+		s.AddStateVariable("x");
+		s.AddStateVariable("y");
+		s.AddStateVariable("yaw");
+
+		s("x") = contestant->GetActorLocation().X;
+		s("y") = contestant->GetActorLocation().Y;
+		s("yaw") = contestant->GetActorRotation().Yaw;
+
+		Agent a;
+		a.SetID(TCHAR_TO_UTF8(*contestant->GetActorLabel()));
+		a.SetState(s);
+		raceControl.Update(GetWorld()->GetTimeSeconds(), a);
+	}
+
+	raceControl.Run(GetWorld()->GetTimeSeconds());
 }
 
 APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass)
@@ -60,6 +90,14 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 			FActorSpawnParameters params;
 			params.Name = FName(*(FString("Player_") + FString::FromInt(PlayerIndex)));
 
+			// Register contestant to race control
+			std::stringstream ss;
+			std::string index_str;
+			ss << PlayerIndex;
+			ss >> index_str;
+
+			raceControl.RegisterContestant(index_str);
+
 			if (PlayerIndex == 0)
 			{
 				//	Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &FVector::ZeroVector, &FRotator::ZeroRotator));
@@ -70,6 +108,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 				Character = Cast<APawn>(GetWorld()->SpawnActor(CharacterClass, &Location, &Rotation, params));
 				Character->SetActorLocation(Start->GetActorLocation());
 				Character->SetActorRotation(Start->GetActorRotation());
+				contestants.Add(Character);
 			}
 			else
 			{
@@ -78,6 +117,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 				AActor* Opponent = GetWorld()->SpawnActor(OpponentsClass, &Location, &Rotation, params);
 				Opponent->SetActorLocation(Start->GetActorLocation());
 				Opponent->SetActorRotation(Start->GetActorRotation());
+				contestants.Add(Opponent);
 			}
 
 			found = true;
@@ -90,6 +130,10 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 			break;
 		}
 	}
+
+	raceControl.AddListener(std::shared_ptr<TestAction>(new TestAction));
+	raceControl.SetRules(std::shared_ptr<TestRules>(new TestRules));
+	raceControl.SetStateConversionFcn(&UnrealToUnicycle);
 
 	return Character;
 }

@@ -4,7 +4,7 @@
 #include "LogFunctions.h"
 #include "Action.h"
 #include "SocialRules.h"
-#include <AgentTrajectory.h>
+#include "RaceExceptions.h"
 
 
 using namespace Race;
@@ -16,19 +16,20 @@ RaceControl::RaceControl()
 
 void RaceControl::RegisterContestant(std::string ID)
 {
-	if (state_vars.size() == 0)
+	// Check if already registered
+	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
 	{
-		throw UninitializedException("state_vars");
+		if (itr->getID() == ID)
+			return;
 	}
 
-	bool inserted = contestants.insert(ID).second;
+	AgentTrajectory trajectory;
+	trajectory.setID(ID);
+	contestants.push_back(trajectory);
 
-	if (inserted)
-	{
-		actionManagers.push_back(ActionManager());
-		actionManagers.back().setID(ID);
-		RuleMonitor rMon(actionManagers.back());
-	}
+	actionManagers.push_back(ActionManager());
+	actionManagers.back().setID(ID);
+	RuleMonitor rMon(actionManagers.back());
 }
 
 void RaceControl::AddListener(std::shared_ptr<Action> a)
@@ -47,7 +48,41 @@ void RaceControl::SetRules(std::shared_ptr<SocialRules> rules)
 	}
 }
 
-void RaceControl::Run(double time, std::vector<AgentTrajectory> agentsState)
+void RaceControl::SetStateConversionFcn(StateConversionFcn fcn)
+{
+	conversionFcn = fcn;
+}
+
+void RaceControl::Update(double time, Agent a)
+{
+	auto found_itr = contestants.end();
+	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
+	{
+		if (itr->getID() == a.GetID())
+		{
+			found_itr = itr;
+			break;
+		}
+	}
+
+	if (found_itr == contestants.end())
+	{
+		throw UnregisteredContestantException(a.GetID().c_str());
+	}
+
+	if (conversionFcn == nullptr)
+	{
+		throw UninitializedException("StateConversionFcn");
+	}
+
+	State updated_state = conversionFcn(a.GetState());
+
+	found_itr->addState(time, updated_state);
+
+	// TODO manage maximum memory of trajectory
+}
+
+void RaceControl::Run(double time)
 {
 	for (auto itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
 	{
@@ -56,7 +91,7 @@ void RaceControl::Run(double time, std::vector<AgentTrajectory> agentsState)
 		std::vector<AgentTrajectory> others;
 
 		// Fill self containers
-		for (auto agent = agentsState.begin(); agent != agentsState.end(); agent++)
+		for (auto agent = contestants.begin(); agent != contestants.end(); agent++)
 		{
 			// if self
 			if (agent->getID() == currentID) 

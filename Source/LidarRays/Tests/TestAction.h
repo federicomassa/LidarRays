@@ -14,9 +14,6 @@ class TestAction : public Action
 {
   double triggerTime;
  public:
-  TestAction();
-  ~TestAction();
-
   /* Trigger condition specifies the conditions that start the action */
   bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
   /* End condition specifies the conditions that end the action */

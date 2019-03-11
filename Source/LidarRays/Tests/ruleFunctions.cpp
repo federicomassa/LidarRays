@@ -4,7 +4,7 @@
 bool safety_1(const AgentTrajectory& targetStates, const AgentTrajectory& otherStates, const EnvironmentParameters& env, const Properties& automatonProperties) 
 {
 	// Avoid unused warning
-	automatonProperties;
+	(void)automatonProperties;
 
 	double selfX = targetStates.getTrajectory().latest().value().at("x");
 	double otherX = otherStates.getTrajectory().latest().value().at("x");

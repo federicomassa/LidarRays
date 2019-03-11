@@ -17,6 +17,7 @@ public:
 	std::string getID() const;
 	void setParameters(AgentParameters params);
 	const TimedContainer<State>& getTrajectory() const;
+	void addState(double time, State s);
 };
 
 #endif

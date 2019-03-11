@@ -32,4 +32,5 @@ void TestRules::addSafetyRules()
 
 TestRules::~TestRules()
 {
+	
 }

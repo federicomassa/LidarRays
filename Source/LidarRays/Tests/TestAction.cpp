@@ -2,11 +2,6 @@
 
 const std::string TestAction::actionName = "TEST";
 
-TestAction::TestAction()
-{}
-
-TestAction::~TestAction() {}
-
 void TestAction::initRuleCategories()
 {
   addRuleCategory("TestCategory");

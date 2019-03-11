@@ -18,6 +18,18 @@ namespace Race {
 
 	};
 
+	class UnregisteredContestantException : public std::exception
+	{
+		const char* contestant_id;
+	public:
+		UnregisteredContestantException(const char* id) : contestant_id(id) {};
+		const char* what() const throw()
+		{
+			return (std::string("Agent ") + contestant_id + " was not registered to RaceControl").c_str();
+		}
+
+	};
+
 	class InexistentStateException : public std::exception
 	{
 		const char* var_name;
