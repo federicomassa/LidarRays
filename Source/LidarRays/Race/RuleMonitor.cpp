@@ -2,7 +2,7 @@
 #include "AgentTrajectory.h"
 #include <iostream>
 
-RuleMonitor::RuleMonitor(const ActionManager& aM): aMan(aM)
+RuleMonitor::RuleMonitor()
 {
 	rules = 0;
 }
@@ -17,16 +17,18 @@ void RuleMonitor::buildRules()
     rules->build();
 }
 
-void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) {
+void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const ActionManager* aMan) {
   /* error handling */
-  if (rules == 0)
-    LogFunctions::Error("RuleMonitor::run()", "Before checking, use setRules() method");
+  if (rules == nullptr)
+    LogFunctions::Error("RuleMonitor::run()", "Before run, use setRules method");
+  if (aMan == nullptr)
+	  LogFunctions::Error("RuleMonitor::run()", "Before run, use setActionManager method");
   
-  for (auto tmpA = aMan.getHistory().begin(); tmpA != aMan.getHistory().end(); tmpA++)
+  for (auto tmpA = aMan->getHistory().begin(); tmpA != aMan->getHistory().end(); tmpA++)
   { 
       /* First see if the rule monitor has already registered this action */
-      ActionInfo foundAction;
-	  std::pair<ActionInfo, std::set<Rule> > processed;
+      const ActionInfo* foundAction = nullptr;
+	  std::pair<ActionInfo, std::vector<Rule> > processed;
 
       for (int i = 0; i < processedActions.size(); i++)
 	{
@@ -35,7 +37,7 @@ void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const st
 	  if (processed.first.name == tmpA->name &&
 	      processed.first.triggerTime == tmpA->triggerTime)
 	    {
-	      foundAction = *tmpA;
+	      foundAction = &(*tmpA);
 	      /* update end time */
 	      processed.first.endTime = tmpA->endTime;
 	      break;
@@ -43,7 +45,7 @@ void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const st
 	}
 
       /* if a match was not found */
-      if (foundAction.name == "")
+      if (foundAction == nullptr)
 		  registerNewAction(*tmpA);	  
       	
     }
@@ -54,47 +56,19 @@ void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const st
 
 void RuleMonitor::processActions(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates)
 {
-  
-  std::pair<ActionInfo, std::set<Rule> > p;
-
-  /* list containing rules processed during this run. 
-   It helps to avoid checking several time the same rule
-  (different actions might share a rule) */
-  processedRules.clear();
-  
   /* for each action recorded */
-  for (int i = 0; i < processedActions.size(); i++)
-    {
-      p = processedActions[i];
-      
-      /* if we are past the end time of that action do not check it anymore */
-      if (time > p.first.endTime && p.first.endTime != -1)
-		continue;
-
-      for (auto r_itr = p.second.begin(); r_itr != p.second.end(); r_itr++)
+	for (auto& p : processedActions)
 	{
-	  Rule r = *r_itr;
+  
+		/* if we are past the end time of that action do not check it anymore */
+		if (time > p.first.endTime && p.first.endTime != -1)
+			continue;	
 
-	  /* check if rule has already been processed */
-	  bool ruleFound = false;
-	  
-	  for (auto procR = processedRules.begin(); procR != processedRules.end(); procR++)
-	    {
-	      if (*procR == r)
-			{
-				ruleFound = true;
-				break;
-			}
-	    }
-
-	  if (!r.isProcessed() && !ruleFound)
-	    {
-	      r.evaluate(targetStates, neighborsStates, p.first.triggerTime, p.first.endTime, time);
-	      processedRules.insert(processedRules.begin(), r);
-		
+		for (auto r = p.second.begin(); r != p.second.end(); r++)
+		{
+	      r->evaluate(targetStates, neighborsStates, p.first.triggerTime, p.first.endTime, time, env_params, properties);		
 	    }
 	}
-    }
 }
 
 void RuleMonitor::registerNewAction(ActionInfo a)
@@ -103,7 +77,17 @@ void RuleMonitor::registerNewAction(ActionInfo a)
     LogFunctions::Error("RuleMonitor::registerNewAction", "Function called with a null pointer argument");
 
   /* Rules will be processed by processAction method. */
-  std::set<Rule> actionRules = rules->createRulesList(a.ruleCategoryList);
+  std::vector<Rule> actionRules = rules->createRulesList(a.ruleCategoryList);
   processedActions.insert(processedActions.begin(), std::make_pair(a, actionRules));
 
+}
+
+void RuleMonitor::UpdateEnvironmentParameters(double time, const EnvironmentParameters& params)
+{
+	env_params.insert(time, params);
+}
+
+void RuleMonitor::SetProperties(const Properties& prop)
+{
+	properties = prop;
 }

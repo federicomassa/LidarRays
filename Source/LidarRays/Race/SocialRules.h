@@ -11,7 +11,6 @@
 #include "Event.h"
 #include "ExtValue.h"
 #include "StateRegion.h"
-#include "TimedContainer.h"
 #include <string>
 #include <set>
 #include <list>
@@ -59,10 +58,12 @@ class Rule {
   const std::set<Event>& getEventList() {return eList;}
   
   void evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const double& triggerTime,
-	     const double& endTime, double currentTime);
+	     const double& endTime, double currentTime, const TimedContainer<EnvironmentParameters>& env_params, const Properties& props);
   
   bool isProcessed() const;
   
+  std::string getName() const { return name; }
+
   bool operator==(const Rule& r) const
   {
     return (category == r.category &&
@@ -70,6 +71,8 @@ class Rule {
 	    eList == r.eList);
 	    
   }
+
+  bool getResult() const { return checkResult; }
 
   bool operator!=(const Rule& r) {return !((*this) == r);}
 
@@ -81,6 +84,7 @@ class Rule {
 class SocialRules
 {
 	std::set<std::string> state_vars;
+
 
  protected:
   std::set<Rule> rList;
@@ -105,6 +109,8 @@ class SocialRules
   /* clear list */
   void purge() {rList.clear();}
   
+
+
  public:
 	 SocialRules();
   virtual ~SocialRules() {}
@@ -112,7 +118,7 @@ class SocialRules
    and will be freed by the destructor */
   virtual void build() = 0;
 
-  std::set<Rule> createRulesList(const std::set<std::string>&);
+  std::vector<Rule> createRulesList(const std::set<std::string>&);
 
   virtual void setStateVars(std::set<std::string> states);
   virtual std::set<std::string> getStateVars() const;

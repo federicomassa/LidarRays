@@ -26,18 +26,26 @@ void ActionManager::run(double time, const AgentTrajectory& targetStates, const 
     {
       
       /* Checks the conditions of this action and update its status. */
-      (*a)->listen(time, targetStates,neighborsStates);
+	if ((*a)->info.status == INACTIVE || (*a)->info.status == TRIGGERED)
+		(*a)->listen(time, targetStates,neighborsStates);
       
-      if ((*a)->info.status != INACTIVE)
-	{
-	  /* Add to history and reset action */
-	  recordAction(*a);
+	if ((*a)->info.status != INACTIVE)
+		{
+			if ((*a)->info.triggerTime == time)
+				LogFunctions::Info("ActionManager::run", (std::string("Action ") + (*a)->name() + " triggered").c_str());
+			else if ((*a)->info.endTime == time)
+				LogFunctions::Info("ActionManager::run", (std::string("Action ") + (*a)->name() + " ended").c_str());
 
-	  if ((*a)->info.status != TRIGGERED)
-	    resetAction(*a);
-	  
+			/* Add to history and reset action */
+			if (!findInHistory((*a)->info))
+				recordAction((*a)->info);
+			else
+				updateAction(*a);
+
+			if ((*a)->info.status != TRIGGERED)
+				resetAction(*a);
+		}
 	}
-    }
   
 }
 
@@ -46,45 +54,31 @@ void ActionManager::resetAction(std::shared_ptr<Action> a)
   a->info.status = INACTIVE;
   a->info.triggerTime = -1;
   a->info.endTime = -1;
+  a->info.name = a->name();
 }
 
 void ActionManager::addListener(std::shared_ptr<Action> a)
 {
-  listeners.insert(a);
+	a->init();
+	listeners.insert(a);
 }
 
-void ActionManager::recordAction(std::shared_ptr<Action> a)
+void ActionManager::recordAction(ActionInfo info)
 {
-	ActionInfo foundAction;
-	bool saveAction = false;
+	history.insert(history.begin(), info);  
+}
 
-	for (auto tmpA = history.begin(); tmpA != history.end(); tmpA++)
+void ActionManager::updateAction(std::shared_ptr<Action> a)
+{
+	for (auto& itr : history)
 	{
-		if (tmpA->name == a->name() &&
-			tmpA->triggerTime == a->info.triggerTime)
+		if (itr.name == a->name() &&
+			itr.triggerTime == a->info.triggerTime)
 		{
-			foundAction = *tmpA;
-			break;
+			itr.status = a->info.status;
+			itr.endTime = a->info.endTime;
 		}
-    }
-
-  if (foundAction.name == "")
-    {
-      saveAction = true;
-    }
-  else
-    {
-      /* Status changed? Needs update */
-	  if (a->info.status != foundAction.status)
-	  {
-		foundAction.status = a->info.status;
-		foundAction.endTime = a->info.endTime;
-	  }
 	}
-  
-  if (saveAction)
-	  history.insert(history.begin(), foundAction);
-  
 }
 
 void ActionManager::clearListeners()
@@ -108,4 +102,21 @@ std::vector<ActionInfo> ActionManager::getActiveActions() const
     }
   
   return activeList;
+}
+
+bool ActionManager::findInHistory(ActionInfo info)
+{
+	bool found = false;
+
+	for (auto tmpA = history.begin(); tmpA != history.end(); tmpA++)
+	{
+		if (tmpA->name == info.name &&
+			tmpA->triggerTime == info.triggerTime)
+		{
+			found = true;
+			break;
+		}
+	}
+
+	return found;
 }

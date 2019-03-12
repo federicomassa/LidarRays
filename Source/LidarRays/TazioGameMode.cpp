@@ -19,6 +19,11 @@
 void ATazioGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	EnvironmentParameters env;
+	env.AddEntry("safety_dist", 10.0);
+
+	raceControl.UpdateEnvironmentParameters(GetWorld()->GetTimeSeconds(), env);
 }
 
 void ATazioGameMode::Tick(float DeltaTime)
@@ -35,12 +40,19 @@ void ATazioGameMode::Tick(float DeltaTime)
 		s("yaw") = contestant->GetActorRotation().Yaw;
 
 		Agent a;
-		a.SetID(TCHAR_TO_UTF8(*contestant->GetActorLabel()));
+		a.SetID(TCHAR_TO_UTF8(*contestant->GetName()));
 		a.SetState(s);
 		raceControl.Update(GetWorld()->GetTimeSeconds(), a);
 	}
 
-	raceControl.Run(GetWorld()->GetTimeSeconds());
+	try
+	{
+		raceControl.Run(GetWorld()->GetTimeSeconds());
+	}
+	catch (Race::LocalMonitorInfoException& e)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(e.what()));
+	}
 }
 
 APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass)
@@ -96,7 +108,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 			ss << PlayerIndex;
 			ss >> index_str;
 
-			raceControl.RegisterContestant(index_str);
+			raceControl.RegisterContestant(TCHAR_TO_UTF8(*params.Name.ToString()));
 
 			if (PlayerIndex == 0)
 			{
@@ -131,8 +143,16 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 		}
 	}
 
-	raceControl.AddListener(std::shared_ptr<TestAction>(new TestAction));
-	raceControl.SetRules(std::shared_ptr<TestRules>(new TestRules));
+	for (auto& aMan : raceControl.GetActionManagers())
+	{
+		aMan.addListener(std::shared_ptr<TestAction>(new TestAction));
+	}
+
+	for (auto& rMon : raceControl.GetRuleMonitors())
+	{
+		rMon.setRules(std::shared_ptr<TestRules>(new TestRules));
+	}
+
 	raceControl.SetStateConversionFcn(&UnrealToUnicycle);
 
 	return Character;

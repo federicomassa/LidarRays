@@ -13,7 +13,6 @@ bool TestAction::triggerCondition(double time, const AgentTrajectory& targetStat
 	(void)targetStates;
 	(void)neighborsStates;
 
-	triggerTime = time;
 	return true;
 }
 
@@ -23,7 +22,7 @@ bool TestAction::endCondition(double time, const AgentTrajectory& targetStates, 
 	(void)targetStates;
 	(void)neighborsStates;
 
-	if (time > triggerTime + 10)
+	if (time > info.triggerTime + 10)
 		return true;
 
   return false;

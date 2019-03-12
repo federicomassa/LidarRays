@@ -11,6 +11,9 @@
 #include "State.h"
 #include "SocialRules.h"
 #include "ActionManager.h"
+#include "TimedContainer.h"
+#include "EnvironmentParameters.h"
+#include "Properties.h"
 #include <vector>
 
 #include <utility>
@@ -20,14 +23,13 @@ class AgentTrajectory;
 class RuleMonitor
 {
  private:
-  const ActionManager& aMan;
   std::shared_ptr<SocialRules> rules;
 
-  /* every record is an action and its associated rules */
-  std::vector<std::pair<ActionInfo, std::set<Rule> > > processedActions;
+  TimedContainer<EnvironmentParameters> env_params;
+  Properties properties;
 
-  // Processed rules
-  std::set<Rule> processedRules;
+  /* every record is an action and its associated rules */
+  std::vector<std::pair<ActionInfo, std::vector<Rule> > > processedActions;
 
   void processActions(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
   void registerNewAction(ActionInfo);
@@ -35,7 +37,7 @@ class RuleMonitor
   void buildRules();
 
  public:
-  RuleMonitor(const ActionManager&);
+  RuleMonitor();
  
   /* owns social rules object */
   ~RuleMonitor();
@@ -49,24 +51,17 @@ class RuleMonitor
     buildRules();
   }
 
+  // Update environment parameters
+  void UpdateEnvironmentParameters(double time, const EnvironmentParameters& params);
 
-
-  /* get pointer to the action manager */
-  const ActionManager* getActionManager() {return &aMan;}
+  void SetProperties(const Properties& prop);
   
   /* check vehicle behaviour based on actions detected by the action manager */
-  void run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
+  void run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const ActionManager* aMan);
 
   /* accessor to processed actions */
-  const std::vector<std::pair<ActionInfo, std::set<Rule> > >& getProcessedActions() const
+  const std::vector<std::pair<ActionInfo, std::vector<Rule> > >& getProcessedActions() const
     {return processedActions;}
-
-
-  /* accessor to processed rules */
-  const std::set<Rule>& getProcessedRules() const
-  {
-	  return processedRules;
-  }
 };
 
 #endif

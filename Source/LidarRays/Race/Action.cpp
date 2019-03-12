@@ -26,6 +26,7 @@ void Action::listen(double time, const AgentTrajectory& targetStates, const std:
 		{
 			info.status = TRIGGERED;
 			info.triggerTime = time - getTriggerOffset();
+			info.name = name();
 			return;
 		}
 	}
@@ -87,4 +88,10 @@ std::string toString(const ActionStatus& status)
     return "ABORTED";
 
   return "";
+}
+
+void Action::init()
+{
+	info.name = name();
+	initRuleCategories();
 }

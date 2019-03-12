@@ -33,12 +33,6 @@ public:
 	// Add contestants to the race
 	void RegisterContestant(std::string ID);
 
-	// Add listeners
-	void AddListener(std::shared_ptr<Action>);
-
-	// Set rules
-	void SetRules(std::shared_ptr<SocialRules>);
-
 	typedef State(*StateConversionFcn) (State);
 	
 	void SetStateConversionFcn(StateConversionFcn);
@@ -49,6 +43,16 @@ public:
 
 	// Function to be called to evaluate action and rules, after updating states
 	void Run(double time);
+
+	// Update environment parameters of RuleMonitor
+	void UpdateEnvironmentParameters(double time, const EnvironmentParameters& params);
+
+	// Set properties for rule monitor
+	void SetProperties(const Properties& prop);
+
+	std::vector<ActionManager>& GetActionManagers() {return actionManagers;}
+	std::vector<RuleMonitor>& GetRuleMonitors() { return ruleMonitors; }
+
 
 private:
 	// Function that convert from the contestants state space to the race control state space

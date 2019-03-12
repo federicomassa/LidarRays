@@ -1,5 +1,7 @@
 #include "SocialRules.h"
 #include "AgentTrajectory.h"
+#include "EnvironmentParameters.h"
+#include "Properties.h"
 
 Rule::Rule()
 {
@@ -12,7 +14,7 @@ Rule::~Rule()
 }
 
 void Rule::evaluate(const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const double& triggerTime,
-	const double& endTime, double currentTime)
+	const double& endTime, double currentTime, const TimedContainer<EnvironmentParameters>& environmentParameters, const Properties& properties)
 {
   checkResult = false;
   
@@ -20,9 +22,7 @@ void Rule::evaluate(const AgentTrajectory& targetStates, const std::vector<Agent
      If we want to do something more complicated for specific rules we need to derive from rule our version of check() */
   for (auto e = eList.begin(); e != eList.end(); e++)
     {
-	  TimedContainer<EnvironmentParameters> env_param;
-	  Properties properties; 
-	  bool evaluation = e->Evaluate(targetStates, neighborsStates, env_param, properties);
+	  bool evaluation = e->Evaluate(targetStates, neighborsStates, environmentParameters, properties);
 
 	  checkResult = checkResult || evaluation;
     }
@@ -30,6 +30,8 @@ void Rule::evaluate(const AgentTrajectory& targetStates, const std::vector<Agent
   lastCheckTime = currentTime;
   
   updateProcessStatus(triggerTime, endTime);
+
+  
   
 }
 
@@ -72,10 +74,10 @@ SocialRules::SocialRules()
 
 }
 
-std::set<Rule> SocialRules::createRulesList(const std::set<std::string>& ruleCategoryList)
+std::vector<Rule> SocialRules::createRulesList(const std::set<std::string>& ruleCategoryList)
 {
 
-	std::set<Rule> actionRules;
+	std::vector<Rule> actionRules;
   
   /* for each category */
 	for (auto cat = ruleCategoryList.begin(); cat != ruleCategoryList.end(); cat++)
@@ -85,7 +87,7 @@ std::set<Rule> SocialRules::createRulesList(const std::set<std::string>& ruleCat
 		for (auto r = rList.begin(); r != rList.end(); r++)
 			{
 				if (r->category == *cat)
-					actionRules.insert(*r);
+					actionRules.push_back(*r);
 			}
 		}
 

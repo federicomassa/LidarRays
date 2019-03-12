@@ -41,6 +41,8 @@ class Action
 
   ActionInfo info;
   
+  void init();
+
   /* Trigger condition specifies the conditions that start the action */
   virtual bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) = 0;
   /* End condition specifies the conditions that end the action */

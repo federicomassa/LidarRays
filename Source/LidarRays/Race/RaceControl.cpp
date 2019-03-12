@@ -6,6 +6,8 @@
 #include "SocialRules.h"
 #include "RaceExceptions.h"
 
+#include <sstream>
+
 
 using namespace Race;
 
@@ -29,23 +31,9 @@ void RaceControl::RegisterContestant(std::string ID)
 
 	actionManagers.push_back(ActionManager());
 	actionManagers.back().setID(ID);
-	RuleMonitor rMon(actionManagers.back());
-}
+	ruleMonitors.push_back(RuleMonitor());
 
-void RaceControl::AddListener(std::shared_ptr<Action> a)
-{
-	for (auto itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
-	{
-		itr->addListener(a);
-	}
-}
-
-void RaceControl::SetRules(std::shared_ptr<SocialRules> rules)
-{
-	for (auto itr = ruleMonitors.begin(); itr != ruleMonitors.end(); itr++)
-	{
-		itr->setRules(rules);
-	}
+	LogFunctions::Require(actionManagers.size() == ruleMonitors.size(), "RaceControl::RegisterContestant", "Action managers and rule monitors must be same size and in sync");
 }
 
 void RaceControl::SetStateConversionFcn(StateConversionFcn fcn)
@@ -84,9 +72,16 @@ void RaceControl::Update(double time, Agent a)
 
 void RaceControl::Run(double time)
 {
-	for (auto itr = actionManagers.begin(); itr != actionManagers.end(); itr++)
+	std::stringstream ss;
+	ss << time;
+
+	std::string time_str;
+	ss >> time_str;
+
+	for (int i = 0; i < actionManagers.size(); i++)
 	{
-		std::string currentID = itr->getID();
+		ActionManager* aMan = &actionManagers[i];
+		std::string currentID = aMan->getID();
 		AgentTrajectory self;
 		std::vector<AgentTrajectory> others;
 
@@ -97,7 +92,6 @@ void RaceControl::Run(double time)
 			if (agent->getID() == currentID) 
 			{
 				self = *agent;
-				break;
 			}
 			else
 			{
@@ -105,6 +99,41 @@ void RaceControl::Run(double time)
 			}
 		}
 		
-		itr->run(time, self, others);
+		aMan->run(time, self, others);
+
+		RuleMonitor* ruleMon = &ruleMonitors[i];
+		ruleMon->run(time, self, others, aMan);
+
+		auto action_rules = ruleMon->getProcessedActions();
+		for (const auto& action_rule : action_rules)
+		{
+			const std::vector<Rule>& rules = action_rule.second;
+
+			for (const auto& rule : rules)
+			{
+				bool result = rule.getResult();
+
+				if (result)
+					LogFunctions::Info("RaceControl::Run", (std::string("Time: ") + time_str + " --- Rule " + rule.getName() + " was OK").c_str());
+				else
+					LogFunctions::Info("RaceControl::Run", (std::string("Time: ") + time_str + " --- Rule " + rule.getName() + " was VIOLATED").c_str());
+			}
+		}
+	}
+}
+
+void RaceControl::UpdateEnvironmentParameters(double time, const EnvironmentParameters& params)
+{
+	for (auto& itr : ruleMonitors)
+	{
+		itr.UpdateEnvironmentParameters(time, params);
+	}
+}
+
+void RaceControl::SetProperties(const Properties& prop)
+{
+	for (auto itr : ruleMonitors)
+	{
+		itr.SetProperties(prop);
 	}
 }

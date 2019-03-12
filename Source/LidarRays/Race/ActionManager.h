@@ -27,7 +27,9 @@ class ActionManager {
   std::vector<ActionInfo> history;
 
   /* Record an ended or aborted action */
-  void recordAction(std::shared_ptr<Action>);
+  void recordAction(ActionInfo info);
+
+  void updateAction(std::shared_ptr<Action>);
 
   /* Reset Action */
   void resetAction(std::shared_ptr<Action>);
@@ -37,6 +39,8 @@ class ActionManager {
 
   /* delete objects inside history list and purge it. */
   void clearHistory();
+
+  bool findInHistory(ActionInfo);
   
  public:
   /* Constructor */

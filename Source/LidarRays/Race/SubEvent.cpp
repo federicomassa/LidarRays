@@ -75,7 +75,12 @@ bool SubEvent::Evaluate(const AgentTrajectory& targetStates, const std::vector<A
 	// mode == SINGLE/NSINGLE means that the logical condition (its negation in NSINGLE case) is evaluated on 
 	// the single agent (usually self during simulation, possibly an observed agent in Observer module) 
 	
-	EnvironmentParameters currEnv = env.begin().value();
+	// FIXME only taking latest value
+	EnvironmentParameters currEnv;
+	if (env.size() != 0)
+		currEnv = env.latest().value();
+	
+
 	
 	bool result = false;
 	

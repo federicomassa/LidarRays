@@ -77,12 +77,12 @@ namespace Race {
 
 	class LocalMonitorInfoException : public std::exception
 	{
-		const char* description;
+		std::string description;
 	public:
 		LocalMonitorInfoException(const char* str) : description(str) {};
 		const char* what() const throw()
 		{
-			return description;
+			return description.c_str();
 		}
 	};
 }
