@@ -12,6 +12,7 @@
 
 class TestAction : public Action
 {
+	double lastEndTime = -1;
  public:
   /* Trigger condition specifies the conditions that start the action */
   bool triggerCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);

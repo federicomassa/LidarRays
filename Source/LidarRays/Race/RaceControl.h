@@ -12,6 +12,7 @@
 #include "RaceExceptions.h"
 #include "RuleMonitor.h"
 #include "AgentTrajectory.h"
+#include "Contestant.h"
 
 #include <memory>
 #include <vector>
@@ -22,10 +23,7 @@ class State;
 
 class RaceControl
 {
-	std::vector<AgentTrajectory> contestants;
-
-	std::vector<ActionManager> actionManagers;
-	std::vector<RuleMonitor> ruleMonitors;
+	std::vector<Contestant> contestants;
 
 public:
 	RaceControl();
@@ -50,9 +48,8 @@ public:
 	// Set properties for rule monitor
 	void SetProperties(const Properties& prop);
 
-	std::vector<ActionManager>& GetActionManagers() {return actionManagers;}
-	std::vector<RuleMonitor>& GetRuleMonitors() { return ruleMonitors; }
-
+	const std::vector<Contestant>& Contestants() const { return contestants; }
+	std::vector<Contestant>& Contestants() { return contestants; }
 
 private:
 	// Function that convert from the contestants state space to the race control state space

@@ -81,7 +81,7 @@ public:
 	const_iterator latest() const { return const_iterator(obj.cbegin()); }
 	iterator end() {return iterator(obj.end());}
 	const_iterator end() const {return const_iterator(obj.cend());}
-	int size() const {return obj.size();}
+	size_t size() const {return obj.size();}
 };
 
 template<class T>

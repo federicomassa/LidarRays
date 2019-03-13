@@ -31,11 +31,6 @@ void ActionManager::run(double time, const AgentTrajectory& targetStates, const 
       
 	if ((*a)->info.status != INACTIVE)
 		{
-			if ((*a)->info.triggerTime == time)
-				LogFunctions::Info("ActionManager::run", (std::string("Action ") + (*a)->name() + " triggered").c_str());
-			else if ((*a)->info.endTime == time)
-				LogFunctions::Info("ActionManager::run", (std::string("Action ") + (*a)->name() + " ended").c_str());
-
 			/* Add to history and reset action */
 			if (!findInHistory((*a)->info))
 				recordAction((*a)->info);

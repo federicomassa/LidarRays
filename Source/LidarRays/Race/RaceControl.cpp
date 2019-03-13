@@ -21,19 +21,12 @@ void RaceControl::RegisterContestant(std::string ID)
 	// Check if already registered
 	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
 	{
-		if (itr->getID() == ID)
+		if (itr->ID() == ID)
 			return;
 	}
 
-	AgentTrajectory trajectory;
-	trajectory.setID(ID);
-	contestants.push_back(trajectory);
-
-	actionManagers.push_back(ActionManager());
-	actionManagers.back().setID(ID);
-	ruleMonitors.push_back(RuleMonitor());
-
-	LogFunctions::Require(actionManagers.size() == ruleMonitors.size(), "RaceControl::RegisterContestant", "Action managers and rule monitors must be same size and in sync");
+	contestants.push_back(Contestant());
+	contestants.back().setID(ID);
 }
 
 void RaceControl::SetStateConversionFcn(StateConversionFcn fcn)
@@ -46,7 +39,7 @@ void RaceControl::Update(double time, Agent a)
 	auto found_itr = contestants.end();
 	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
 	{
-		if (itr->getID() == a.GetID())
+		if (itr->ID() == a.GetID())
 		{
 			found_itr = itr;
 			break;
@@ -65,7 +58,7 @@ void RaceControl::Update(double time, Agent a)
 
 	State updated_state = conversionFcn(a.GetState());
 
-	found_itr->addState(time, updated_state);
+	found_itr->updateState(time, updated_state);
 
 	// TODO manage maximum memory of trajectory
 }
@@ -78,62 +71,40 @@ void RaceControl::Run(double time)
 	std::string time_str;
 	ss >> time_str;
 
-	for (int i = 0; i < actionManagers.size(); i++)
+	for (auto& contestant : contestants)
 	{
-		ActionManager* aMan = &actionManagers[i];
-		std::string currentID = aMan->getID();
-		AgentTrajectory self;
+		ActionManager* aMan = &contestant.actionManager();
 		std::vector<AgentTrajectory> others;
 
 		// Fill self containers
-		for (auto agent = contestants.begin(); agent != contestants.end(); agent++)
+		for (const auto& opponent : contestants)
 		{
-			// if self
-			if (agent->getID() == currentID) 
+			// if others
+			if (opponent.ID() != contestant.ID()) 
 			{
-				self = *agent;
-			}
-			else
-			{
-				others.push_back(*agent);
+				others.push_back(opponent.trajectory());
 			}
 		}
 		
-		aMan->run(time, self, others);
+		aMan->run(time, contestant.trajectory(), others);
 
-		RuleMonitor* ruleMon = &ruleMonitors[i];
-		ruleMon->run(time, self, others, aMan);
-
-		auto action_rules = ruleMon->getProcessedActions();
-		for (const auto& action_rule : action_rules)
-		{
-			const std::vector<Rule>& rules = action_rule.second;
-
-			for (const auto& rule : rules)
-			{
-				bool result = rule.getResult();
-
-				if (result)
-					LogFunctions::Info("RaceControl::Run", (std::string("Time: ") + time_str + " --- Rule " + rule.getName() + " was OK").c_str());
-				else
-					LogFunctions::Info("RaceControl::Run", (std::string("Time: ") + time_str + " --- Rule " + rule.getName() + " was VIOLATED").c_str());
-			}
-		}
+		RuleMonitor* ruleMon = &contestant.ruleMonitor();
+		ruleMon->run(time, contestant.trajectory(), others, aMan);
 	}
 }
 
 void RaceControl::UpdateEnvironmentParameters(double time, const EnvironmentParameters& params)
 {
-	for (auto& itr : ruleMonitors)
+	for (auto& contestant : contestants)
 	{
-		itr.UpdateEnvironmentParameters(time, params);
+		contestant.ruleMonitor().UpdateEnvironmentParameters(time, params);
 	}
 }
 
 void RaceControl::SetProperties(const Properties& prop)
 {
-	for (auto itr : ruleMonitors)
+	for (auto& contestant : contestants)
 	{
-		itr.SetProperties(prop);
+		contestant.ruleMonitor().SetProperties(prop);
 	}
 }

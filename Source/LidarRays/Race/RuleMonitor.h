@@ -29,10 +29,8 @@ class RuleMonitor
   Properties properties;
 
   /* every record is an action and its associated rules */
-  std::vector<std::pair<ActionInfo, std::vector<Rule> > > processedActions;
+  TimedContainer<std::pair<ActionInfo, std::vector<Rule> > > processedActions;
 
-  void processActions(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates);
-  void registerNewAction(ActionInfo);
   /* build rules */
   void buildRules();
 
@@ -60,7 +58,7 @@ class RuleMonitor
   void run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates, const ActionManager* aMan);
 
   /* accessor to processed actions */
-  const std::vector<std::pair<ActionInfo, std::vector<Rule> > >& getProcessedActions() const
+  const TimedContainer<std::pair<ActionInfo, std::vector<Rule> > >& getProcessedActions() const
     {return processedActions;}
 };
 

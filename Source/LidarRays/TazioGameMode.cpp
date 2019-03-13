@@ -45,13 +45,38 @@ void ATazioGameMode::Tick(float DeltaTime)
 		raceControl.Update(GetWorld()->GetTimeSeconds(), a);
 	}
 
-	try
+	raceControl.Run(GetWorld()->GetTimeSeconds());
+
+	for (const auto& contestant : raceControl.Contestants())
 	{
-		raceControl.Run(GetWorld()->GetTimeSeconds());
-	}
-	catch (Race::LocalMonitorInfoException& e)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(e.what()));
+		auto results = contestant.Results();
+
+		if (GetWorld()->GetTimeSeconds() - results.latest().time() > 0.01)
+			continue;
+
+		if (results.size() > 0)
+		{
+			const auto& rules = results.latest().value().second;
+			for (const auto& rule : rules)
+			{
+				bool result = rule.getResult();
+
+				if (result)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("At time: %f - Agent %s - Rule %s is OK"),
+						results.latest().time(),
+						*FString(contestant.ID().c_str()),
+						*FString(rule.getName().c_str()));
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("At time: %f - Agent %s - Rule %s is VIOLATED"),
+						results.latest().time(),
+						*FString(contestant.ID().c_str()),
+						*FString(rule.getName().c_str()));
+				}
+			}
+		}
 	}
 }
 
@@ -143,14 +168,10 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 		}
 	}
 
-	for (auto& aMan : raceControl.GetActionManagers())
+	for (auto& contestant : raceControl.Contestants())
 	{
-		aMan.addListener(std::shared_ptr<TestAction>(new TestAction));
-	}
-
-	for (auto& rMon : raceControl.GetRuleMonitors())
-	{
-		rMon.setRules(std::shared_ptr<TestRules>(new TestRules));
+		contestant.actionManager().addListener(std::shared_ptr<TestAction>(new TestAction));
+		contestant.ruleMonitor().setRules(std::shared_ptr<TestRules>(new TestRules));
 	}
 
 	raceControl.SetStateConversionFcn(&UnrealToUnicycle);

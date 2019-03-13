@@ -34,7 +34,7 @@ struct ActionInfo
 class Action
 {
  protected:
-  void addRuleCategory(const std::string& cat) {info.ruleCategoryList.insert(info.ruleCategoryList.begin(), cat);}
+  void addRuleCategory(const std::string& cat) {info.ruleCategoryList.insert(cat);}
  public:
   Action();
   Action(const Action&);
