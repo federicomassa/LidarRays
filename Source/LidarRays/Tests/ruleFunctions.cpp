@@ -9,5 +9,8 @@ bool safety_1(const AgentTrajectory& targetStates, const AgentTrajectory& otherS
 	double selfX = targetStates.getTrajectory().latest().value().at("x");
 	double otherX = otherStates.getTrajectory().latest().value().at("x");
 
-	return (selfX + env.at("safety_dist") < otherX);
+	if (selfX > otherX)
+		return true;
+	else
+		return (selfX + env.at("safety_dist") < otherX);
 }

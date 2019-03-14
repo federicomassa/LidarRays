@@ -46,7 +46,7 @@ void ATazioGameMode::Tick(float DeltaTime)
 	}
 
 	raceControl.Run(GetWorld()->GetTimeSeconds());
-
+	
 	for (const auto& contestant : raceControl.Contestants())
 	{
 		auto results = contestant.Results();
@@ -175,6 +175,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 	}
 
 	raceControl.SetStateConversionFcn(&UnrealToUnicycle);
+	raceControl.setTrajectoryCapacity(10);
 
 	return Character;
 }

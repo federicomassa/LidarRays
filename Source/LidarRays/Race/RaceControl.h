@@ -50,6 +50,7 @@ public:
 
 	const std::vector<Contestant>& Contestants() const { return contestants; }
 	std::vector<Contestant>& Contestants() { return contestants; }
+	void setTrajectoryCapacity(size_t);
 
 private:
 	// Function that convert from the contestants state space to the race control state space

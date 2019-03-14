@@ -28,3 +28,8 @@ void AgentTrajectory::addState(double time, State s)
 
 	trajectory.insert(time, s);
 }
+
+void AgentTrajectory::setCapacity(size_t c)
+{
+	trajectory.setCapacity(c);
+}

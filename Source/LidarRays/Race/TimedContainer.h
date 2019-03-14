@@ -35,6 +35,8 @@ class TimedContainer
 	typedef typename std::vector<TimePair> timedObject;
 	timedObject obj;
 
+	// 0 means infinite
+	size_t _capacity = 0;
 public:
 	class iterator
 	{
@@ -82,6 +84,8 @@ public:
 	iterator end() {return iterator(obj.end());}
 	const_iterator end() const {return const_iterator(obj.cend());}
 	size_t size() const {return obj.size();}
+	size_t capacity() const { return _capacity; }
+	void setCapacity(size_t c);
 };
 
 template<class T>
@@ -98,6 +102,21 @@ void TimedContainer<T>::insert(const double& time, const T& element)
 	
 	if (needsSorting)
 		std::sort(obj.begin(), obj.end());
+
+	if (_capacity != 0 && obj.size() > _capacity)
+	{
+		obj.pop_back();
+	}
+}
+
+template<class T>
+void TimedContainer<T>::setCapacity(size_t c)
+{
+	_capacity = c;
+
+	// Shrink if necessary
+	while (obj.size() > _capacity)
+		obj.pop_back();
 }
 
 #endif

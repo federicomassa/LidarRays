@@ -108,3 +108,11 @@ void RaceControl::SetProperties(const Properties& prop)
 		contestant.ruleMonitor().SetProperties(prop);
 	}
 }
+
+void RaceControl::setTrajectoryCapacity(size_t c)
+{
+	for (auto& contestant : contestants)
+	{
+		contestant.trajectory().setCapacity(c);
+	}
+}

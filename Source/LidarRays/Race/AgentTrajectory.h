@@ -18,6 +18,7 @@ public:
 	void setParameters(AgentParameters params);
 	const TimedContainer<State>& getTrajectory() const;
 	void addState(double time, State s);
+	void setCapacity(size_t);
 };
 
 #endif
