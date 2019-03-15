@@ -9,6 +9,14 @@
 
 class State;
 
+struct Zone
+{
+	int Type;
+	int Start;
+	int End;
+	int ID;
+};
+
 class RRStateConverter : public StateConverter
 {
 	nlohmann::json* track_file = nullptr;
@@ -18,6 +26,9 @@ class RRStateConverter : public StateConverter
 
 	// Center line in s
 	std::vector<double> center_line_curv;
+
+	// Zones
+	std::vector<Zone> zones;
 
 	static double distance(double x1, double y1, double x2, double y2);
 public:

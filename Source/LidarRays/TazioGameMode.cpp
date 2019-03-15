@@ -61,8 +61,13 @@ void ATazioGameMode::Tick(float DeltaTime)
 		double s = contestant.trajectory().getTrajectory().latest().value()("s");
 		double y = contestant.trajectory().getTrajectory().latest().value()("y");
 		double next_index = contestant.trajectory().getTrajectory().latest().value()("next_index");
+		int current_zone_type = (int)contestant.trajectory().getTrajectory().latest().value()("current_zone_type");
+		int current_zone_id = (int)contestant.trajectory().getTrajectory().latest().value()("current_zone_id");
 
-		UE_LOG(LogTemp, Warning, TEXT("Agent %s: s: %f, y: %f, index: %f"), *FString(contestant.ID().c_str()), s, y, next_index);
+		if (current_zone_type != -1)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Agent %s: zone type: %d, id: %d"), *FString(contestant.ID().c_str()), current_zone_type, current_zone_id);
+		}
 
 		auto results = contestant.Results();
 

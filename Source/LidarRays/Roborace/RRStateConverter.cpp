@@ -19,6 +19,8 @@ RRStateConverter::RRStateConverter(std::string track_file_path)
 	track_file = new nlohmann::json;
 	in_file >> *track_file;
 
+	// ================ CENTER LINE CALCULATIONS ======================== //
+
 	auto center_line_json = track_file->find("Centre");
 	LogFunctions::Require(center_line_json->is_array(), "RRStateConverter::RRStateConverter", "Centre object must be an array");
 
@@ -50,6 +52,43 @@ RRStateConverter::RRStateConverter(std::string track_file_path)
 	}
 
 	LogFunctions::Require(center_line.size() == center_line_curv.size(), "RRStateConverter::RRstateConverter", "Bad calculation of center line curvilinear coordinates");
+
+	// ================ ZONES ======================== //
+	auto zones_json = track_file->find("Zone");
+	LogFunctions::Require(zones_json->is_array(), "RRStateConverter::RRstateConverter", "Zone field in json must be an array");
+
+	for (auto itr = zones_json->begin(); itr != zones_json->end(); itr++)
+	{
+		auto type = itr->find("Type");
+		auto start = itr->find("Start");
+		auto end = itr->find("End");
+		auto id = itr->find("ID");
+
+		LogFunctions::Require(type != itr->end(), "RRStateConverter::RRstateConverter", "Type field in zone must exist");
+		LogFunctions::Require(type->is_number_integer(), "RRStateConverter::RRstateConverter", "Type field in zone must be an integer");
+
+		LogFunctions::Require(start != itr->end(), "RRStateConverter::RRstateConverter", "Start field in zone must exist");
+		LogFunctions::Require(start->is_number_integer(), "RRStateConverter::RRstateConverter", "Start field in zone must be an integer");
+
+		LogFunctions::Require(end != itr->end(), "RRStateConverter::RRstateConverter", "End field in zone must exist");
+		LogFunctions::Require(end->is_number_integer(), "RRStateConverter::RRstateConverter", "End field in zone must be an integer");
+
+		LogFunctions::Require(id != itr->end(), "RRStateConverter::RRstateConverter", "ID field in zone must exist");
+		LogFunctions::Require(id->is_number_integer(), "RRStateConverter::RRstateConverter", "ID field in zone must be an integer");
+
+		Zone zone;
+		zone.Type = type->get<int>();
+		zone.Start = start->get<int>();
+		zone.End = end->get<int>();
+		zone.ID = id->get<int>();
+
+		zones.push_back(zone);
+	}
+
+
+
+
+
 }
 
 RRStateConverter::~RRStateConverter()
@@ -72,12 +111,15 @@ State RRStateConverter::Convert(const State& s)
 	out.AddStateVariable("y");
 	out.AddStateVariable("v");
 	out.AddStateVariable("next_index");
+	out.AddStateVariable("current_zone_type");
+	out.AddStateVariable("current_zone_id");
 
 	double converted_x = s("x")*0.01;
 	double converted_y = -s("y")*0.01;
 	double converted_v = s("v")*0.01;
 
 
+	// TODO use previous point and limit the search on an interval of points around it
 	// Index on center line of minimum distance
 	int min_index = -1;
 	double min_dist = 1E9;
@@ -145,16 +187,6 @@ State RRStateConverter::Convert(const State& s)
 		}
 		else if (new_x < 0)
 		{
-			// This can lead to infinite loop if two consecutive segments on the center line are convex
-			/*if (min_index > 0)
-				min_index--;
-			else
-				min_index = int(center_line.size() - 1);*/
-
-			std::ofstream err_log("D:/err_log.txt");
-			err_log << converted_x << ',' << converted_y << ',' << previous_x << ',' << previous_y << ',' << next_x << ',' << next_y << std::endl;
-			err_log.close();
-
 			if (!corrected)
 				LogFunctions::Error("RRStateConverter::Convert", "FIXME I thought this could not happen");
 			else
@@ -173,6 +205,37 @@ State RRStateConverter::Convert(const State& s)
 	out("v") = converted_v;
 
 	out("next_index") = min_index;
+
+	out("current_zone_type") = -1;
+	out("current_zone_id") = -1;
+
+	int previous_index = min_index - 1;
+	if (previous_index < 0)
+		previous_index = center_line.size() - 1;
+
+	// Check if inside a zone
+	for (auto zone : zones)
+	{
+		// A car is in a zone if its previous index on the center line is within the indexes of the zone: [Z_start, Z_end[
+		if (zone.End >= zone.Start)
+		{
+			if (previous_index >= zone.Start && previous_index < zone.End)
+			{
+				out("current_zone_type") = (double)zone.Type;
+				out("current_zone_id") = (double)zone.ID;
+				break;
+			}
+		}
+		else
+		{
+			if (previous_index >= zone.Start || previous_index < zone.End)
+			{
+				out("current_zone_type") = (double)zone.Type;
+				out("current_zone_id") = (double)zone.ID;
+				break;
+			}
+		}
+	}
 
 	return out;
 }
