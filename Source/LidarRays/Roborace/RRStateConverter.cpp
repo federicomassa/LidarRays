@@ -106,6 +106,7 @@ State RRStateConverter::Convert(const State& s)
 	// Closest point might not be the next in curvilinear coordinates
 	// If this happens, to ensure that you have found the two points of the center line
 	// that make the projection of the car be within them, consider increasing min_index
+	bool corrected = false;
 
 	for (int iteration = 0; true; iteration++)
 	{
@@ -132,22 +133,32 @@ State RRStateConverter::Convert(const State& s)
 
 		LogFunctions::Require(iteration < 100, "RRStateConverter::Convert", "Unable to find proper points on center line");
 
-		if (new_x < 0)
-		{
-			if (min_index > 0)
-				min_index--;
-			else
-				min_index = int(center_line.size() - 1);
-
-			continue;
-		}
-		else if (new_x > distance(previous_x, previous_y, next_x, next_y))
+		if (new_x > distance(previous_x, previous_y, next_x, next_y))
 		{
 			min_index++;
 			if ((size_t)min_index == center_line.size())
 				min_index = 0;
+			
+			corrected = true;
 
 			continue;
+		}
+		else if (new_x < 0)
+		{
+			// This can lead to infinite loop if two consecutive segments on the center line are convex
+			/*if (min_index > 0)
+				min_index--;
+			else
+				min_index = int(center_line.size() - 1);*/
+
+			std::ofstream err_log("D:/err_log.txt");
+			err_log << converted_x << ',' << converted_y << ',' << previous_x << ',' << previous_y << ',' << next_x << ',' << next_y << std::endl;
+			err_log.close();
+
+			if (!corrected)
+				LogFunctions::Error("RRStateConverter::Convert", "FIXME I thought this could not happen");
+			else
+				break;
 		}
 		else
 			break;
