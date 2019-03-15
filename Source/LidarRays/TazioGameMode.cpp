@@ -8,9 +8,9 @@
 #include <GameFramework/Pawn.h>
 #include <Internationalization/Regex.h>
 
-#include "Tests/TestAction.h"
-#include "Tests/TestRules.h"
-#include "Tests/TestStateConversion.h"
+#include "RRStateConverter.h"
+#include "TimerAction.h"
+#include "SeasonAlphaRules.h"
 
 #include <sstream>
 #include <string>
@@ -24,6 +24,14 @@ void ATazioGameMode::BeginPlay()
 	env.AddEntry("safety_dist", 10.0);
 
 	raceControl.UpdateEnvironmentParameters(GetWorld()->GetTimeSeconds(), env);
+
+	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	check(GameInstance);
+
+	std::string track_map_path = TCHAR_TO_UTF8(*GameInstance->TrackMapFilePath);
+	RRStateConverter* stateConverter = new RRStateConverter(track_map_path);
+	
+	raceControl.SetStateConverter(stateConverter);
 }
 
 void ATazioGameMode::Tick(float DeltaTime)
@@ -33,22 +41,29 @@ void ATazioGameMode::Tick(float DeltaTime)
 		State s;
 		s.AddStateVariable("x");
 		s.AddStateVariable("y");
-		s.AddStateVariable("yaw");
+		s.AddStateVariable("v");
 
 		s("x") = contestant->GetActorLocation().X;
 		s("y") = contestant->GetActorLocation().Y;
-		s("yaw") = contestant->GetActorRotation().Yaw;
+		s("v") = FMath::Sqrt(FMath::Pow(contestant->GetVelocity().X, 2) + FMath::Pow(contestant->GetVelocity().Y, 2));
 
 		Agent a;
 		a.SetID(TCHAR_TO_UTF8(*contestant->GetName()));
 		a.SetState(s);
 		raceControl.Update(GetWorld()->GetTimeSeconds(), a);
+
 	}
 
 	raceControl.Run(GetWorld()->GetTimeSeconds());
 	
 	for (const auto& contestant : raceControl.Contestants())
 	{
+		double s = contestant.trajectory().getTrajectory().latest().value()("s");
+		double y = contestant.trajectory().getTrajectory().latest().value()("y");
+		double next_index = contestant.trajectory().getTrajectory().latest().value()("next_index");
+
+		UE_LOG(LogTemp, Warning, TEXT("Agent %s: s: %f, y: %f, index: %f"), *FString(contestant.ID().c_str()), s, y, next_index);
+
 		auto results = contestant.Results();
 
 		if (GetWorld()->GetTimeSeconds() - results.latest().time() > 0.01)
@@ -170,11 +185,10 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 
 	for (auto& contestant : raceControl.Contestants())
 	{
-		contestant.actionManager().addListener(std::shared_ptr<TestAction>(new TestAction));
-		contestant.ruleMonitor().setRules(std::shared_ptr<TestRules>(new TestRules));
+		contestant.actionManager().addListener(std::shared_ptr<TimerAction>(new TimerAction));
+		contestant.ruleMonitor().setRules(std::shared_ptr<SeasonAlphaRules>(new SeasonAlphaRules));
 	}
 
-	raceControl.SetStateConversionFcn(&UnrealToUnicycle);
 	raceControl.setTrajectoryCapacity(10);
 
 	return Character;

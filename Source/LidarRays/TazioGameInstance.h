@@ -71,4 +71,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FString DumpTrajectory = "";
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FString TrackMapFilePath = "";
+
 };

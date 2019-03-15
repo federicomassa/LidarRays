@@ -239,3 +239,17 @@ void CheckConsistency(const string &className, const State &q1, const State &q2)
                 className, errorString);
 	
 }
+
+bool State::Contains(std::string key) const
+{
+	try
+	{
+		at(key);
+	}
+	catch (std::out_of_range&)
+	{
+		return false;
+	}
+
+	return true;
+}

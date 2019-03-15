@@ -50,6 +50,8 @@ public:
 	static State GenerateStateOfType( const std::set<std::string>& );
 	static State GenerateStateOfType( const std::vector<std::string>&);
 
+	bool Contains(std::string key) const;
+
     friend void CheckConsistency ( const std::string &, const State &, const State & );
 };
 

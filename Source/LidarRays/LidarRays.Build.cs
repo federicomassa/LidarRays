@@ -24,6 +24,7 @@ public class LidarRays : ModuleRules
 
         // Race
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Race/"));
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Roborace/"));
 
         // Vehicle
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Vehicle"));
@@ -34,6 +35,10 @@ public class LidarRays : ModuleRules
 
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
+
+        // Json parser for track data
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/json/include"));
+
 
         //// Disable some warnings
         bEnableUndefinedIdentifierWarnings = false;

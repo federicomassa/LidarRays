@@ -20,6 +20,7 @@
 class Action;
 class SocialRules;
 class State;
+class StateConverter;
 
 class RaceControl
 {
@@ -34,6 +35,8 @@ public:
 	typedef State(*StateConversionFcn) (State);
 	
 	void SetStateConversionFcn(StateConversionFcn);
+	void SetStateConverter(StateConverter*);
+
 
 	// Update agent a. State is in the contestant state space, and it will be converted to 
 	// race control state space variables
@@ -55,4 +58,5 @@ public:
 private:
 	// Function that convert from the contestants state space to the race control state space
 	StateConversionFcn conversionFcn = nullptr;
+	std::shared_ptr<StateConverter> stateConverter = nullptr;
 };

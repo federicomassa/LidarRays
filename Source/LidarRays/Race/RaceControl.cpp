@@ -5,6 +5,7 @@
 #include "Action.h"
 #include "SocialRules.h"
 #include "RaceExceptions.h"
+#include "StateConverter.h"
 
 #include <sstream>
 
@@ -32,6 +33,7 @@ void RaceControl::RegisterContestant(std::string ID)
 void RaceControl::SetStateConversionFcn(StateConversionFcn fcn)
 {
 	conversionFcn = fcn;
+	stateConverter = nullptr;
 }
 
 void RaceControl::Update(double time, Agent a)
@@ -51,16 +53,19 @@ void RaceControl::Update(double time, Agent a)
 		throw UnregisteredContestantException(a.GetID().c_str());
 	}
 
-	if (conversionFcn == nullptr)
+	if (conversionFcn == nullptr && stateConverter == nullptr)
 	{
-		throw UninitializedException("StateConversionFcn");
+		throw UninitializedException("StateConversionFcn or StateConverter");
 	}
 
-	State updated_state = conversionFcn(a.GetState());
+	State updated_state;
+	
+	if (conversionFcn)
+		updated_state = conversionFcn(a.GetState());
+	else if (stateConverter)
+		updated_state = stateConverter->Convert(a.GetState());
 
 	found_itr->updateState(time, updated_state);
-
-	// TODO manage maximum memory of trajectory
 }
 
 void RaceControl::Run(double time)
@@ -76,7 +81,6 @@ void RaceControl::Run(double time)
 		ActionManager* aMan = &contestant.actionManager();
 		std::vector<AgentTrajectory> others;
 
-		// Fill self containers
 		for (const auto& opponent : contestants)
 		{
 			// if others
@@ -116,3 +120,10 @@ void RaceControl::setTrajectoryCapacity(size_t c)
 		contestant.trajectory().setCapacity(c);
 	}
 }
+
+void RaceControl::SetStateConverter(StateConverter* converter)
+{
+	stateConverter = std::shared_ptr<StateConverter>(converter);
+	conversionFcn = nullptr;
+}
+
