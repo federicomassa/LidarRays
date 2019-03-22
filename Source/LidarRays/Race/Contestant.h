@@ -12,6 +12,15 @@
 #include "RuleMonitor.h"
 #include "AgentTrajectory.h"
 
+struct RaceResults
+{
+	// List of all actions recorded until now
+	std::vector<ActionInfo> ActionHistory;
+
+	// For each time recorded, list of rules evaluated
+	TimedContainer<std::set<Rule> > RulesHistory;
+};
+
 class Contestant
 {
 	ActionManager aMan;
@@ -41,12 +50,18 @@ public:
 		traj.setID(id);
 		aMan.setID(id);
 	}
-	void updateState(double time, State new_state);
+	State& updateState(double time, State new_state);
 
 	/* accessor to results */
-	const TimedContainer<std::pair<ActionInfo, std::vector<Rule> > >& Results() const
-	{
-		return rMon.getProcessedActions();
+	RaceResults Results() const;
+
+	double& parameter(std::string name) { return traj.parameter(name); }
+	const double& parameter(std::string name) const { return traj.parameter(name); }
+	double& setParameter(std::string name) 
+	{ 
+		auto& params = traj.getParameters();
+		params.AddEntry(name, 0.0);
+		return parameter(name);
 	}
 };
 

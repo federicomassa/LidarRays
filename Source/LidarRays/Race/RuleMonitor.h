@@ -50,7 +50,18 @@ class RuleMonitor
   }
 
   // Update environment parameters
+  void UpdateEnvironmentParameters(double time, std::string key, double value);
   void UpdateEnvironmentParameters(double time, const EnvironmentParameters& params);
+
+  TimedContainer<EnvironmentParameters>& getEnvironmentParameters()
+  {
+	  return env_params;
+  }
+
+  const TimedContainer<EnvironmentParameters>& getEnvironmentParameters() const
+  {
+	  return env_params;
+  }
 
   void SetProperties(const Properties& prop);
   

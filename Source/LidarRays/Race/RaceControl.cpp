@@ -36,7 +36,7 @@ void RaceControl::SetStateConversionFcn(StateConversionFcn fcn)
 	stateConverter = nullptr;
 }
 
-void RaceControl::Update(double time, Agent a)
+State& RaceControl::Update(double time, Agent a)
 {
 	auto found_itr = contestants.end();
 	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
@@ -59,13 +59,19 @@ void RaceControl::Update(double time, Agent a)
 	}
 
 	State updated_state;
-	
+
+	// Additional environment parameters
+	AgentParameters pars;
+
 	if (conversionFcn)
 		updated_state = conversionFcn(a.GetState());
 	else if (stateConverter)
-		updated_state = stateConverter->Convert(a.GetState());
+		updated_state = stateConverter->Convert(a.GetState(), pars);
 
-	found_itr->updateState(time, updated_state);
+	State& new_state = found_itr->updateState(time, updated_state);
+	UpdateContestantParameters(found_itr->ID(), pars);
+
+	return new_state;
 }
 
 void RaceControl::Run(double time)
@@ -127,3 +133,40 @@ void RaceControl::SetStateConverter(StateConverter* converter)
 	conversionFcn = nullptr;
 }
 
+void RaceControl::UpdateContestantParameters(std::string ID, const AgentParameters& parameters)
+{
+	Contestant* c = GetContestant(ID);
+
+	LogFunctions::Require(c != nullptr, "RaceControl::UpdateContestantParameters", "Contestant not found");
+
+	AgentParameters& current_pars = c->trajectory().getParameters();
+
+	for (const auto& param : parameters)
+	{
+		if (current_pars.IsAvailable(param.first))
+		{
+			current_pars(param.first) = param.second;
+		}
+		else
+		{
+			current_pars.AddEntry(param.first, param.second);
+		}
+	}
+
+}
+
+Contestant* RaceControl::GetContestant(std::string ID)
+{
+	Contestant* found = nullptr;
+
+	for (auto itr = contestants.begin(); itr != contestants.end(); itr++)
+	{
+		if (itr->ID() == ID)
+		{
+			found = &(*itr);
+			break;
+		}
+	}
+
+	return found;
+}

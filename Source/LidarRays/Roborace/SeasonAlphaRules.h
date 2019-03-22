@@ -16,6 +16,7 @@ class SeasonAlphaRules : public SocialRules
   ~SeasonAlphaRules();
   void build();
   void addSafetyRules();
+  void addTriggerRules();
 };
 
 #endif

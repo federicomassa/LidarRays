@@ -29,6 +29,8 @@ class TimedContainer
 		
 		const double& time() const {return timePair.first;}
 		const T& value() const {return timePair.second;}
+		double& time() { return timePair.first; }
+		T& value() { return timePair.second; }
 	};
 
 	
@@ -44,13 +46,16 @@ public:
 		typename timedObject::iterator itr;
 	public:
 		iterator(typename timedObject::iterator i) : itr(i) {}
-		const double& time() const {return itr->time();}
-		const T& value() const {return itr->value();}
+		double& time() {return itr->time();}
+		T& value() {return itr->value();}
+		const double& time() const { return itr->time(); }
+		const T& value() const { return itr->value(); }
 		iterator operator++() {return iterator(++itr);}
 		iterator operator--() {return iterator(--itr);}
 		iterator operator++(int) {return iterator(itr++);}
 		iterator operator--(int) {return iterator(itr--);}
 		bool operator !=(const iterator& i) {return (itr != i.itr);}
+		iterator& operator*() { return *this; }
 	};
 
 	class const_iterator
@@ -67,6 +72,7 @@ public:
 		const_iterator operator++(int) {return const_iterator(itr++);}
 		const_iterator operator--(int) {return const_iterator(itr--);}
 		bool operator !=(const const_iterator& i) {return (itr != i.itr);}
+		const const_iterator& operator*() const { return *this; }
 	};
 
 	

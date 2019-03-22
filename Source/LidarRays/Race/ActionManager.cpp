@@ -17,7 +17,6 @@ ActionManager::~ActionManager()
 
 void ActionManager::init()
 {
-  /* Add here any action that you want to be listened to with addListener. */
 }
 
 void ActionManager::run(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates)
@@ -37,6 +36,7 @@ void ActionManager::run(double time, const AgentTrajectory& targetStates, const 
 			else
 				updateAction(*a);
 
+			// if ended or aborted
 			if ((*a)->info.status != TRIGGERED)
 				resetAction(*a);
 		}

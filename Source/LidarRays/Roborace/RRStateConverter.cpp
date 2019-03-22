@@ -11,7 +11,7 @@ double RRStateConverter::distance(double x1, double y1, double x2, double y2)
 	return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
 }
 
-RRStateConverter::RRStateConverter(std::string track_file_path)
+RRStateConverter::RRStateConverter(std::string track_file_path, EnvironmentParameters& env)
 {
 	std::ifstream in_file(track_file_path.c_str());
 	LogFunctions::Require(in_file.is_open(), "RRStateConverter::RStateConverter", std::string("File ") + track_file_path + " not found.");
@@ -19,41 +19,9 @@ RRStateConverter::RRStateConverter(std::string track_file_path)
 	track_file = new nlohmann::json;
 	in_file >> *track_file;
 
-	// ================ CENTER LINE CALCULATIONS ======================== //
+	size_t start_index = 0;
 
-	auto center_line_json = track_file->find("Centre");
-	LogFunctions::Require(center_line_json->is_array(), "RRStateConverter::RRStateConverter", "Centre object must be an array");
-
-	// Transform center line (x,y) into a curvilinear coordinate
-	double s = 0;
-
-	for (auto itr = center_line_json->begin(); itr != center_line_json->end(); itr++)
-	{
-		std::vector<double> point = itr->get <std::vector<double> >();
-		LogFunctions::Require(point.size() == 2, "RRStateConverter::RRStateConverter", "Center line must be an array of 2 points");
-
-		if (center_line.size() == 0)
-		{
-			// First element in curvilinear coordinates is origin
-			center_line_curv.push_back(0.0);
-		}
-		else
-		{
-			// Other elements are euclidean difference with respect to previous point
-			double deltaS = distance(point[0], point[1], center_line.back().first, center_line.back().second);
-
-			s += deltaS;
-			center_line_curv.push_back(s);
-		}
-
-		center_line.push_back(std::make_pair(point[0], point[1]));
-
-		
-	}
-
-	LogFunctions::Require(center_line.size() == center_line_curv.size(), "RRStateConverter::RRstateConverter", "Bad calculation of center line curvilinear coordinates");
-
-	// ================ ZONES ======================== //
+	// ================ START ZONE ======================== //
 	auto zones_json = track_file->find("Zone");
 	LogFunctions::Require(zones_json->is_array(), "RRStateConverter::RRstateConverter", "Zone field in json must be an array");
 
@@ -78,16 +46,92 @@ RRStateConverter::RRStateConverter(std::string track_file_path)
 
 		Zone zone;
 		zone.Type = type->get<int>();
+
 		zone.Start = start->get<int>();
 		zone.End = end->get<int>();
 		zone.ID = id->get<int>();
+
+		// Start point
+		if (zone.Type == 0)
+			start_index = zone.Start;
 
 		zones.push_back(zone);
 	}
 
 
 
+	// ================ CENTER LINE CALCULATIONS ======================== //
 
+	
+
+	auto center_line_json = track_file->find("Centre");
+	LogFunctions::Require(center_line_json->is_array(), "RRStateConverter::RRStateConverter", "Centre object must be an array");
+
+	// Transform center line (x,y) into a curvilinear coordinate
+	double s = 0;
+
+	// From start index to end
+	for (auto itr = center_line_json->begin() + start_index; itr != center_line_json->end(); itr++)
+	{
+		std::vector<double> point = itr->get <std::vector<double> >();
+		LogFunctions::Require(point.size() == 2, "RRStateConverter::RRStateConverter", "Center line must be an array of 2 points");
+
+		if (center_line.size() == 0)
+		{
+			// First element in curvilinear coordinates is origin
+			center_line_curv.push_back(0.0);
+		}
+		else
+		{
+			// Other elements are euclidean difference with respect to previous point
+			double deltaS = distance(point[0], point[1], center_line.back().first, center_line.back().second);
+
+			s += deltaS;
+			center_line_curv.push_back(s);
+		}
+
+		center_line.push_back(std::make_pair(point[0], point[1]));
+	}
+
+	// From beginning to start index
+	for (auto itr = center_line_json->begin(); itr != center_line_json->begin() + start_index; itr++)
+	{
+		std::vector<double> point = itr->get <std::vector<double> >();
+		LogFunctions::Require(point.size() == 2, "RRStateConverter::RRStateConverter", "Center line must be an array of 2 points");
+
+		if (center_line.size() == 0)
+		{
+			// First element in curvilinear coordinates is origin
+			center_line_curv.push_back(0.0);
+		}
+		else
+		{
+			// Other elements are euclidean difference with respect to previous point
+			double deltaS = distance(point[0], point[1], center_line.back().first, center_line.back().second);
+
+			s += deltaS;
+			center_line_curv.push_back(s);
+		}
+
+		center_line.push_back(std::make_pair(point[0], point[1]));
+	}
+
+	// OTHER ZONES --> CORRECT INDEXES BASED ON STARTING POINT
+	for (auto& zone : zones)
+	{
+		zone.Start -= start_index;
+
+		if (zone.Start < 0)
+			zone.Start += center_line.size();
+
+		zone.End -= start_index;
+		if (zone.End < 0)
+			zone.End += center_line.size();
+	}
+
+	env.AddEntry("total_circuit_length", center_line_curv.back());
+
+	LogFunctions::Require(center_line.size() == center_line_curv.size(), "RRStateConverter::RRstateConverter", "Bad calculation of center line curvilinear coordinates");
 
 }
 
@@ -97,11 +141,12 @@ RRStateConverter::~RRStateConverter()
 		delete track_file;
 }
 
-State RRStateConverter::Convert(const State& s)
+State RRStateConverter::Convert(const State& s, AgentParameters& par)
 {
 	LogFunctions::Require(s.Contains("x"), "RRStateConverter::Convert", "Input state must be (x,y,v)");
 	LogFunctions::Require(s.Contains("y"), "RRStateConverter::Convert", "Input state must be (x,y,v)");
 	LogFunctions::Require(s.Contains("v"), "RRStateConverter::Convert", "Input state must be (x,y,v)");
+
 
 	State out;
 	// s = curvilinear coordinate along center line
@@ -110,16 +155,18 @@ State RRStateConverter::Convert(const State& s)
 	out.AddStateVariable("s");
 	out.AddStateVariable("y");
 	out.AddStateVariable("v");
-	out.AddStateVariable("next_index");
-	out.AddStateVariable("current_zone_type");
-	out.AddStateVariable("current_zone_id");
+	par.AddEntry("next_index", 0.0);
+	par.AddEntry("current_zone_type", 0.0);
+	par.AddEntry("current_zone_id", 0.0);
 
 	double converted_x = s("x")*0.01;
 	double converted_y = -s("y")*0.01;
 	double converted_v = s("v")*0.01;
 
 
-	// TODO use previous point and limit the search on an interval of points around it
+	// TODO use previous point and limit the search on an interval of points around it. This is both inefficient and dangerous
+	// if there are two track segments that are close to each other in (x,y) but far in s
+
 	// Index on center line of minimum distance
 	int min_index = -1;
 	double min_dist = 1E9;
@@ -201,17 +248,19 @@ State RRStateConverter::Convert(const State& s)
 	else
 		out("s") = center_line_curv.back() + new_x;
 
+	
+
 	out("y") = new_y;
 	out("v") = converted_v;
 
-	out("next_index") = min_index;
+	par("next_index") = min_index;
 
-	out("current_zone_type") = -1;
-	out("current_zone_id") = -1;
+	par("current_zone_type") = -1;
+	par("current_zone_id") = -1;
 
 	int previous_index = min_index - 1;
 	if (previous_index < 0)
-		previous_index = center_line.size() - 1;
+		previous_index = int(center_line.size() - 1);
 
 	// Check if inside a zone
 	for (auto zone : zones)
@@ -221,8 +270,9 @@ State RRStateConverter::Convert(const State& s)
 		{
 			if (previous_index >= zone.Start && previous_index < zone.End)
 			{
-				out("current_zone_type") = (double)zone.Type;
-				out("current_zone_id") = (double)zone.ID;
+				par.AddEntry("current_zone_length", center_line_curv.at(zone.End) - center_line_curv.at(zone.Start));
+				par("current_zone_type") = (double)zone.Type;
+				par("current_zone_id") = (double)zone.ID;
 				break;
 			}
 		}
@@ -230,8 +280,10 @@ State RRStateConverter::Convert(const State& s)
 		{
 			if (previous_index >= zone.Start || previous_index < zone.End)
 			{
-				out("current_zone_type") = (double)zone.Type;
-				out("current_zone_id") = (double)zone.ID;
+				// When current zone loops the center line array, the length is TOTAL_CIRCUIT_LENGTH - (S_START - S_END), because start is ahead of end
+				par.AddEntry("current_zone_length", center_line_curv.back() - (center_line_curv.at(zone.Start) - center_line_curv.at(zone.End)));
+				par("current_zone_type") = (double)zone.Type;
+				par("current_zone_id") = (double)zone.ID;
 				break;
 			}
 		}

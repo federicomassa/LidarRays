@@ -50,6 +50,9 @@ class Action
   /* Abort condition specifies the conditions that stop the listener of this action */
   virtual bool abortCondition(double time, const AgentTrajectory& targetStates, const std::vector<AgentTrajectory>& neighborsStates) = 0;
 
+  // Called after end or abort evaluates true. Useful to reset derived action to original status
+  virtual void reset() {};
+
   virtual ~Action() {};
 
   // Tick of action recognition loop, at time <time>.

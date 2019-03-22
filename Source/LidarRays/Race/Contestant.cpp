@@ -1,6 +1,34 @@
 #include "Contestant.h"
 
-void Contestant::updateState(double time, State new_state)
+State& Contestant::updateState(double time, State new_state)
 {
-	traj.addState(time, new_state);
+	return traj.addState(time, new_state);
+}
+
+RaceResults Contestant::Results() const
+{
+	RaceResults results;
+
+	results.ActionHistory = aMan.getHistory();
+
+	const auto& processedActions = rMon.getProcessedActions();
+
+	// Create vector without repetitions (more actions could have corresponded to the same rule)
+	for (const auto& currentProcessedAction : processedActions)
+	{
+		std::set<Rule> processedRules;
+
+		for (const auto& rule : currentProcessedAction.value().second)
+		{
+			if (processedRules.find(rule) == processedRules.end())
+			{
+				processedRules.insert(rule);
+			}
+
+		}
+
+		results.RulesHistory.insert(currentProcessedAction.time(), processedRules);
+	}
+
+	return results;
 }

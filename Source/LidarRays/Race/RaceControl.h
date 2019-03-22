@@ -28,6 +28,7 @@ class RaceControl
 
 public:
 	RaceControl();
+	virtual ~RaceControl() {};
 
 	// Add contestants to the race
 	void RegisterContestant(std::string ID);
@@ -39,8 +40,8 @@ public:
 
 
 	// Update agent a. State is in the contestant state space, and it will be converted to 
-	// race control state space variables
-	void Update(double time, Agent a);
+	// race control state space variables. Returns the updated state in race control state space
+	State& Update(double time, Agent a);
 
 	// Function to be called to evaluate action and rules, after updating states
 	void Run(double time);
@@ -55,6 +56,13 @@ public:
 	std::vector<Contestant>& Contestants() { return contestants; }
 	void setTrajectoryCapacity(size_t);
 
+	TimedContainer<EnvironmentParameters>& getEnvironmentParameters() { return contestants.back().ruleMonitor().getEnvironmentParameters(); }
+
+	void UpdateContestantParameters(std::string, const AgentParameters&);
+
+	Contestant* GetContestant(std::string ID);
+
+	virtual void Evaluate(double) {};
 private:
 	// Function that convert from the contestants state space to the race control state space
 	StateConversionFcn conversionFcn = nullptr;

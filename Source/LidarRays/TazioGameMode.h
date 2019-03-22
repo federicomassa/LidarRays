@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "RaceControl.h"
+#include "EnvironmentParameters.h"
 #include "TazioGameMode.generated.h"
 
 /**
  * 
  */
 
+class RaceControl;
 
 UCLASS()
 class LIDARRAYS_API ATazioGameMode : public AGameMode
@@ -18,11 +19,15 @@ class LIDARRAYS_API ATazioGameMode : public AGameMode
 	GENERATED_BODY()
 
 private:
-	RaceControl raceControl;
+	RaceControl* raceControl;
 	TArray<AActor*> contestants;
+
+	int lastEgoZoneType = -1;
 public:
+	ATazioGameMode();
 	void BeginPlay() override;
 	void Tick(float DeltaTime) override;
+	void UpdateEnvironmentParameters(double time, EnvironmentParameters param);
 
 	// Returns pointer to character
 	UFUNCTION(BlueprintCallable)

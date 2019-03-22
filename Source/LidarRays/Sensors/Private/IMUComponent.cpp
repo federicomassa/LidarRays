@@ -71,7 +71,7 @@ void UIMUComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	float UVx = Owner->GetVelocity().X;
 	float UVy = Owner->GetVelocity().Y;
-	float UVz = Owner->GetVelocity().Y;
+	float UVz = Owner->GetVelocity().Z;
 	float UPitch = CurrentWorldRotation.Pitch;
 	float UYaw = CurrentWorldRotation.Yaw;
 	float URoll = CurrentWorldRotation.Roll;

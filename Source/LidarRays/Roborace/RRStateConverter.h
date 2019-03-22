@@ -4,6 +4,7 @@
 
 #include "StateConverter.h"
 #include "nlohmann/json_fwd.hpp"
+#include "AgentParameters.h"
 #include <vector>
 #include <utility>
 
@@ -32,8 +33,8 @@ class RRStateConverter : public StateConverter
 
 	static double distance(double x1, double y1, double x2, double y2);
 public:
-	RRStateConverter(std::string track_file_path);
+	RRStateConverter(std::string track_file_path, EnvironmentParameters& env);
 	~RRStateConverter();
 
-	State Convert(const State&);
+	State Convert(const State&, AgentParameters& params) override;
 };

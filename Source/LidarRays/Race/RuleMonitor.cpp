@@ -43,12 +43,49 @@ void RuleMonitor::run(double time, const AgentTrajectory& targetStates, const st
   }
 }
 
-void RuleMonitor::UpdateEnvironmentParameters(double time, const EnvironmentParameters& params)
-{
-	env_params.insert(time, params);
-}
-
 void RuleMonitor::SetProperties(const Properties& prop)
 {
 	properties = prop;
+}
+
+void RuleMonitor::UpdateEnvironmentParameters(double time, std::string key, double value)
+{
+	EnvironmentParameters par;
+	par.AddEntry(key, value);
+
+	UpdateEnvironmentParameters(time, par);
+}
+
+
+void RuleMonitor::UpdateEnvironmentParameters(double time, const EnvironmentParameters& param)
+{
+	if (env_params.size() == 0)
+	{
+		env_params.insert(time, param);
+		return;
+	}
+	else
+	{
+		if (env_params.latest().time() < time)
+		{
+			env_params.insert(time, param);
+			return;
+		}
+		else if (env_params.latest().time() == time)
+		{
+			EnvironmentParameters& latest = env_params.latest().value();
+			for (const auto& itr : param)
+			{
+				if (latest.IsAvailable(itr.first))
+					latest(itr.first) = itr.second;
+				else
+					latest.AddEntry(itr.first, itr.second);
+			}
+		}
+		else
+		{
+			LogFunctions::Error("RuleMonitor::UpdateEnvironmentParameters", "trying to update in the past");
+		}
+
+	}
 }

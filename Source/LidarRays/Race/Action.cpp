@@ -37,12 +37,14 @@ void Action::listen(double time, const AgentTrajectory& targetStates, const std:
 		{
 			info.status = ENDED;
 			info.endTime = time - getEndOffset();
+			reset();
 			return;
 		}
 		else if (abortCondition(time, targetStates, neighborsStates))
 		{
 			info.status = ABORTED;
 			info.endTime = time - getAbortOffset();
+			reset();
 			return;
 		}
     }

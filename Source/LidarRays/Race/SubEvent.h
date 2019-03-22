@@ -29,8 +29,7 @@ private:
 	// 'single' sub-events, i.e. sub-events that can be evaluated
 	// only based on measurements of a single agent, must only
 	// define singleEvaluationFcn, 'interaction' sub-events must
-	// only define areaFcn and interactionFcn. This corresponds to
-	// the two RegisterSubEvent functions in Automaton class
+	// only define areaFcn and interactionFcn.
 	AreaFcn areaFcn;
 	InteractionFcn interactionFcn;
 	SingleEvaluationFcn singleEvaluationFcn;
