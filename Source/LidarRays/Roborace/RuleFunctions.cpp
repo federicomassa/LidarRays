@@ -28,5 +28,5 @@ bool trigger(const AgentTrajectory& targetStates, const AgentTrajectory& otherSt
 		return true;
 
 	
-	
+	return false;
 }

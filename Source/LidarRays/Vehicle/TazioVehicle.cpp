@@ -15,6 +15,7 @@
 #include <iomanip>
 #include "UDPReceiver.h"
 #include "VehicleModel.h"
+#include "MessageSerializerComponent.h"
 #include "GPSComponent.h"
 #include <array>
 #include "Components/SkeletalMeshComponent.h"
@@ -227,6 +228,9 @@ void ATazioVehicle::Init()
 
 	SensManager = NewObject<USensorManager>();
 	SensManager->Init(this);
+
+	MessageSerializerComponent = FindComponentByClass<UMessageSerializerComponent>();
+	check(MessageSerializerComponent);
 }
 
 void ATazioVehicle::BeginPlay()
@@ -234,9 +238,6 @@ void ATazioVehicle::BeginPlay()
 	Super::BeginPlay();
 
 	Init();
-
-	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
-	check(GameInstance);
 
 	FString DumpPath = GameInstance->DumpTrajectory;
 	trajectory_dump.open(TCHAR_TO_ANSI(*DumpPath));

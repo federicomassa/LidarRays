@@ -43,22 +43,27 @@ void UMessageSerializerComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-TArray<uint8> UMessageSerializerComponent::SerializeOdometryMessage(const FOdometryMessage & msg, bool Simulink)
+TArray<uint8> UMessageSerializerComponent::SerializeOdometryMessage(const FOdometryMessage & msg, bool Simulink) const
 {
 	return SerializeMessage<FOdometryMessage>(msg, Simulink);
 }
 
-TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(const FLidarMessage & msg, bool Simulink)
+TArray<uint8> UMessageSerializerComponent::SerializeLidarMessage(const FLidarMessage & msg, bool Simulink) const
 {
 	return SerializeMessage<FLidarMessage>(msg, Simulink);
 }
 
-TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(const FIMUMessage & msg, bool Simulink)
+TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(const FIMUMessage & msg, bool Simulink) const
 {
 	return SerializeMessage<FIMUMessage>(msg, Simulink);
 }
 
-FControlMessage UMessageSerializerComponent::DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink)
+TArray<uint8> UMessageSerializerComponent::SerializeRaceControlMessage(const FRaceControlMessage & msg, bool Simulink) const
+{
+	return SerializeMessage<FRaceControlMessage>(msg, Simulink);
+}
+
+FControlMessage UMessageSerializerComponent::DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink) const
 {
 	return DeserializeMessage<FControlMessage>(bytes, Simulink);
 }

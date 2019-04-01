@@ -7,6 +7,7 @@
 #include "Buffer.h"
 #include "Definitions.h"
 #include "ControlMessage.h"
+#include "Components/InputComponent.h"
 #include <fstream>
 #include "TazioVehicle.generated.h"
 
@@ -14,7 +15,6 @@ class UPhysicalMaterial;
 class UCameraComponent;
 class USpringArmComponent;
 class UTextRenderComponent;
-class UInputComponent;
 class UAudioComponent;
 class USkeletalMeshComponent;
 class UWheeledVehicleMovementComponent4W;
@@ -37,7 +37,7 @@ class ATazioVehicle : public AWheeledVehicle
 	UPROPERTY()
 	USensorManager* SensManager = nullptr;
 
-	UMessageSerializerComponent* MessageSerializerComponent;
+	UMessageSerializerComponent* MessageSerializerComponent = nullptr;
 
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
@@ -116,6 +116,8 @@ public:
 	AUDPReceiver* GetControlReceiver();	
 
 	USensorManager* GetSensorManager();
+
+	const UMessageSerializerComponent* GetMessageSerializerComponent() const { return MessageSerializerComponent; }
 
 	// Begin Pawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;

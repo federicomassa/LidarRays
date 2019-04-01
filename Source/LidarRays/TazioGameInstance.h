@@ -60,6 +60,15 @@ public:
 	int32 OpponentStatePort = 9000;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FString RaceControlSendIP = "127.0.0.1";
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 RaceControlPort = 8000;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 TotalLaps = 4;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	bool isCommunicationUDP = true;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

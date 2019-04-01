@@ -4,6 +4,7 @@
 #include <Engine/World.h>
 #include <Kismet/GameplayStatics.h>
 #include "TazioGameInstance.h"
+#include "RaceControlMessage.h"
 #include <GameFramework/PlayerStart.h>
 #include <GameFramework/Pawn.h>
 #include <Internationalization/Regex.h>
@@ -13,6 +14,10 @@
 #include "TriggerAttackAction.h"
 #include "OvertakeAction.h"
 #include "SeasonAlphaRules.h"
+
+#include "UDPSender.h"
+#include "TazioVehicle.h"
+#include "MessageSerializerComponent.h"
 
 #include <sstream>
 #include <string>
@@ -28,9 +33,23 @@ void ATazioGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	if (GameInstance == nullptr)
+		GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	
 	check(GameInstance);
 
+	for (const auto& contestant : contestants)
+	{
+		// if ego vehicle
+		if (contestant->GetName() == "Player_0")
+		{
+			egoVehicle = Cast<ATazioVehicle>(contestant);
+			check(egoVehicle);
+			check(contestant->InputComponent);
+			contestant->InputComponent->BindAction("ToggleManualRaceControl", IE_Pressed, this, &ATazioGameMode::ToggleManualRaceControl);
+			contestant->InputComponent->BindAction("ToggleOvertakeStatus", IE_Pressed, this, &ATazioGameMode::ToggleOvertakeStatus);
+		}
+	}
 
 	std::string track_map_path = TCHAR_TO_UTF8(*GameInstance->TrackMapFilePath);
 
@@ -59,6 +78,9 @@ void ATazioGameMode::BeginPlay()
 		
 		contestant.trajectory().setParameters(par);
 	}
+
+	RaceControlSender = NewObject<AUDPSender>(this);
+	RaceControlSender->Start("RaceControl", GameInstance->RaceControlSendIP, GameInstance->RaceControlPort, GameInstance->isCommunicationUDP);
 }
 
 void ATazioGameMode::Tick(float DeltaTime)
@@ -107,6 +129,7 @@ void ATazioGameMode::Tick(float DeltaTime)
 	raceControl->Run(GetWorld()->GetTimeSeconds());
 	raceControl->Evaluate(GetWorld()->GetTimeSeconds());
 	
+	// ============== PRINT RESULTS TO SCREEN ================= //
 	for (const auto& contestant : raceControl->Contestants())
 	{
 		if (contestant.ID() != "Player_0")
@@ -171,6 +194,8 @@ void ATazioGameMode::Tick(float DeltaTime)
 			}
 		}
 	}
+
+	SendRaceControl();
 }
 
 APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass)
@@ -179,7 +204,9 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 	TArray<AActor*> StartingPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), StartingPoints);
 
-	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+	if (GameInstance == nullptr)
+		GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
+
 	check(GameInstance);
 
 	// A valid map must have at least as many player starts as number of contestants
@@ -279,4 +306,47 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 void ATazioGameMode::UpdateEnvironmentParameters(double time, EnvironmentParameters par)
 {
 	raceControl->UpdateEnvironmentParameters(time, par);
+}
+
+void ATazioGameMode::ToggleManualRaceControl()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Toggle manual race control"));
+	manualRaceControl = !manualRaceControl;
+}
+
+void ATazioGameMode::ToggleOvertakeStatus()
+{
+	if (manualRaceControl)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Toggle overtake"));
+		overtakeStatus = !overtakeStatus;
+	}
+}
+
+void ATazioGameMode::SendRaceControl()
+{
+	Contestant* egoContestant = raceControl->GetContestant("Player_0");
+	check(egoContestant);
+
+	FRaceControlMessage msg;
+	msg.timestamp = GetWorld()->GetTimeSeconds();
+	msg.overtaking_status = egoContestant->parameter("overtaking_status");
+	msg.lap_remaining = GameInstance->TotalLaps - egoContestant->parameter("lap");
+
+	// Defense case
+	if (msg.overtaking_status == 2)
+		msg.power_limit = 0.8 * 500; // kW, power cut of 80%
+	else
+		msg.power_limit = 500; // kW
+
+	if (msg.lap_remaining > 0)
+		msg.race_mode = 1;
+	else
+		msg.race_mode = 2;
+
+	msg.race_position = egoContestant->parameter("race_position");
+	msg.speed_limit = 200; // kph
+
+	TArray<uint8> data = egoVehicle->GetMessageSerializerComponent()->SerializeRaceControlMessage(msg, true);
+	RaceControlSender->SendData(data);
 }

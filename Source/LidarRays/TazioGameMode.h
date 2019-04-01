@@ -12,6 +12,9 @@
  */
 
 class RaceControl;
+class AUDPSender;
+class ATazioVehicle;
+class UTazioGameInstance;
 
 UCLASS()
 class LIDARRAYS_API ATazioGameMode : public AGameMode
@@ -23,6 +26,19 @@ private:
 	TArray<AActor*> contestants;
 
 	int lastEgoZoneType = -1;
+
+	// Manual race control mode
+	//    if it is in manual mode
+	bool manualRaceControl = false;
+	//    if ego vehicle can overtake
+	bool overtakeStatus = false;
+
+	UPROPERTY()
+	AUDPSender* RaceControlSender = nullptr;
+
+	const ATazioVehicle* egoVehicle = nullptr;
+
+	UTazioGameInstance* GameInstance = nullptr;
 public:
 	ATazioGameMode();
 	void BeginPlay() override;
@@ -32,6 +48,9 @@ public:
 	// Returns pointer to character
 	UFUNCTION(BlueprintCallable)
 	APawn* SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass);
+
+	void ToggleManualRaceControl();
+	void ToggleOvertakeStatus();
+
+	void SendRaceControl();
 };
-
-
