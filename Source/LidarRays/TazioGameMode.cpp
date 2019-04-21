@@ -13,6 +13,7 @@
 #include "TimerAction.h"
 #include "TriggerAttackAction.h"
 #include "OvertakeAction.h"
+#include "OvertakeZoneAction.h"
 #include "SeasonAlphaRules.h"
 
 #include "UDPSender.h"
@@ -293,6 +294,7 @@ APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* Opponent
 		//contestant.actionManager().addListener(std::shared_ptr<TimerAction>(new TimerAction));
 		contestant.actionManager().addListener(std::shared_ptr<TriggerAttackAction>(new TriggerAttackAction));
 		contestant.actionManager().addListener(std::shared_ptr<OvertakeAction>(new OvertakeAction));
+		contestant.actionManager().addListener(std::shared_ptr<OvertakeZoneAction>(new OvertakeZoneAction));
 		contestant.ruleMonitor().setRules(std::shared_ptr<SeasonAlphaRules>(new SeasonAlphaRules));
 	}
 	 
@@ -347,6 +349,6 @@ void ATazioGameMode::SendRaceControl()
 	msg.race_position = egoContestant->parameter("race_position");
 	msg.speed_limit = 200; // kph
 
-	TArray<uint8> data = egoVehicle->GetMessageSerializerComponent()->SerializeRaceControlMessage(msg, true);
-	RaceControlSender->SendData(data);
+	/*TArray<uint8> data = egoVehicle->GetMessageSerializerComponent()->SerializeRaceControlMessage(msg, true);
+	RaceControlSender->SendData(data);*/
 }

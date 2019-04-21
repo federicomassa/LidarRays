@@ -5,10 +5,8 @@ State& Contestant::updateState(double time, State new_state)
 	return traj.addState(time, new_state);
 }
 
-RaceResults Contestant::Results() const
+void Contestant::UpdateResults()
 {
-	RaceResults results;
-
 	results.ActionHistory = aMan.getHistory();
 
 	const auto& processedActions = rMon.getProcessedActions();
@@ -27,8 +25,6 @@ RaceResults Contestant::Results() const
 
 		}
 
-		results.RulesHistory.insert(currentProcessedAction.time(), processedRules);
+		//results.RulesHistory.insert(currentProcessedAction.time(), processedRules);
 	}
-
-	return results;
 }

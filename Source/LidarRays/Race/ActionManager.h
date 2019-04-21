@@ -14,6 +14,7 @@
 #include "Action.h"
 
 class AgentTrajectory;
+class Contestant;
 
 class ActionManager {
 
@@ -25,6 +26,8 @@ class ActionManager {
   std::set<std::shared_ptr<Action> > listeners;
   /* Keeps track of the actions done by the monitored vehicle. */
   std::vector<ActionInfo> history;
+
+  Contestant* parent = nullptr;
 
   /* Record an ended or aborted action */
   void recordAction(ActionInfo info);
@@ -66,4 +69,6 @@ class ActionManager {
 
   void setID(std::string id) { ID = id; }
   std::string getID() const { return ID; }
+
+  void setParent(Contestant* parent) { this->parent = parent; }
 };

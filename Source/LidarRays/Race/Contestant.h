@@ -26,6 +26,9 @@ class Contestant
 	ActionManager aMan;
 	RuleMonitor rMon;
 	AgentTrajectory traj;
+	RaceResults results;
+
+	void UpdateResults();
 
 public:
 	void setActionManager(const ActionManager& a)
@@ -53,7 +56,9 @@ public:
 	State& updateState(double time, State new_state);
 
 	/* accessor to results */
-	RaceResults Results() const;
+	const RaceResults& Results() const {
+		return results;
+	}
 
 	double& parameter(std::string name) { return traj.parameter(name); }
 	const double& parameter(std::string name) const { return traj.parameter(name); }

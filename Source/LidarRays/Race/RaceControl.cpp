@@ -100,6 +100,8 @@ void RaceControl::Run(double time)
 
 		RuleMonitor* ruleMon = &contestant.ruleMonitor();
 		ruleMon->run(time, contestant.trajectory(), others, aMan);
+
+		contestant.UpdateResults();
 	}
 }
 
@@ -170,3 +172,4 @@ Contestant* RaceControl::GetContestant(std::string ID)
 
 	return found;
 }
+

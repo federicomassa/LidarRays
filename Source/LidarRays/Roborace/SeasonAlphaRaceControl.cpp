@@ -35,7 +35,7 @@ void SeasonAlphaRaceControl::Evaluate(double time)
 
 	for (auto& contestant : Contestants())
 	{
-		auto results = contestant.Results();
+		const auto& results = contestant.Results();
 		for (const auto& action : results.ActionHistory)
 		{
 			if (action.name == "TriggerAttack" && action.endTime == time && action.status == ENDED)
@@ -56,6 +56,11 @@ void SeasonAlphaRaceControl::Evaluate(double time)
 				// Set attacker and defender
 				contestant.parameter("overtaking_status") = 1.0;
 				opponent->parameter("overtaking_status") = 2.0;
+			}
+
+			else if (action.name == "OvertakeZone" && action.endTime == time && action.status == ENDED)
+			{
+				contestant.parameter("overtaking_status") = 0.0;
 			}
 		}
 	}
