@@ -8,6 +8,7 @@
 #include "IMUMessage.h"
 #include "OdometryMessage.h"
 #include "LidarMessage.h"
+#include "PoseMessage.h"
 #include "ControlMessage.h"
 
 #include "MessageSerializerComponent.generated.h"
@@ -46,8 +47,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Controller)
 		FControlMessage DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink = true);
 
-
-
+	UFUNCTION(BlueprintCallable, Category = External)
+		FPoseMessage DeserializePoseMessage(const TArray<uint8>& bytes, bool Simulink = true);
 };
 
 template <class MessageType>

@@ -35,6 +35,9 @@ public:
 	UFUNCTION()
 	void ReceiveControlMessage(const TArray<uint8>& data);
 
+	UFUNCTION()
+	void ReceivePoseMessage(const TArray<uint8>& data);
+
 	// NB not making them UPROPERTY because they are set from TazioVehicle and if that is destroyed, then these do not make sense anymore.
 
 	AUDPSender* LidarSender = nullptr;
@@ -46,6 +49,8 @@ public:
 	AUDPSender* GPSTruthSender = nullptr;
 
 	AUDPReceiver* ControlReceiver = nullptr;
+
+	AUDPReceiver* PoseReceiver = nullptr;
 
 	UMessageSerializerComponent* MessageSerializerComponent = nullptr;
 };

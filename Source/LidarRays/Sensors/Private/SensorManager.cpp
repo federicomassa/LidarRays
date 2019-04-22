@@ -7,6 +7,7 @@
 #include "TazioVehicle.h"
 #include "UDPSender.h"
 #include "UDPReceiver.h"
+#include "PoseMessage.h"
 #include "MessageSerializerComponent.h"
 
 USensorManager::USensorManager()
@@ -37,7 +38,11 @@ void USensorManager::Init(ATazioVehicle* Owner)
 	ControlReceiver = Owner->GetControlReceiver();
 	check(ControlReceiver);
 
+	PoseReceiver = Owner->GetPoseReceiver();
+	check(PoseReceiver);
+
 	ControlReceiver->OnDataReceived.AddDynamic(this, &USensorManager::ReceiveControlMessage);
+	PoseReceiver->OnDataReceived.AddDynamic(this, &USensorManager::ReceivePoseMessage);
 }
 
 void USensorManager::SendLidarMessage(FLidarMessage msg)
@@ -70,4 +75,9 @@ void USensorManager::ReceiveControlMessage(const TArray<uint8>& data)
 	Owner->SendControls(msg);
 }
 
+void USensorManager::ReceivePoseMessage(const TArray<uint8>& data)
+{
+	FPoseMessage msg = MessageSerializerComponent->DeserializePoseMessage(data, true);
+	Owner->SendPose(msg);
+}
 

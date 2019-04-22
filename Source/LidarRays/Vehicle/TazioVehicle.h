@@ -7,6 +7,7 @@
 #include "Buffer.h"
 #include "Definitions.h"
 #include "ControlMessage.h"
+#include "PoseMessage.h"
 #include <fstream>
 #include "TazioVehicle.generated.h"
 
@@ -66,6 +67,9 @@ public:
 	UPROPERTY()
 	AUDPReceiver* ControlReceiver = nullptr;
 
+	UPROPERTY()
+	AUDPReceiver* PoseReceiver = nullptr;
+
 private:
 
 	bool ManualDriving = true;
@@ -82,6 +86,10 @@ private:
 
 	float lastThrottle = 0.f;
 	float lastSteer = 0.f;
+
+	float lastX = 0.f;
+	float lastY = 0.f;
+	float lastTheta = 0.f;
 
 	USkeletalMeshComponent* Mesh = nullptr;
 
@@ -115,6 +123,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetControlReceiver();	
 
+	UFUNCTION(BlueprintCallable, Category = UDP)
+	AUDPReceiver* GetPoseReceiver();
+
 	USensorManager* GetSensorManager();
 
 	// Begin Pawn interface
@@ -144,6 +155,9 @@ public:
 	/** Handle pressing forwards */
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	void SendControls(const FControlMessage& ControlMessage);
+
+	UFUNCTION(BlueprintCallable, Category = Controller)
+	void SendPose(const FPoseMessage& PoseMessage);
 
 	void SetThrottle(float value);
 	void SetSteer(float value);

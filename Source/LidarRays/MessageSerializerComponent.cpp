@@ -14,6 +14,7 @@
 #include <sstream>
 #include <Containers/UnrealString.h>
 #include "LidarMessage.h"
+#include "PoseMessage.h"
 #include "IMUMessage.h"
 #include "OdometryMessage.h"
 #include "ControlMessage.h"
@@ -61,6 +62,11 @@ TArray<uint8> UMessageSerializerComponent::SerializeIMUMessage(const FIMUMessage
 FControlMessage UMessageSerializerComponent::DeserializeControlMessage(const TArray<uint8>& bytes, bool Simulink)
 {
 	return DeserializeMessage<FControlMessage>(bytes, Simulink);
+}
+
+FPoseMessage UMessageSerializerComponent::DeserializePoseMessage(const TArray<uint8>& bytes, bool Simulink)
+{
+	return DeserializeMessage<FPoseMessage>(bytes, Simulink);
 }
 
 

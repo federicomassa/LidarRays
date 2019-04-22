@@ -69,6 +69,11 @@ AUDPReceiver* ATazioVehicle::GetControlReceiver()
 	return ControlReceiver;
 }
 
+AUDPReceiver* ATazioVehicle::GetPoseReceiver()
+{
+	return PoseReceiver;
+}
+
 void ATazioVehicle::ToggleManualDriving()
 {
 	if (InputComponent->AxisBindings.Num() > 0)
@@ -125,6 +130,13 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 	lastSteer = control.Ydot;
 }
 
+void ATazioVehicle::SendPose(const FPoseMessage& pose)
+{
+	lastX = pose.x*100;
+	lastY = -pose.y*100;
+	lastTheta = -pose.theta*180/3.14159;
+}
+
 void ATazioVehicle::ToggleRecordTrajectory()
 {
 	isRecordingTrajectory = !isRecordingTrajectory;
@@ -133,7 +145,6 @@ void ATazioVehicle::ToggleRecordTrajectory()
 void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
-
 
 	if (bPhysXSimulation)
 	{
@@ -146,29 +157,8 @@ void ATazioVehicle::Tick(float Delta)
 	}
 	else
 	{
-		std::map<std::string, double> originalControls;
-		originalControls["Throttle"] = lastThrottle;
-		originalControls["Steering"] = lastSteer;
-
-		DynamicModel->run(originalControls, Delta);
-
-		std::map<std::string, double> currentState = DynamicModel->getWorldState();
-
-		FRotator currentRotation = GetActorRotation();
-
-		//Mesh->SetWorldLocation(FVector(currentState.at("x"), currentState.at("y"), Mesh->GetWorldLocation().Z));
-		//Mesh->SetWorldRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
-
-		SetActorLocation(FVector(currentState.at("x"), currentState.at("y"), GetActorLocation().Z));
-		SetActorRotation(FQuat(FRotator(currentRotation.Pitch, currentState.at("yaw"), currentRotation.Roll)));
-
-		std::array<double, 3> velocity = DynamicModel->getVelocity();
-		//UE_LOG(LogTemp, Warning, TEXT("SETTING VELOCITY: %f, %f, %f"), velocity[0], velocity[1], velocity[2]);
-		ModelMovementComponent->Velocity = FVector(velocity[0], velocity[1], velocity[2]);
-
-		// Consume control
-		lastThrottle = 0.0;
-		lastSteer = 0.0;
+		SetActorLocation(FVector(lastX, lastY, 150.f));
+		SetActorRotation(FRotator(0.f, lastTheta, 0.f));
 	}
 
 	// Dump trajectory to csv file
@@ -217,6 +207,10 @@ void ATazioVehicle::Init()
 
 	ControlReceiver = NewObject<AUDPReceiver>(this);
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
+
+	PoseReceiver = NewObject<AUDPReceiver>(this);
+	PoseReceiver->Start("Test", "192.168.105.3", 9000);
+
 
 	// ===================== Vehicle Model ============================
 	VehicleModelType = GameInstance->VehicleModel;
