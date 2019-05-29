@@ -9,7 +9,9 @@
 #include "ControlMessage.h"
 #include "PoseMessage.h"
 #include <fstream>
+#include <chrono>
 #include "TazioVehicle.generated.h"
+
 
 class UPhysicalMaterial;
 class UCameraComponent;
@@ -45,6 +47,10 @@ class ATazioVehicle : public AWheeledVehicle
 
 	// File where to dump trajectory in csv
 	std::ofstream trajectory_dump;
+
+	// Logger file if needed: FIXME
+	std::ofstream debug_file;
+
 	float InitRecordingTime = -1.f;
 	bool isFirst = true;
 	bool isRecordingTrajectory = false;
@@ -82,14 +88,22 @@ private:
 
 	TArray < FInputAxisBinding > AxisBindings;
 
-	float lastDeltaTime = 0.f;
+	//float lastDeltaTime = 0.f;
 
 	float lastThrottle = 0.f;
 	float lastSteer = 0.f;
 
-	float lastX = 0.f;
-	float lastY = 0.f;
-	float lastTheta = 0.f;
+	//float lastX = 0.f;
+	//float lastY = 0.f;
+	//float lastTheta = 0.f;
+
+	TUniquePtr<FPoseMessage> currentPose;
+	TUniquePtr<FPoseMessage> lastPose;
+
+	// Store time (from clock) of previous message
+	double currentTime;
+	double lastTime;
+	std::chrono::steady_clock::time_point initTime;
 
 	USkeletalMeshComponent* Mesh = nullptr;
 

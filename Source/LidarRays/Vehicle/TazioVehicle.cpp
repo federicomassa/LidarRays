@@ -20,6 +20,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "ControlMessage.h"
+#include <chrono>
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -28,6 +29,7 @@ const FName ATazioVehicle::LookRightBinding("LookRight");
 
 ATazioVehicle::ATazioVehicle()
 {
+	debug_file.open("D:/debug.txt");
 }
 
 ATazioVehicle::~ATazioVehicle()
@@ -37,6 +39,9 @@ ATazioVehicle::~ATazioVehicle()
 
 	if (trajectory_dump.is_open())
 		trajectory_dump.close();
+
+	if (debug_file.is_open())
+		debug_file.close();
 }
 
 USensorManager* ATazioVehicle::GetSensorManager()
@@ -132,9 +137,42 @@ void ATazioVehicle::SendControls(const FControlMessage& control)
 
 void ATazioVehicle::SendPose(const FPoseMessage& pose)
 {
-	lastX = pose.x*100;
-	lastY = -pose.y*100;
-	lastTheta = -pose.theta*180/3.14159;
+	// Check if vehicle simulator has been reset
+	if (currentPose && lastPose && currentPose->timestamp < lastPose->timestamp)
+	{
+		initTime = std::chrono::steady_clock::now();
+		currentPose.Release();
+		lastPose.Release();
+	}
+
+	
+	// Init case
+	if (!currentPose)
+	{
+		currentPose = TUniquePtr<FPoseMessage>(new FPoseMessage);
+		*currentPose = pose;
+		initTime = std::chrono::steady_clock::now();
+
+		currentTime = std::chrono::duration_cast<std::chrono::nanoseconds>(
+			std::chrono::steady_clock::now() - initTime).count()*1E-9;
+	}
+	else
+	{
+		// Init
+		if (!lastPose)
+			lastPose = TUniquePtr<FPoseMessage>(new FPoseMessage);
+
+		// Store old value in lastPose
+		*lastPose = *currentPose;
+		*currentPose = pose;
+
+		lastTime = currentTime;
+
+		currentTime = std::chrono::duration_cast<std::chrono::nanoseconds>(
+			std::chrono::steady_clock::now() - initTime).count()*1E-9;
+
+		debug_file << pose.timestamp << '\t' << currentTime << '\n';
+	}
 }
 
 void ATazioVehicle::ToggleRecordTrajectory()
@@ -146,6 +184,9 @@ void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
+	double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+		std::chrono::steady_clock::now() - initTime).count()*1E-9;
+
 	if (bPhysXSimulation)
 	{
 		GetVehicleMovementComponent()->SetThrottleInput(lastThrottle);
@@ -156,9 +197,33 @@ void ATazioVehicle::Tick(float Delta)
 		lastSteer = 0.0;
 	}
 	else
-	{
-		SetActorLocation(FVector(lastX, lastY, 150.f));
-		SetActorRotation(FRotator(0.f, lastTheta, 0.f));
+	{ 
+		double x_interp, y_interp, theta_interp;
+
+		if (lastPose)
+		{
+			// Estimate pose with linear interpolation
+			x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+			y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+
+			// TODO unwrap
+			theta_interp = currentPose->theta;
+		}
+		else if (currentPose)
+		{
+			x_interp = currentPose->x;
+			y_interp = currentPose->y;
+			theta_interp = currentPose->theta;
+		}
+		else
+		{
+			x_interp = 0.0;
+			y_interp = 0.0;
+			theta_interp = 0.0;
+		}
+
+		SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
+		SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
 	}
 
 	// Dump trajectory to csv file
@@ -209,7 +274,7 @@ void ATazioVehicle::Init()
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	PoseReceiver = NewObject<AUDPReceiver>(this);
-	PoseReceiver->Start("Test", "192.168.105.3", 9000);
+	PoseReceiver->Start("Test", "192.168.105.3", 33333);
 
 
 	// ===================== Vehicle Model ============================

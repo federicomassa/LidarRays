@@ -15,18 +15,8 @@ void ATazioGameMode::BeginPlay()
 
 APawn* ATazioGameMode::SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass)
 {
-	// Find all PlayerStart objects in world
-	TArray<AActor*> StartingPoints;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), StartingPoints);
-
 	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
 	check(GameInstance);
-
-	// A valid map must have at least as many player starts as number of contestants
-	check(StartingPoints.Num() >= GameInstance->Contestants);
-
-	// Search for actors with name "PlayerStart_<index>"
-	FRegexPattern PlayerStartRegex("PlayerStart_([0-9]+)");
 
 	APawn* Character = nullptr;
 

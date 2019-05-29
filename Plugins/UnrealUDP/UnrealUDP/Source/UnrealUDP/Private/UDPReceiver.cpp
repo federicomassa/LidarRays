@@ -84,8 +84,8 @@ void AUDPReceiver::Receive(const FArrayReaderPtr& ArrayReaderPtr, const FIPv4End
 	ArrayReaderPtr->Serialize(Data.GetData(), ArrayReaderPtr->TotalSize());
 
 	//Pass the reference to be used on gamethread. This seems to be working better than sending controls to car in UDP thread
-	AsyncTask(ENamedThreads::GameThread, [&, Data]()
-	{
+	/*AsyncTask(ENamedThreads::GameThread, [&, Data]()
+	{*/
 		OnDataReceived.Broadcast(Data);
-	});
+	/*});*/
 }

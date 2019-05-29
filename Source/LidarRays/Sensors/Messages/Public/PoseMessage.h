@@ -11,12 +11,14 @@ struct FPoseMessage : public FMessageBase
 	GENERATED_BODY()
 
 	float x, y, theta;
+	double timestamp;
+	unsigned long seq;
 
 public:
 	template <class Archive>
 	void serialize(Archive & ar)
 	{
-		ar(x, y, theta);
+		ar(x, y, theta, timestamp, seq);
 	}
 
 	std::string ToString() override
