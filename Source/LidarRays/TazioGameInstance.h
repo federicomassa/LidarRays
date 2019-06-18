@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Definitions.h"
+#include "Templates/Tuple.h"
+#include "IPv4Endpoint_Wrapper.h"
 #include "TazioGameInstance.generated.h"
 
 /**
@@ -70,5 +72,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FString DumpTrajectory = "";
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<FIPv4Endpoint_Wrapper> PoseReceiveEndpoints;
 
 };

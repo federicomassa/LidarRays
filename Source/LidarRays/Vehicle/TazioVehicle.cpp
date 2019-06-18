@@ -20,6 +20,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "ControlMessage.h"
+#include <Components/SceneCaptureComponent2D.h>
+#include <Engine/TextureRenderTarget2D.h>
 #include <chrono>
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
@@ -30,13 +32,19 @@ const FName ATazioVehicle::LookRightBinding("LookRight");
 ATazioVehicle::ATazioVehicle()
 {
 	debug_file.open("D:/debug.txt");
+	
+	const int MAX_VEHICLES = 4;
+	for (int i = 0; i < MAX_VEHICLES; i++)
+	{
+		ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTargetObj(*(FString("/Game/Maps/Cameras/ThirdPersonVehicle_") + FString::FromInt(i)));
+		check(RenderTargetObj.Succeeded());
+
+		TextureTargets.Add(RenderTargetObj.Object);
+	}
 }
 
 ATazioVehicle::~ATazioVehicle()
 {
-	if (DynamicModel)
-		delete DynamicModel;
-
 	if (trajectory_dump.is_open())
 		trajectory_dump.close();
 
@@ -79,44 +87,13 @@ AUDPReceiver* ATazioVehicle::GetPoseReceiver()
 	return PoseReceiver;
 }
 
-void ATazioVehicle::ToggleManualDriving()
-{
-	if (InputComponent->AxisBindings.Num() > 0)
-		AxisBindings = InputComponent->AxisBindings;
-
-	ManualDriving = !ManualDriving;
-
-	if (ManualDriving)
-	{
-		///*InputComponent->BindAxis(LookUpBinding);
-		//InputComponent->BindAxis(LookRightBinding);*/
-		//InputComponent->AxisKeyBindings = AxisBindings;
-		//UE_LOG(LogTemp, Warning, TEXT("Manual: %i"), InputComponent->AxisBindings.Num());*/
-		InputComponent->AxisBindings = AxisBindings;
-		UE_LOG(LogTemp, Warning, TEXT("Manual mode activated"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AI control mode activated"));
-		InputComponent->AxisBindings.Empty();
-	}
-
-}
-
 void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	InputComponent = PlayerInputComponent;
 
-	UE_LOG(LogTemp, Warning, TEXT("Setting Player input: %i"), bPhysXSimulation);
-
 	//// set up gameplay key bindings
 	//check(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("Throttle", this, &ATazioVehicle::SetThrottle);
-	PlayerInputComponent->BindAxis("Steer", this, &ATazioVehicle::SetSteer);
-
-	PlayerInputComponent->BindAction("ManualDriving", IE_Pressed, this, &ATazioVehicle::ToggleManualDriving);
 
 	UGPSComponent* GPSComponent = FindComponentByClass<UGPSComponent>();
 	check(GPSComponent);
@@ -131,8 +108,7 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
 {
-	lastThrottle = control.VX;
-	lastSteer = control.Ydot;
+
 }
 
 void ATazioVehicle::SendPose(const FPoseMessage& pose)
@@ -187,44 +163,32 @@ void ATazioVehicle::Tick(float Delta)
 	double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
 		std::chrono::steady_clock::now() - initTime).count()*1E-9;
 
-	if (bPhysXSimulation)
-	{
-		GetVehicleMovementComponent()->SetThrottleInput(lastThrottle);
-		GetVehicleMovementComponent()->SetSteeringInput(lastSteer);
+	double x_interp, y_interp, theta_interp;
 
-		// Consume control
-		lastThrottle = 0.0;
-		lastSteer = 0.0;
+	if (lastPose)
+	{
+		// Estimate pose with linear interpolation
+		x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+		y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+
+		// TODO unwrap
+		theta_interp = currentPose->theta;
+	}
+	else if (currentPose)
+	{
+		x_interp = currentPose->x;
+		y_interp = currentPose->y;
+		theta_interp = currentPose->theta;
 	}
 	else
-	{ 
-		double x_interp, y_interp, theta_interp;
-
-		if (lastPose)
-		{
-			// Estimate pose with linear interpolation
-			x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
-			y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
-
-			// TODO unwrap
-			theta_interp = currentPose->theta;
-		}
-		else if (currentPose)
-		{
-			x_interp = currentPose->x;
-			y_interp = currentPose->y;
-			theta_interp = currentPose->theta;
-		}
-		else
-		{
-			x_interp = 0.0;
-			y_interp = 0.0;
-			theta_interp = 0.0;
-		}
-
-		SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
-		SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
+	{
+		x_interp = 0.0;
+		y_interp = 0.0;
+		theta_interp = 0.0;
 	}
+
+	SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
+	SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
 
 	// Dump trajectory to csv file
 	if (isRecordingTrajectory && trajectory_dump.good())
@@ -253,6 +217,9 @@ void ATazioVehicle::Tick(float Delta)
 
 void ATazioVehicle::Init()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Initializing actor with label %s"), *GetActorLabel());
+
+
 	check(GetGameInstance());
 	GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
 	check(GameInstance != nullptr);
@@ -274,15 +241,14 @@ void ATazioVehicle::Init()
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	PoseReceiver = NewObject<AUDPReceiver>(this);
-	PoseReceiver->Start("Test", "192.168.105.3", 33333);
 
+	PlayerIndex = GetPlayerIndex();
 
-	// ===================== Vehicle Model ============================
-	VehicleModelType = GameInstance->VehicleModel;
-	DynamicModel = VehicleModel::generateVehicleModel(VehicleModelType);
-
-	if (VehicleModelType != EVehicleModelEnum::VM_PhysX)
-		bPhysXSimulation = false;
+	// Check that pose is set to be received
+	check(GameInstance->PoseReceiveEndpoints.Num() > PlayerIndex);
+	PoseReceiver->Start("PoseReceiver", 
+		GameInstance->PoseReceiveEndpoints[PlayerIndex].Address,
+		GameInstance->PoseReceiveEndpoints[PlayerIndex].Port);
 
 	SensManager = NewObject<USensorManager>();
 	SensManager->Init(this);
@@ -303,65 +269,46 @@ void ATazioVehicle::BeginPlay()
 
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
 	PhysicsMovementComponent = FindComponentByClass<UWheeledVehicleMovementComponent4W>();
+	/*ThirdPersonSceneComponent = NewObject<USceneCaptureComponent2D>(this);
+	AddOwnedComponent(ThirdPersonSceneComponent);
 
-	if (DynamicModel)
-	{
-		// Remove physics movement component, add model movement component
-		Mesh->SetSimulatePhysics(false);
+	ThirdPersonSceneComponent->TextureTarget = TextureTargets[PlayerIndex];
+	FVector CameraLocation = Mesh->GetSocketLocation("ThirdPersonCamera");
+	FRotator CameraRotation = Mesh->GetSocketRotation("ThirdPersonCamera");
 
+	ThirdPersonSceneComponent->SetAbsolute(true, true);
+	ThirdPersonSceneComponent->SetWorldLocationAndRotation(CameraLocation, CameraRotation);
+	ThirdPersonSceneComponent->Activate();*/
 
-		PhysicsMovementComponent->DestroyComponent();
-
-		ModelMovementComponent = NewObject<UKinematicMovementComponent>(this);
-		AddOwnedComponent(ModelMovementComponent);
-
-	}
-
-	if (DynamicModel)
-	{
-		DynamicModel->initModel();
-
-		// Create pawn movement component
-		std::map<std::string, double> initState;
-		FVector initLocation = GetActorLocation();
-		FRotator initRotation = GetActorRotation();
-
-		initState["x"] = initLocation.X;
-		initState["y"] = initLocation.Y;
-		initState["v"] = 0.f;
-		initState["yaw"] = initRotation.Yaw;
-
-		DynamicModel->setState(initState);
-
-		std::map<std::string, double> newState = DynamicModel->getWorldState();
-		FVector newWorldState;
-		newWorldState.X = newState.at("x");
-		newWorldState.Y = newState.at("y");
-		newWorldState.Z = initLocation.Z + 10.f;
-
-		SetActorLocation(newWorldState, false, nullptr, ETeleportType::TeleportPhysics);
-		SetActorRotation(FQuat(FRotator(initRotation.Pitch, newState.at("yaw"), initRotation.Roll)), ETeleportType::TeleportPhysics);
-	}
 }
 
 void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (DynamicModel)
-		DynamicModel->closeModel();
-
 	Super::EndPlay(EndPlayReason);
 }
 
-void ATazioVehicle::SetThrottle(float value)
+int ATazioVehicle::GetPlayerIndex()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Throttle"));
-	lastThrottle = value;
+	int index = -1;
+
+	// Actor should be named Player_%d. TODO Only for Player_0 lidars/cameras are simulated
+	FRegexPattern PlayerNamePattern("Player_([0-9]+)");
+	FRegexMatcher PlayerNameMatcher(PlayerNamePattern, GetActorLabel());
+
+	if (PlayerNameMatcher.FindNext())
+	{
+		FString Match = PlayerNameMatcher.GetCaptureGroup(1);
+		UE_LOG(LogTemp, Warning, TEXT("Matching: %s"), *Match);
+		check(Match.IsNumeric());
+		index = FCString::Atoi(*Match);
+	}
+
+	return index;
 }
 
-void ATazioVehicle::SetSteer(float value)
+TArray<UTextureRenderTarget2D*> ATazioVehicle::GetTextureTargets() const
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Steer"));
-	lastSteer = value;
+	return TextureTargets;
 }
 
 

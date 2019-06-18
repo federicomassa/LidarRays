@@ -27,6 +27,8 @@ class AUDPSender;
 class AUDPReceiver;
 class USensorManager;
 class UMessageSerializerComponent;
+class USceneCaptureComponent2D;
+class UTextureRenderTarget2D;
 class VehicleModel;
 
 UCLASS(config=Game)
@@ -45,6 +47,12 @@ class ATazioVehicle : public AWheeledVehicle
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
 
+	// Scene capture component (the one used in split screen)
+	USceneCaptureComponent2D* ThirdPersonSceneComponent = nullptr;
+
+	// Texture targets, one for each possible opponent, taken from content browser
+	TArray<UTextureRenderTarget2D*> TextureTargets;
+
 	// File where to dump trajectory in csv
 	std::ofstream trajectory_dump;
 
@@ -55,6 +63,7 @@ class ATazioVehicle : public AWheeledVehicle
 	bool isFirst = true;
 	bool isRecordingTrajectory = false;
 
+	int PlayerIndex = -1;
 
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
@@ -78,24 +87,7 @@ public:
 
 private:
 
-	bool ManualDriving = true;
-
-	//// Vehicle model
-	//UPROPERTY(EditAnywhere, Category = Model)
-	EVehicleModelEnum VehicleModelType = EVehicleModelEnum::VM_PhysX;
-
-	VehicleModel* DynamicModel = nullptr;
-
 	TArray < FInputAxisBinding > AxisBindings;
-
-	//float lastDeltaTime = 0.f;
-
-	float lastThrottle = 0.f;
-	float lastSteer = 0.f;
-
-	//float lastX = 0.f;
-	//float lastY = 0.f;
-	//float lastTheta = 0.f;
 
 	TUniquePtr<FPoseMessage> currentPose;
 	TUniquePtr<FPoseMessage> lastPose;
@@ -119,9 +111,6 @@ public:
 	// Called on BeginPlay
 	void Init();
 
-	UPROPERTY(BlueprintReadOnly)
-	bool bPhysXSimulation = true;
-
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPSender* GetLidarSender();
 
@@ -140,6 +129,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetPoseReceiver();
 
+	UFUNCTION(BlueprintCallable, Category = Utility)
+	int GetPlayerIndex();
+
+	UFUNCTION(BlueprintCallable, Category = Utility)
+	TArray<UTextureRenderTarget2D*> GetTextureTargets() const;
+
+
 	USensorManager* GetSensorManager();
 
 	// Begin Pawn interface
@@ -153,15 +149,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-
-	void ToggleManualDriving();
 	void ToggleRecordTrajectory();
-
-	UFUNCTION(BlueprintCallable, Category = Controller)
-	bool IsManualDriveMode() const
-	{
-		return ManualDriving;
-	}
 
 public:
 	// End Actor interface
@@ -172,9 +160,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	void SendPose(const FPoseMessage& PoseMessage);
-
-	void SetThrottle(float value);
-	void SetSteer(float value);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

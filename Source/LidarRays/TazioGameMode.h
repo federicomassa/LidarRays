@@ -19,7 +19,7 @@ public:
 
 	// Returns pointer to character
 	UFUNCTION(BlueprintCallable)
-	APawn* SpawnContestants(UClass* CharacterClass, UClass* OpponentsClass);
+	APawn* SpawnContestants(UClass* CharacterClass);
 };
 
 
