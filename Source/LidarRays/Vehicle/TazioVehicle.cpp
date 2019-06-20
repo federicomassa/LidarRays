@@ -242,13 +242,13 @@ void ATazioVehicle::Init()
 
 	PoseReceiver = NewObject<AUDPReceiver>(this);
 
-	PlayerIndex = GetPlayerIndex();
+	//PlayerIndex = GetPlayerIndex();
 
-	// Check that pose is set to be received
-	check(GameInstance->PoseReceiveEndpoints.Num() > PlayerIndex);
-	PoseReceiver->Start("PoseReceiver", 
-		GameInstance->PoseReceiveEndpoints[PlayerIndex].Address,
-		GameInstance->PoseReceiveEndpoints[PlayerIndex].Port);
+	//// Check that pose is set to be received
+	//check(GameInstance->PoseReceiveEndpoints.Num() > PlayerIndex);
+	//PoseReceiver->Start("PoseReceiver", 
+	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Address,
+	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Port);
 
 	SensManager = NewObject<USensorManager>();
 	SensManager->Init(this);
