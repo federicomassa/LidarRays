@@ -31,6 +31,8 @@ class USceneCaptureComponent2D;
 class UTextureRenderTarget2D;
 class VehicleModel;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIDChangedDelegate, const int&, NewID);
+
 UCLASS(config=Game)
 class ATazioVehicle : public AWheeledVehicle
 {
@@ -63,7 +65,11 @@ class ATazioVehicle : public AWheeledVehicle
 	bool isFirst = true;
 	bool isRecordingTrajectory = false;
 
-	int PlayerIndex = -1;
+	int _ID = -1;
+
+	// Event called when ID is reassigned
+	UPROPERTY(BlueprintAssignable, Category = UDP)
+	FIDChangedDelegate OnIDChanged;
 
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
@@ -132,10 +138,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Utility)
 	int GetPlayerIndex();
 
-	UFUNCTION(BlueprintCallable, Category = Utility)
-	TArray<UTextureRenderTarget2D*> GetTextureTargets() const;
-
-
 	USensorManager* GetSensorManager();
 
 	// Begin Pawn interface
@@ -160,6 +162,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	void SendPose(const FPoseMessage& PoseMessage);
+
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
+	int GetID() const { return _ID; }
+
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
+	void SetID(const int& id);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

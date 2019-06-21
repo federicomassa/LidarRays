@@ -16,10 +16,6 @@ class LIDARRAYS_API ATazioGameMode : public AGameMode
 
 public:
 	void BeginPlay() override;
-
-	// Returns pointer to character
-	UFUNCTION(BlueprintCallable)
-	APawn* SpawnContestants(UClass* CharacterClass);
 };
 
 

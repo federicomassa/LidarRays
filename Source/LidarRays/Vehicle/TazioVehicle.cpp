@@ -32,15 +32,6 @@ const FName ATazioVehicle::LookRightBinding("LookRight");
 ATazioVehicle::ATazioVehicle()
 {
 	debug_file.open("D:/debug.txt");
-	
-	const int MAX_VEHICLES = 4;
-	for (int i = 0; i < MAX_VEHICLES; i++)
-	{
-		ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTargetObj(*(FString("/Game/Maps/Cameras/ThirdPersonVehicle_") + FString::FromInt(i)));
-		check(RenderTargetObj.Succeeded());
-
-		TextureTargets.Add(RenderTargetObj.Object);
-	}
 }
 
 ATazioVehicle::~ATazioVehicle()
@@ -95,7 +86,8 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	//// set up gameplay key bindings
 	//check(PlayerInputComponent);
 
-	UGPSComponent* GPSComponent = FindComponentByClass<UGPSComponent>();
+	// TEMP
+	/* UGPSComponent* GPSComponent = FindComponentByClass<UGPSComponent>();
 	check(GPSComponent);
 
 	PlayerInputComponent->BindAction("ToggleGPS", IE_Pressed, GPSComponent, &UGPSComponent::ToggleGPS);
@@ -103,7 +95,7 @@ void ATazioVehicle::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("RecordTrajectory", IE_Pressed, this, &ATazioVehicle::ToggleRecordTrajectory);
 
 
-	AxisBindings = InputComponent->AxisBindings;
+	AxisBindings = InputComponent->AxisBindings;*/
 }
 
 void ATazioVehicle::SendControls(const FControlMessage& control)
@@ -160,59 +152,60 @@ void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
-	double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-		std::chrono::steady_clock::now() - initTime).count()*1E-9;
+	// TEMP
+	//double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+	//	std::chrono::steady_clock::now() - initTime).count()*1E-9;
 
-	double x_interp, y_interp, theta_interp;
+	//double x_interp, y_interp, theta_interp;
 
-	if (lastPose)
-	{
-		// Estimate pose with linear interpolation
-		x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
-		y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+	//if (lastPose)
+	//{
+	//	// Estimate pose with linear interpolation
+	//	x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+	//	y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
 
-		// TODO unwrap
-		theta_interp = currentPose->theta;
-	}
-	else if (currentPose)
-	{
-		x_interp = currentPose->x;
-		y_interp = currentPose->y;
-		theta_interp = currentPose->theta;
-	}
-	else
-	{
-		x_interp = 0.0;
-		y_interp = 0.0;
-		theta_interp = 0.0;
-	}
+	//	// TODO unwrap
+	//	theta_interp = currentPose->theta;
+	//}
+	//else if (currentPose)
+	//{
+	//	x_interp = currentPose->x;
+	//	y_interp = currentPose->y;
+	//	theta_interp = currentPose->theta;
+	//}
+	//else
+	//{
+	//	x_interp = 0.0;
+	//	y_interp = 0.0;
+	//	theta_interp = 0.0;
+	//}
 
-	SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
-	SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
+	//SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
+	//SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
 
-	// Dump trajectory to csv file
-	if (isRecordingTrajectory && trajectory_dump.good())
-	{
-		if (isFirst)
-		{
-			InitRecordingTime = GetWorld()->GetTimeSeconds();
-			isFirst = false;
-		}
-		else
-		{
-			trajectory_dump << '\n';
-		}
+	//// Dump trajectory to csv file
+	//if (isRecordingTrajectory && trajectory_dump.good())
+	//{
+	//	if (isFirst)
+	//	{
+	//		InitRecordingTime = GetWorld()->GetTimeSeconds();
+	//		isFirst = false;
+	//	}
+	//	else
+	//	{
+	//		trajectory_dump << '\n';
+	//	}
 
-		FVector Location = GetActorLocation();
-		float Yaw = GetActorRotation().Yaw;
+	//	FVector Location = GetActorLocation();
+	//	float Yaw = GetActorRotation().Yaw;
 
-		trajectory_dump << double(GetWorld()->GetTimeSeconds()) - double(InitRecordingTime) << ',';
-		trajectory_dump << double(Location.X)/100.0 << ',';
-		trajectory_dump << double(Location.Y)/100.0 << ',';
-		trajectory_dump << double(Location.Z)/100.0 << ',';
-		trajectory_dump << double(Yaw)*PI/180.0 << ',';
-		trajectory_dump << double(GetVelocity().X)/100.0;
-	}
+	//	trajectory_dump << double(GetWorld()->GetTimeSeconds()) - double(InitRecordingTime) << ',';
+	//	trajectory_dump << double(Location.X)/100.0 << ',';
+	//	trajectory_dump << double(Location.Y)/100.0 << ',';
+	//	trajectory_dump << double(Location.Z)/100.0 << ',';
+	//	trajectory_dump << double(Yaw)*PI/180.0 << ',';
+	//	trajectory_dump << double(GetVelocity().X)/100.0;
+	//}
 } 
 
 void ATazioVehicle::Init()
@@ -225,7 +218,8 @@ void ATazioVehicle::Init()
 	check(GameInstance != nullptr);
 
 	// =============== Setup communication ================
-	LidarSender = NewObject<AUDPSender>(this);
+	// TEMP
+	/*LidarSender = NewObject<AUDPSender>(this);
 	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
 
 	GPSSender = NewObject<AUDPSender>(this);
@@ -241,7 +235,7 @@ void ATazioVehicle::Init()
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	PoseReceiver = NewObject<AUDPReceiver>(this);
-
+*/
 	//PlayerIndex = GetPlayerIndex();
 
 	//// Check that pose is set to be received
@@ -250,8 +244,9 @@ void ATazioVehicle::Init()
 	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Address,
 	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Port);
 
-	SensManager = NewObject<USensorManager>();
-	SensManager->Init(this);
+	// TEMP
+	/*SensManager = NewObject<USensorManager>();
+	SensManager->Init(this);*/
 }
 
 void ATazioVehicle::BeginPlay()
@@ -306,11 +301,11 @@ int ATazioVehicle::GetPlayerIndex()
 	return index;
 }
 
-TArray<UTextureRenderTarget2D*> ATazioVehicle::GetTextureTargets() const
+void ATazioVehicle::SetID(const int& id)
 {
-	return TextureTargets;
+	_ID = id;
+	OnIDChanged.Broadcast(_ID);
 }
-
 
 
 #undef LOCTEXT_NAMESPACE
