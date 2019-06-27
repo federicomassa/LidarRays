@@ -10,6 +10,8 @@
 #include "PoseMessage.h"
 #include <fstream>
 #include <chrono>
+#include <Containers/Set.h>
+//#include "simulink_interface/udp_receiver.hpp"
 #include "TazioVehicle.generated.h"
 
 
@@ -65,11 +67,25 @@ class ATazioVehicle : public AWheeledVehicle
 	bool isFirst = true;
 	bool isRecordingTrajectory = false;
 
+	// ID is a unique identifier
 	int _ID = -1;
 
+	// Player index is an increasing number from 1 to N (N contestants)
+	int _PlayerIndex = -1;
+
+	// If player settings are available for this player
+	bool _PlayerSettingsReady = false;
+
+	// If ID event has been received
+	bool _IDReceived = false;
+
+	//boost::asio::io_service io_service;
+	//simulink::udp_receiver<FPoseMessage>* PoseReceiver = nullptr;
+
 	// Event called when ID is reassigned
-	UPROPERTY(BlueprintAssignable, Category = UDP)
+	UPROPERTY(BlueprintAssignable, Category = TazioVehicle)
 	FIDChangedDelegate OnIDChanged;
+
 
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
@@ -110,6 +126,9 @@ private:
 	UPROPERTY()
 	UPawnMovementComponent* ModelMovementComponent = nullptr;
 
+	bool WaitForPlayerSettings();
+
+
 public:
 	ATazioVehicle();
 	~ATazioVehicle();
@@ -135,10 +154,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetPoseReceiver();
 
-	UFUNCTION(BlueprintCallable, Category = Utility)
-	int GetPlayerIndex();
-
 	USensorManager* GetSensorManager();
+
+	UFUNCTION(BlueprintCallable)
+	void IDReceived();
 
 	// Begin Pawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -167,7 +186,10 @@ public:
 	int GetID() const { return _ID; }
 
 	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
-	void SetID(const int& id);
+	void SetID(const int& ID);
+
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
+	void SetPlayerIndex(const int& PlayerIndex);
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

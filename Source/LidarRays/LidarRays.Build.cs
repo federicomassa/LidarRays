@@ -9,7 +9,7 @@ public class LidarRays : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Networking", "UnrealUDP", "Slate", "SlateCore", "PhysXVehicles", "HeadMountedDisplay" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Networking", "UnrealUDP", "Slate", "SlateCore", "PhysXVehicles", "HeadMountedDisplay", "LoadingScreen" });
 
 		PrivateDependencyModuleNames.Add("UnrealUDP");
 
@@ -31,6 +31,11 @@ public class LidarRays : ModuleRules
 
         // Cereal to serialize sensor data
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/cereal/include"));
+
+        // Boost
+        //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost"));
+
+        //PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "../ThirdParty/boost/lib64-msvc-14.1/boost_system-vc141-mt-gd-x64-1_70.lib"));
 
         //// Disable some warnings
         bEnableUndefinedIdentifierWarnings = false;

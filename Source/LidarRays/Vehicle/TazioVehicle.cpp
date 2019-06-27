@@ -24,10 +24,21 @@
 #include <Engine/TextureRenderTarget2D.h>
 #include <chrono>
 
+//#include "AllowWindowsPlatformTypes.h"
+//#define WIN32_LEAN_AND_MEAN
+//#define NOMINMAX
+//
+//// Windows Header Files:
+//#include <windows.h>
+//#include <boost/detail/interlocked.hpp>
+//#include "simulink_interface/udp_receiver.hpp"
+//#include "HideWindowsPlatformTypes.h"
+
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
+constexpr int MAX_VEHICLES = 4;
 
 ATazioVehicle::ATazioVehicle()
 {
@@ -152,6 +163,15 @@ void ATazioVehicle::Tick(float Delta)
 {
 	Super::Tick(Delta);
 
+	// If player settings are not available yet, return
+	if (!_PlayerSettingsReady && !WaitForPlayerSettings())
+		return;
+
+	if (!_IDReceived)
+		OnIDChanged.Broadcast(_ID);
+
+	UE_LOG(LogTemp, Warning, TEXT("Actor %s with ID: %d is ticking!"), *GetActorLabel(), _ID);
+
 	// TEMP
 	//double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
 	//	std::chrono::steady_clock::now() - initTime).count()*1E-9;
@@ -217,9 +237,13 @@ void ATazioVehicle::Init()
 	GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
 	check(GameInstance != nullptr);
 
+
+
+	//PoseReceiver = new simulink::udp_receiver<FPoseMessage>(io_service, 3004, ATazioVehicle::PoseCallback);
+
 	// =============== Setup communication ================
-	// TEMP
-	/*LidarSender = NewObject<AUDPSender>(this);
+	
+	LidarSender = NewObject<AUDPSender>(this);
 	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
 
 	GPSSender = NewObject<AUDPSender>(this);
@@ -235,18 +259,12 @@ void ATazioVehicle::Init()
 	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
 
 	PoseReceiver = NewObject<AUDPReceiver>(this);
-*/
+
 	//PlayerIndex = GetPlayerIndex();
 
 	//// Check that pose is set to be received
 	//check(GameInstance->PoseReceiveEndpoints.Num() > PlayerIndex);
-	//PoseReceiver->Start("PoseReceiver", 
-	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Address,
-	//	GameInstance->PoseReceiveEndpoints[PlayerIndex].Port);
 
-	// TEMP
-	/*SensManager = NewObject<USensorManager>();
-	SensManager->Init(this);*/
 }
 
 void ATazioVehicle::BeginPlay()
@@ -282,30 +300,47 @@ void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-int ATazioVehicle::GetPlayerIndex()
-{
-	int index = -1;
-
-	// Actor should be named Player_%d. TODO Only for Player_0 lidars/cameras are simulated
-	FRegexPattern PlayerNamePattern("Player_([0-9]+)");
-	FRegexMatcher PlayerNameMatcher(PlayerNamePattern, GetActorLabel());
-
-	if (PlayerNameMatcher.FindNext())
-	{
-		FString Match = PlayerNameMatcher.GetCaptureGroup(1);
-		UE_LOG(LogTemp, Warning, TEXT("Matching: %s"), *Match);
-		check(Match.IsNumeric());
-		index = FCString::Atoi(*Match);
-	}
-
-	return index;
-}
-
 void ATazioVehicle::SetID(const int& id)
 {
 	_ID = id;
+
+	// Broadcast event to change text box above car
 	OnIDChanged.Broadcast(_ID);
+
+	UE_LOG(LogTemp, Warning, TEXT("Setting ID %d for player %s"), id, *GetActorLabel());
 }
 
+void ATazioVehicle::SetPlayerIndex(const int& PlayerIndex)
+{
+	_PlayerIndex = PlayerIndex;
+}
+
+bool ATazioVehicle::WaitForPlayerSettings()
+{
+	// Check if this player has its player settings available
+	if (GameInstance->PlayersSettings.Contains(_PlayerIndex)) {
+		PoseReceiver->Start("PoseReceiver",
+			GameInstance->PlayersSettings[_PlayerIndex].Address,
+			GameInstance->PlayersSettings[_PlayerIndex].Port);
+
+		SensManager = NewObject<USensorManager>();
+		SensManager->Init(this);
+
+		_PlayerSettingsReady = true;
+
+		return true;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Players settings for player index %d are not available!"), _PlayerIndex);
+
+		return false;
+	}
+}
+
+void ATazioVehicle::IDReceived()
+{
+	_IDReceived = true;
+}
 
 #undef LOCTEXT_NAMESPACE

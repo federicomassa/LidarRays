@@ -60,6 +60,9 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!Owner->GetSensorManager())
+		return;
+
 	//if (DeltaTime < 0.02) return;
 
 	//_LARGE_INTEGER StartingTime;

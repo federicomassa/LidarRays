@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/bind.hpp>
+#include <functional>
 #include <cereal/archives/portable_binary.hpp>
 #include <cereal/types/array.hpp>
 
@@ -20,7 +22,7 @@ namespace simulink {
         typedef boost::asio::streambuf buffer_t;
 
     private:
-        const handler_t& _on_recv_handler;
+        handler_t _on_recv_handler;
         boost::asio::ip::udp::socket _socket;
         buffer_t _recv_buffer;
 
@@ -46,6 +48,9 @@ simulink::udp_receiver<MessageType>::udp_receiver(
 {
     using boost::asio::ip::udp;
     recv_data();
+    
+    if (!_on_recv_handler)
+      throw std::runtime_error("In simulink::udp_receiver constructor, bad handler");
 }
 
 template<typename MessageType>
@@ -53,15 +58,15 @@ void simulink::udp_receiver<MessageType>::recv_data(){
     _socket.async_receive(
         _recv_buffer.prepare(sizeof(MessageType)),
         [&](const boost::system::error_code& error, std::size_t trans_bytes){
-            if (error)
-                return;
-            
-            _recv_buffer.commit(sizeof(MessageType));
-            MessageType msg = buffer_to_message(_recv_buffer);
-            _on_recv_handler(msg);
-            recv_data();
-        }
-    );
+	  if (error)
+	    return;
+	 
+	  _recv_buffer.commit(sizeof(MessageType));
+	  MessageType msg = buffer_to_message(_recv_buffer);
+	  _on_recv_handler(msg);
+	  recv_data();
+	}
+			  );
 }
 
 template<typename MessageType>

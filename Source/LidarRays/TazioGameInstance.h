@@ -6,7 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "Definitions.h"
 #include "Templates/Tuple.h"
-#include "IPv4Endpoint_Wrapper.h"
+#include "PlayerSettings.h"
 #include "TazioGameInstance.generated.h"
 
 /**
@@ -68,12 +68,12 @@ public:
 	int32 Contestants = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString ReplayTrajectoryPath = "";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FString DumpTrajectory = "";
 	
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	TArray<FIPv4Endpoint_Wrapper> PoseReceiveEndpoints;
+	FString ReplayTrajectoryPath = "";
 
+	// key is player index
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TMap<int, FPlayerSettings> PlayersSettings;
 };
