@@ -68,7 +68,7 @@ bool AUDPReceiver::Start(const FString& YourChosenSocketName, const FString& The
 
 
 	FTimespan ThreadWaitTime = FTimespan::FromMilliseconds(100);
-	UDPReceiver = new FUdpSocketReceiver(ListenSocket, ThreadWaitTime, TEXT("UDP RECEIVER"));
+	UDPReceiver = new FUdpSocketReceiver( ListenSocket, ThreadWaitTime, *(YourChosenSocketName + " RECEIVER"));
 	UDPReceiver->OnDataReceived().BindUObject(this, &AUDPReceiver::Receive);
 	UDPReceiver->Start();
 
