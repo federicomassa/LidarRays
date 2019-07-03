@@ -35,18 +35,24 @@ public:
 	FORCEINLINE void ScreenMsg(const FString& Msg) { 
 		if(!ShowOnScreenDebugMessages) return; 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, *Msg); 
-	} 
+
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *Msg);
+	}
 	
 	FORCEINLINE void ScreenMsg(const FString& Msg, const float Value) 
 	{ 
 		if(!ShowOnScreenDebugMessages) return; 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%s %f"), *Msg, Value)); 
+
+		UE_LOG(LogTemp, Warning, TEXT("%s %f"), *Msg, Value);
 	} 
 	
 	FORCEINLINE void ScreenMsg(const FString& Msg, const FString& Msg2) 
 	{ 
 		if(!ShowOnScreenDebugMessages) return; 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%s %s"), *Msg, *Msg2)); 
+
+		UE_LOG(LogTemp, Warning, TEXT("%s %s"), *Msg, *Msg2);
 	}
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

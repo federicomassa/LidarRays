@@ -13,7 +13,7 @@ ULidarComponent::ULidarComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 	
 	// ...
 }
@@ -42,10 +42,14 @@ void ULidarComponent::BeginPlay()
 void ULidarComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	// FIXME it was crashing
-	//return;
+	UE_LOG(LogTemp, Warning, TEXT("Lidar ticking!"));
 
-	UE_LOG(LogTemp, Warning, TEXT("LIDAR FPS: %f"), 1.f / DeltaTime);
+	if (!Owner->GetSensorManager())
+		return;
+
+	if (!Owner->GetSensorManager()->IsLidarAvailable())
+		return;
+
 
 	//int TotalPoints = PointsPerLayer * Layers* NLidars;
 	//TotalPoints = 72;

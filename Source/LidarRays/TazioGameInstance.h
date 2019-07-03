@@ -23,45 +23,6 @@ public:
 	FString LevelName = "";
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	EVehicleModelEnum VehicleModel = EVehicleModelEnum::VM_PhysX;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString LidarSendIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 LidarPort = 8890;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString GPSSendIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 GPSPort = 8891;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString GPSTruthSendIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 GPSTruthPort = 8893;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString IMUSendIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 IMUPort = 8892;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString ControlReceiveIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 ControlPort = 7790;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FString OpponentStateSendIP = "127.0.0.1";
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	int32 OpponentStatePort = 9000;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	bool isCommunicationUDP = true;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

@@ -53,4 +53,7 @@ public:
 	AUDPReceiver* PoseReceiver = nullptr;
 
 	UMessageSerializerComponent* MessageSerializerComponent = nullptr;
+
+	bool IsLidarAvailable() { return !(LidarSender == nullptr); }
+	bool IsGPSAvailable() { return !(GPSSender == nullptr); }
 };

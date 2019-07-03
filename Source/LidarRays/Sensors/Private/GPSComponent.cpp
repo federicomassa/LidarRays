@@ -55,10 +55,20 @@ void UGPSComponent::BeginPlay()
 
 void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	UE_LOG(LogTemp, Warning, TEXT("GPS Ticking"));
+
 	if (!isActive)
 		return;
 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (!Owner->GetSensorManager())
+		return;
+
+	if (!Owner->GetSensorManager()->IsGPSAvailable())
+		return;
+
+	UE_LOG(LogTemp, Warning, TEXT("GPS TICKING!"));
 
 	if (!Owner->GetSensorManager())
 		return;
@@ -71,8 +81,6 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	//QueryPerformanceFrequency(&SystemTickFrequency);
 
 	FRotator CurrentWorldRotation = Owner->GetActorRotation();
-	CurrentWorldRotation.Yaw = CurrentWorldRotation.Yaw + 90; // mesh is rotated 90 degrees? (here is +, in IMU is -??)
-
 	//FVector CurrentWorldLocation = Owner->GetActorLocation() + CurrentWorldRotation.RotateVector(FVector(0.f, 0.f, 50.f));
 	FVector CurrentWorldLocation = Owner->GetActorLocation();
 
@@ -110,14 +118,14 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 
 	//UE_LOG(LogTemp, Warning, TEXT("Noise: %f, %f"), PositionCurrentNoise, YawCurrentNoise);
 
-	GPSMessage.x = GPSLocation.X + XCurrentNoise;
-	GPSMessage.y = GPSLocation.Y + YCurrentNoise;
-	GPSMessage.z = GPSLocation.Z + ZCurrentNoise;
+	GPSMessage.x = CurrentWorldLocation.X*0.01 + XCurrentNoise;
+	GPSMessage.y = -CurrentWorldLocation.Y*0.01 + YCurrentNoise;
+	GPSMessage.z = CurrentWorldLocation.Z*0.01 + ZCurrentNoise;
 
 
-	GPSMessage.yaw = (GPSRotation.Yaw)*PI / 180 + YawCurrentNoise;
-	GPSMessage.pitch = 0.0f;
-	GPSMessage.roll = 0.0f;
+	GPSMessage.yaw = -CurrentWorldRotation.Yaw*PI/180;
+	GPSMessage.pitch = CurrentWorldRotation.Pitch*PI/180;
+	GPSMessage.roll = CurrentWorldRotation.Roll*PI/180;
 
 	if (GPSMessage.yaw > PI)
 		GPSMessage.yaw -= 2 * PI;
@@ -200,7 +208,7 @@ void UGPSComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	UE_LOG(LogTemp, Warning, TEXT("GPS R, P, Y:  %f, %f, %f"), GPSTruthMessage.roll, -GPSTruthMessage.pitch, -GPSTruthMessage.yaw);*/
 
 
-	Owner->GetSensorManager()->SendGPSTruthMessage(GPSTruthMessage);
+	//Owner->GetSensorManager()->SendGPSTruthMessage(GPSTruthMessage);
 }
 
 void UGPSComponent::ToggleGPS()

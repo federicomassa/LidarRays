@@ -40,13 +40,24 @@ class ATazioVehicle : public AWheeledVehicle
 {
 	GENERATED_BODY()
 
+	// =========== COMPONENTS =========== // 
+	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UGPSComponent* GPSComponent;
+
+	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class ULidarComponent* LidarComponent;
+
+	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UMessageSerializerComponent* MessageSerializerComponent;
+
+
+
+
 	// Game instance to access permanent variables
 	UTazioGameInstance* GameInstance = nullptr;
 
 	UPROPERTY()
 	USensorManager* SensManager = nullptr;
-
-	UMessageSerializerComponent* MessageSerializerComponent;
 
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
@@ -154,7 +165,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = UDP)
 	AUDPReceiver* GetPoseReceiver();
 
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
 	USensorManager* GetSensorManager();
+
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
+	void SetGPSActive(bool bNewActive);
+
+	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
+	void SetLidarActive(bool bNewActive);
 
 	UFUNCTION(BlueprintCallable)
 	void IDReceived();

@@ -24,29 +24,31 @@ void USensorManager::Init(ATazioVehicle* Owner)
 	check(MessageSerializerComponent);
 
 	LidarSender = Owner->GetLidarSender();
-	check(LidarSender);
 
 	IMUSender = Owner->GetIMUSender();
-	check(IMUSender);
 
 	GPSSender = Owner->GetGPSSender();
-	check(GPSSender);
 
 	GPSTruthSender = Owner->GetGPSTruthSender();
-	check(GPSTruthSender);
 
 	ControlReceiver = Owner->GetControlReceiver();
-	check(ControlReceiver);
 
 	PoseReceiver = Owner->GetPoseReceiver();
-	check(PoseReceiver);
 
-	ControlReceiver->OnDataReceived.AddDynamic(this, &USensorManager::ReceiveControlMessage);
-	PoseReceiver->OnDataReceived.AddDynamic(this, &USensorManager::ReceivePoseMessage);
+	if (PoseReceiver)
+		PoseReceiver->OnDataReceived.AddDynamic(this, &USensorManager::ReceivePoseMessage);
+	else
+		UE_LOG(LogTemp, Error, TEXT("Pose receiver not found in owner!"));
 }
 
 void USensorManager::SendLidarMessage(FLidarMessage msg)
 {
+	if (!IsLidarAvailable())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Trying to send lidar message but lidar sender is not available!"));
+		return;
+	}
+
 	TArray<uint8> data = MessageSerializerComponent->SerializeLidarMessage(msg);
 	LidarSender->SendData(data);
 }
@@ -59,6 +61,12 @@ void USensorManager::SendIMUMessage(FIMUMessage msg)
 
 void USensorManager::SendGPSMessage(FOdometryMessage msg)
 {
+	if (!IsGPSAvailable())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Trying to send gps message but gps sender is not available!"));
+		return;
+	}
+
 	TArray<uint8> data = MessageSerializerComponent->SerializeOdometryMessage(msg, true);
 	GPSSender->SendData(data);
 }

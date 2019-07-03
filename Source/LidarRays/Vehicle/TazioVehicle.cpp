@@ -15,7 +15,11 @@
 #include <iomanip>
 #include "UDPReceiver.h"
 #include "VehicleModel.h"
+
 #include "GPSComponent.h"
+#include "MessageSerializerComponent.h"
+#include "LidarComponent.h"
+
 #include <array>
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
@@ -23,16 +27,6 @@
 #include <Components/SceneCaptureComponent2D.h>
 #include <Engine/TextureRenderTarget2D.h>
 #include <chrono>
-
-//#include "AllowWindowsPlatformTypes.h"
-//#define WIN32_LEAN_AND_MEAN
-//#define NOMINMAX
-//
-//// Windows Header Files:
-//#include <windows.h>
-//#include <boost/detail/interlocked.hpp>
-//#include "simulink_interface/udp_receiver.hpp"
-//#include "HideWindowsPlatformTypes.h"
 
 const FName ATazioVehicle::LookUpBinding("LookUp");
 const FName ATazioVehicle::LookRightBinding("LookRight");
@@ -42,6 +36,19 @@ constexpr int MAX_VEHICLES = 4;
 
 ATazioVehicle::ATazioVehicle()
 {
+	GPSComponent = CreateDefaultSubobject<UGPSComponent>(TEXT("GPS"));
+	GPSComponent->SetAutoActivate(false);
+	GPSComponent->Deactivate();
+	GPSComponent->PrimaryComponentTick.SetTickFunctionEnable(false);
+
+	LidarComponent = CreateDefaultSubobject<ULidarComponent>(TEXT("Lidar"));
+	LidarComponent->SetAutoActivate(false);
+	LidarComponent->Deactivate();
+	LidarComponent->PrimaryComponentTick.SetTickFunctionEnable(false);
+
+	MessageSerializerComponent = CreateDefaultSubobject<UMessageSerializerComponent>(TEXT("MessageSerializer"));
+	MessageSerializerComponent->Deactivate();
+
 	debug_file.open("D:/debug.txt");
 }
 
@@ -150,7 +157,7 @@ void ATazioVehicle::SendPose(const FPoseMessage& pose)
 		currentTime = std::chrono::duration_cast<std::chrono::nanoseconds>(
 			std::chrono::steady_clock::now() - initTime).count()*1E-9;
 
-		debug_file << pose.timestamp << '\t' << currentTime << '\n';
+		//debug_file << pose.timestamp << '\t' << currentTime << '\n';
 	}
 }
 
@@ -200,6 +207,12 @@ void ATazioVehicle::Tick(float Delta)
 	SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
 	SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
 
+
+	//if (currentPose)
+	//{
+	//	SetActorLocation(FVector(currentPose->x * 100, -currentPose->y * 100, 150.0));
+	//	SetActorRotation(FRotator(0.f, -currentPose->theta * 180 / 3.14159, 0.f));
+	//}
 	// Dump trajectory to csv file
 	if (isRecordingTrajectory && trajectory_dump.good())
 	{
@@ -233,31 +246,6 @@ void ATazioVehicle::Init()
 	check(GetGameInstance());
 	GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
 	check(GameInstance != nullptr);
-
-	// =============== Setup communication ================
-	
-	LidarSender = NewObject<AUDPSender>(this);
-	LidarSender->Start("Lidar", GameInstance->LidarSendIP, GameInstance->LidarPort, GameInstance->isCommunicationUDP);
-
-	GPSSender = NewObject<AUDPSender>(this);
-	GPSSender->Start("GPS", GameInstance->GPSSendIP, GameInstance->GPSPort, GameInstance->isCommunicationUDP);
-
-	GPSTruthSender = NewObject<AUDPSender>(this);
-	GPSTruthSender->Start("GPSTruth", GameInstance->GPSTruthSendIP, GameInstance->GPSTruthPort, GameInstance->isCommunicationUDP);
-
-	IMUSender = NewObject<AUDPSender>(this);
-	IMUSender->Start("IMU", GameInstance->IMUSendIP, GameInstance->IMUPort, GameInstance->isCommunicationUDP);
-
-	ControlReceiver = NewObject<AUDPReceiver>(this);
-	ControlReceiver->Start("Control", GameInstance->ControlReceiveIP, GameInstance->ControlPort);
-
-	PoseReceiver = NewObject<AUDPReceiver>(this);
-
-	//PlayerIndex = GetPlayerIndex();
-
-	//// Check that pose is set to be received
-	//check(GameInstance->PoseReceiveEndpoints.Num() > PlayerIndex);
-
 }
 
 void ATazioVehicle::BeginPlay()
@@ -312,9 +300,30 @@ bool ATazioVehicle::WaitForPlayerSettings()
 {
 	// Check if this player has its player settings available
 	if (GameInstance->PlayersSettings.Contains(_PlayerIndex)) {
+
+		auto& PlayerSettings = GameInstance->PlayersSettings[_PlayerIndex];
+
+		PoseReceiver = NewObject<AUDPReceiver>(this);
 		PoseReceiver->Start("PoseReceiver",
-			GameInstance->PlayersSettings[_PlayerIndex].Address,
-			GameInstance->PlayersSettings[_PlayerIndex].Port);
+			PlayerSettings.VehicleIP,
+			PlayerSettings.VehiclePort);
+
+		LidarComponent->SetActive(PlayerSettings.bIsLidarActive);
+		LidarComponent->PrimaryComponentTick.SetTickFunctionEnable(PlayerSettings.bIsLidarActive);
+
+		GPSComponent->SetActive(PlayerSettings.bIsGPSActive);
+		GPSComponent->PrimaryComponentTick.SetTickFunctionEnable(PlayerSettings.bIsGPSActive);
+
+		if (PlayerSettings.bIsLidarActive) {
+
+			LidarSender = NewObject<AUDPSender>(this);
+			LidarSender->Start("Lidar", PlayerSettings.LidarSendIP, PlayerSettings.LidarSendPort, GameInstance->isCommunicationUDP);
+		}
+
+		if (PlayerSettings.bIsGPSActive) {
+			GPSSender = NewObject<AUDPSender>(this);
+			GPSSender->Start("GPS", PlayerSettings.GPSSendIP, PlayerSettings.GPSSendPort, GameInstance->isCommunicationUDP);
+		}
 
 		SensManager = NewObject<USensorManager>();
 		SensManager->Init(this);
@@ -335,5 +344,36 @@ void ATazioVehicle::IDReceived()
 {
 	_IDReceived = true;
 }
+
+void ATazioVehicle::SetGPSActive(bool bNewActive)
+{
+	GPSComponent->SetActive(bNewActive);
+
+	if (bNewActive)
+	{
+		if (GPSSender == nullptr)
+			GPSSender = NewObject<AUDPSender>(this);
+
+		auto& PlayerSettings = GameInstance->PlayersSettings[_PlayerIndex];
+
+		GPSSender->Start("GPS", PlayerSettings.GPSSendIP, PlayerSettings.GPSSendPort, GameInstance->isCommunicationUDP);
+	}
+}
+
+void ATazioVehicle::SetLidarActive(bool bNewActive)
+{
+	LidarComponent->SetActive(bNewActive);
+
+	if (bNewActive)
+	{
+		if (LidarSender == nullptr)
+			LidarSender = NewObject<AUDPSender>(this);
+
+		auto& PlayerSettings = GameInstance->PlayersSettings[_PlayerIndex];
+
+		LidarSender->Start("Lidar", PlayerSettings.LidarSendIP, PlayerSettings.LidarSendPort, GameInstance->isCommunicationUDP);
+	}
+}
+
 
 #undef LOCTEXT_NAMESPACE
