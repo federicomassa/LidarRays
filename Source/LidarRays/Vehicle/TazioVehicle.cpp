@@ -35,6 +35,36 @@ const FName ATazioVehicle::LookRightBinding("LookRight");
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 constexpr int MAX_VEHICLES = 4;
 
+// Normalize angle between min_angle and min_angle + 2PI
+double normalize_angle(double a1, double min_angle = -PI)
+{
+	while (a1 < min_angle)
+	{
+		a1 += 2 * PI;
+	}
+
+	while (a1 > min_angle + 2 * PI)
+	{
+		a1 -= 2 * PI;
+	}
+
+	return a1;
+}
+
+// Difference a2 - a1 renormalized. E.g. 1° -> 359°, the difference is -2°.
+double angle_difference(double a1, double a2)
+{
+	a1 = normalize_angle(a1);
+	a2 = normalize_angle(a2);
+
+	if (std::fabs(a2 - a1) > PI)
+	{
+		return -(2*PI - std::fabs(a2 - a1))*std::signbit(a2 - a1);
+	}
+
+	return (a2 - a1);
+}
+
 ATazioVehicle::ATazioVehicle()
 {
 	GPSComponent = CreateDefaultSubobject<UGPSComponent>(TEXT("GPS"));
@@ -175,35 +205,51 @@ void ATazioVehicle::Tick(float Delta)
 	if (!_PlayerSettingsReady && !WaitForPlayerSettings())
 		return;
 
+	// Wait for at least two poses from client
+	if (!currentPose.IsValid() || !lastPose.IsValid())
+		return;
+
 	if (!_IDReceived)
 		OnIDChanged.Broadcast(_ID);
 
-	double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-		std::chrono::steady_clock::now() - initTime).count()*1E-9;
+	//double now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+	//	std::chrono::steady_clock::now() - initTime).count()*1E-9;
 
 	double x_interp, y_interp, theta_interp;
 
-	if (lastPose)
-	{
-		// Estimate pose with linear interpolation
-		x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
-		y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+	//if (lastPose)
+	//{
+	//	// Estimate pose with linear interpolation
+	//	x_interp = lastPose->x + (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
+	//	y_interp = lastPose->y + (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp)*(now - lastTime);
 
-		// TODO unwrap
-		theta_interp = currentPose->theta;
-	}
-	else if (currentPose)
-	{
-		x_interp = currentPose->x;
-		y_interp = currentPose->y;
-		theta_interp = currentPose->theta;
-	}
-	else
-	{
-		x_interp = 0.0;
-		y_interp = 0.0;
-		theta_interp = 0.0;
-	}
+	//	// TODO unwrap
+	//	theta_interp = currentPose->theta;
+	//}
+	//else if (currentPose)
+	//{
+	//	x_interp = currentPose->x;
+	//	y_interp = currentPose->y;
+	//	theta_interp = currentPose->theta;
+	//}
+	//else
+	//{
+	//	x_interp = 0.0;
+	//	y_interp = 0.0;
+	//	theta_interp = 0.0;
+	//}
+
+	double now = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count()*1E-9;
+	double lastVx = (currentPose->x - lastPose->x) / (currentPose->timestamp - lastPose->timestamp);
+	double lastVy = (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp);
+	double lastVtheta = angle_difference(lastPose->theta, currentPose->theta) / (currentPose->timestamp - lastPose->timestamp);
+
+	debug_file << now - currentPose->timestamp << '\t' << currentPose->timestamp - lastPose->timestamp << '\n';
+
+	x_interp = currentPose->x + lastVx * (now - currentPose->timestamp);
+	y_interp = currentPose->y + lastVy * (now - currentPose->timestamp);
+	theta_interp = currentPose->theta + lastVtheta* (now - currentPose->timestamp);
+	theta_interp = normalize_angle(theta_interp);
 
 	SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
 	SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
@@ -254,8 +300,8 @@ void ATazioVehicle::BeginPlay()
 	Super::BeginPlay();
 
 	// Constructor is called in game thread
-	GPSSender = NewObject<AUDPSender>(this);
-	GPSSensor = new FGPSSensor(this, GPSSender);
+	/*GPSSender = NewObject<AUDPSender>(this);
+	GPSSensor = new FGPSSensor(this, GPSSender);*/
 
 	Init();
 
@@ -283,8 +329,11 @@ void ATazioVehicle::BeginPlay()
 
 void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	delete GPSSensor;
-	GPSSensor = nullptr;
+	if (GPSSensor)
+	{
+		delete GPSSensor;
+		GPSSensor = nullptr;
+	}
 
 	Super::EndPlay(EndPlayReason);
 }
