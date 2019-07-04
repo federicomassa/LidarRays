@@ -35,11 +35,11 @@ public:
 		TArray<uint8> SerializeIMUMessage(const FIMUMessage& msg, bool Simulink = false);
 
 	UFUNCTION(BlueprintCallable, Category = Sensors)
-		TArray<uint8> SerializeOdometryMessage(const FOdometryMessage& msg, bool Simulink = false);
+		static TArray<uint8> SerializeOdometryMessage(const FOdometryMessage& msg, bool Simulink = false);
 
 
 	template <class MessageType>
-		TArray<uint8> SerializeMessage(const MessageType& msg, bool Simulink);
+		static TArray<uint8> SerializeMessage(const MessageType& msg, bool Simulink);
 
 	template <class MessageType>
 		MessageType DeserializeMessage(const TArray<uint8>& bytes, bool Simulink);

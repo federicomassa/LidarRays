@@ -11,7 +11,6 @@
 #include <fstream>
 #include <chrono>
 #include <Containers/Set.h>
-//#include "simulink_interface/udp_receiver.hpp"
 #include "TazioVehicle.generated.h"
 
 
@@ -49,9 +48,6 @@ class ATazioVehicle : public AWheeledVehicle
 
 	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMessageSerializerComponent* MessageSerializerComponent;
-
-
-
 
 	// Game instance to access permanent variables
 	UTazioGameInstance* GameInstance = nullptr;
@@ -97,7 +93,7 @@ class ATazioVehicle : public AWheeledVehicle
 	UPROPERTY(BlueprintAssignable, Category = TazioVehicle)
 	FIDChangedDelegate OnIDChanged;
 
-
+	class FGPSSensor* GPSSensor = nullptr;
 	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
 	UPROPERTY()
@@ -208,6 +204,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
 	void SetPlayerIndex(const int& PlayerIndex);
+
+	FPoseMessage* GetLatestState() const { return currentPose.Get(); }
 
 	static const FName LookUpBinding;
 	static const FName LookRightBinding;

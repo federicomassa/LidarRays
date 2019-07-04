@@ -22,6 +22,9 @@ class LIDARRAYS_API USensorManager : public UObject
 	UPROPERTY()
 	ATazioVehicle* Owner;
 
+	// TEST MULTITHREADED SENSOR FIXME
+
+
 public:
 	USensorManager();
 

@@ -19,6 +19,7 @@
 #include "GPSComponent.h"
 #include "MessageSerializerComponent.h"
 #include "LidarComponent.h"
+#include "GPSSensor.h"
 
 #include <array>
 #include "Components/SkeletalMeshComponent.h"
@@ -252,6 +253,10 @@ void ATazioVehicle::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Constructor is called in game thread
+	GPSSender = NewObject<AUDPSender>(this);
+	GPSSensor = new FGPSSensor(this, GPSSender);
+
 	Init();
 
 	UTazioGameInstance* GameInstance = Cast<UTazioGameInstance>(GetGameInstance());
@@ -278,6 +283,9 @@ void ATazioVehicle::BeginPlay()
 
 void ATazioVehicle::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	delete GPSSensor;
+	GPSSensor = nullptr;
+
 	Super::EndPlay(EndPlayReason);
 }
 

@@ -9,19 +9,6 @@
 #include <Components/InputComponent.h>
 #include <DrawDebugHelpers.h>
 
-#ifndef SIMULINK
-#define SIMULINK
-#endif
-
-//
-//#ifdef WIN32
-//#include "AllowWindowsPlatformTypes.h"
-//#include "Windows.h"
-//#include "HideWindowsPlatformTypes.h"
-//#else
-//#error "FIXME Windows platform needed for timers!"
-//#endif
-
 
 UGPSComponent::UGPSComponent() : RandomGenerator(RandomDevice()), PosXRandomNoise(PosXBias, PositionStdDev), PosYRandomNoise(PosYBias, PositionStdDev), YawRandomNoise(0.0, YawStdDev)
 {
