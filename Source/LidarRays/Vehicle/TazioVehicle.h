@@ -39,16 +39,6 @@ class ATazioVehicle : public AWheeledVehicle
 {
 	GENERATED_BODY()
 
-	// =========== COMPONENTS =========== // 
-	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UGPSComponent* GPSComponent;
-
-	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class ULidarComponent* LidarComponent;
-
-	UPROPERTY(Category = TazioVehicle, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UMessageSerializerComponent* MessageSerializerComponent;
-
 	// Game instance to access permanent variables
 	UTazioGameInstance* GameInstance = nullptr;
 
@@ -57,12 +47,6 @@ class ATazioVehicle : public AWheeledVehicle
 
 	// Reference to controller component
 	UInputComponent* InputComponent = nullptr;
-
-	// Scene capture component (the one used in split screen)
-	USceneCaptureComponent2D* ThirdPersonSceneComponent = nullptr;
-
-	// Texture targets, one for each possible opponent, taken from content browser
-	TArray<UTextureRenderTarget2D*> TextureTargets;
 
 	// File where to dump trajectory in csv
 	std::ofstream trajectory_dump;
@@ -93,26 +77,8 @@ class ATazioVehicle : public AWheeledVehicle
 	UPROPERTY(BlueprintAssignable, Category = TazioVehicle)
 	FIDChangedDelegate OnIDChanged;
 
-	class FGPSSensor* GPSSensor = nullptr;
-	// !!! NB: UPROPERTY() needed to avoid garbage collection !!!
 public:
-	UPROPERTY()
-	AUDPSender* LidarSender = nullptr;
-
-	UPROPERTY()
-	AUDPSender* IMUSender = nullptr;
-
-	UPROPERTY()
-	AUDPSender* GPSSender = nullptr;
-
-	UPROPERTY()
-	AUDPSender* GPSTruthSender = nullptr;
-
-	UPROPERTY()
-	AUDPReceiver* ControlReceiver = nullptr;
-
-	UPROPERTY()
-	AUDPReceiver* PoseReceiver = nullptr;
+	
 
 private:
 
@@ -143,33 +109,6 @@ public:
 	// Called on BeginPlay
 	void Init();
 
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPSender* GetLidarSender();
-
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPSender* GetIMUSender();
-
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPSender* GetGPSSender();
-
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPSender* GetGPSTruthSender();
-
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPReceiver* GetControlReceiver();	
-
-	UFUNCTION(BlueprintCallable, Category = UDP)
-	AUDPReceiver* GetPoseReceiver();
-
-	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
-	USensorManager* GetSensorManager();
-
-	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
-	void SetGPSActive(bool bNewActive);
-
-	UFUNCTION(BlueprintCallable, Category = TazioVehicle)
-	void SetLidarActive(bool bNewActive);
-
 	UFUNCTION(BlueprintCallable)
 	void IDReceived();
 
@@ -187,11 +126,6 @@ protected:
 	void ToggleRecordTrajectory();
 
 public:
-	// End Actor interface
-
-	/** Handle pressing forwards */
-	UFUNCTION(BlueprintCallable, Category = Controller)
-	void SendControls(const FControlMessage& ControlMessage);
 
 	UFUNCTION(BlueprintCallable, Category = Controller)
 	void SendPose(const FPoseMessage& PoseMessage);
