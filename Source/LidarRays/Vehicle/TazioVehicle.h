@@ -86,6 +86,8 @@ class ATazioVehicle : public AWheeledVehicle
 	// If ID event has been received
 	bool _IDReceived = false;
 
+	double _lastNow = -10000000;
+
 	//boost::asio::io_service io_service;
 	//simulink::udp_receiver<FPoseMessage>* PoseReceiver = nullptr;
 

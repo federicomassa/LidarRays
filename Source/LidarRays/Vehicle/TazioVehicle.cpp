@@ -67,6 +67,8 @@ double angle_difference(double a1, double a2)
 
 ATazioVehicle::ATazioVehicle()
 {
+	PrimaryActorTick.TickGroup = TG_PostUpdateWork;
+
 	GPSComponent = CreateDefaultSubobject<UGPSComponent>(TEXT("GPS"));
 	GPSComponent->SetAutoActivate(false);
 	GPSComponent->Deactivate();
@@ -244,17 +246,18 @@ void ATazioVehicle::Tick(float Delta)
 	double lastVy = (currentPose->y - lastPose->y) / (currentPose->timestamp - lastPose->timestamp);
 	double lastVtheta = angle_difference(lastPose->theta, currentPose->theta) / (currentPose->timestamp - lastPose->timestamp);
 
-	debug_file << now - currentPose->timestamp << '\t' << currentPose->timestamp - lastPose->timestamp << '\n';
+	debug_file << now - currentPose->timestamp << '\t' << currentPose->timestamp - lastPose->timestamp << '\t' << now - _lastNow << '\t' << Delta << '\n';
 
 	x_interp = currentPose->x + lastVx * (now - currentPose->timestamp);
 	y_interp = currentPose->y + lastVy * (now - currentPose->timestamp);
 	theta_interp = currentPose->theta + lastVtheta* (now - currentPose->timestamp);
 	theta_interp = normalize_angle(theta_interp);
 
+
 	SetActorLocation(FVector(x_interp*100, -y_interp*100, 150.0));
 	SetActorRotation(FRotator(0.f, -theta_interp*180/3.14159, 0.f));
 
-
+	_lastNow = now;
 	//if (currentPose)
 	//{
 	//	SetActorLocation(FVector(currentPose->x * 100, -currentPose->y * 100, 150.0));
